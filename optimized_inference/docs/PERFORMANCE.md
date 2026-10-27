@@ -146,3 +146,82 @@ spectrum files to rotate real clips. `--model 2` or `--model 8` selects one mode
 Run benchmarks without competing builds or tests. Use multiple fresh processes,
 balanced order and the same input/warmup/cadence for comparisons. Measure the
 complete application pipeline separately when budgeting callback deadlines.
+
+### Paired optimization experiments
+
+`tools/compare_benchmarks.py` compares two existing builds in randomized,
+balanced ABBA/BAAB blocks. Each letter starts a fresh process; all four runs in
+a block use the same model, input, 120-hop warmup and measurement length. Pin
+both variants to the same logical CPU and keep other builds, regression tests
+and profilers idle during collection:
+
+```sh
+python3 tools/compare_benchmarks.py \
+  --baseline /path/to/reference-build --candidate /path/to/changed-build \
+  --models 2 8 --blocks 24 --hops 500 --mode paced --cpu 2 \
+  --family-size 2 --seed 43000 --label comparison \
+  --spectra speech.f32 quiet.f32 silence.f32 \
+  --output validation/local/comparison.json
+```
+
+Choose the inputs, sample count, statistical family and acceptance rule before
+collection. Repeat the same comparison with identical builds as a noise control.
+Exploratory candidate selection should be followed by a separate confirmation
+experiment; a favorable result selected from many trials is not confirmation.
+
+The driver retains every run, raw per-hop double-precision timings, library and
+input hashes, process statistics and before/after CPU telemetry. It does not
+remove slow runs. Run means are summarized with sample SD. The inferential unit
+is a complete four-process block: hops from the same process are correlated and
+must not be counted as independent replications. The primary interval is a
+Student t interval for the mean paired block log time ratio, transformed to
+percentage time reduction. `--family-size` applies a Bonferroni correction to
+the interval; multiply the reported raw randomization p-value by the same
+family size, capped at one. A block bootstrap interval is a sensitivity check.
+`tools/analyze_comparison.py` can reanalyze an immutable journal separately.
+
+`DPDF_BENCH_SAMPLES=/path/to/timings.f64` also enables raw timing output in an
+individual C benchmark run. The file contains one native-endian binary64
+millisecond duration per timed hop. Writing happens after the timed region.
+Per-run p99, observed maximum, calls exceeding 10 ms and late cadence completions
+remain separate from the mean-throughput comparison. Short runs and a finite
+observed maximum cannot establish a worst-case latency bound.
+
+### Hot kernels and hardware counters
+
+Configure with `-DDPDF_BUILD_KERNEL_BENCHMARKS=ON` to build the private kernel
+workers. `tools/compare_kernels.py` uses balanced fresh-process blocks and at
+least 100 ms of same-kernel warmup. These workers measure amortized hot-cache
+call time, not per-call tail latency. Preserve end-to-end model measurements:
+a large speedup in a small kernel need not materially speed up the model.
+
+`tools/profile_cpu.py` collects Linux perf events only after benchmark warmup,
+using perf's FIFO enable/disable protocol. For example:
+
+```sh
+python3 tools/profile_cpu.py --build-dir /path/to/build \
+  --model 8 --cpu 2 --hops 5000 --spectra speech.f32 \
+  --kind record --events cycles:upp --output validation/local/hotspots
+```
+
+Precise events depend on CPU/kernel support. Use `--kind stat` for hardware
+counter totals; choose event groups that fit the available counters and check
+their running percentage. Repeat on the same inputs for both builds. Sampling
+percentages describe a share of the measured profile, not absolute saved time.
+Do not use timings gathered under a profiler as the latency experiment.
+
+Where perf permissions require elevation, `--sudo` elevates only the collector.
+Its workload drops to the invoking user's UID/GID and clears capabilities.
+Neither this tool nor the benchmark changes global perf permissions, frequency
+policy or security mitigations. `--perf` and `--perf-library-path` support an
+isolated perf extraction without installing an application runtime dependency.
+
+### Independent stream regression
+
+`tools/make_cpu_fixtures.py` creates a separately documented 48 kHz regression
+suite from official EARS demonstration audio and deterministic stress signals.
+It requires development-only NumPy and FFmpeg. This suite does not reconstruct
+the historic 65-file release corpus described above and does not add perceptual
+quality scores. `tools/compare_streams.py` compares multiple library builds on
+every spectrum and complete recurrent state at every hop, including in-place
+buffers and reset replay. Keep these correctness jobs separate from timing.

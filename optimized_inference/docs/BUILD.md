@@ -79,6 +79,25 @@ Direct static consumers must link `libm`. Exported CMake targets carry that
 dependency automatically. The shared library exports only the seven public
 functions in `dpdfnet.h`; graph and kernel symbols are private.
 
+### Optional branch alignment experiment
+
+`DPDF_ALIGN_BRANCHES` defaults to `OFF`. Enabling it passes GNU assembler's
+`-mbranches-within-32B-boundaries` option to the private model backends, including
+assembly kernels. This can help CPUs affected by the Skylake/Kaby Lake JCC
+microcode mitigation, but changes code layout and is not a portable speedup.
+Measure it against the default build on the intended CPU and workload. It adds
+no instruction-set requirement and needs an assembler supporting that option.
+
+```sh
+python3 tools/build.py --build-dir build-aligned \
+  --cmake-arg=-DDPDF_ALIGN_BRANCHES=ON
+```
+
+Use a separate build directory and fresh PGO training for each configuration.
+For private microbenchmarks, additionally pass
+`--cmake-arg=-DDPDF_BUILD_KERNEL_BENCHMARKS=ON`; these executables are not part
+of the installed runtime.
+
 ## Sanitizers and audio regression
 
 ```sh

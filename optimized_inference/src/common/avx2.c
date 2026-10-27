@@ -251,7 +251,6 @@ int dpdf_conv_row_avx2(const float *x,const float *w,const float *bias,float *y,
  * downsamplers. The original sw!=1 path uses separate binary32 multiply/add,
  * so these vectors deliberately do not fuse. Padding and odd-width tails
  * use the original ordered scalar terms; vector loads stay inside input. */
-#if DPDF_MODEL_SIZE == 2
 /* A stride-three vector touches p[0] through p[21]. The final load starts
  * at p+14, so its last byte is exactly the last gathered element, including
  * near the input boundary. Keep this specialization separate so stride-two
@@ -288,16 +287,13 @@ static __attribute__((noinline)) void depthwise_stride3(const float *x,const flo
     }
 }
 
-#endif
 int dpdf_depthwise_stride_avx2(const float *x,const float *w,const float *bias,float *y,
         int ci,int hi,int wi,int co,int ho,int wo,int kh,int kw,
         int sh,int sw,int ph,int pw,int group) {
     if (ci<=0 || group<=0 || hi!=1 || ho!=1 || kh!=1 || kw!=3 || sh!=1 || ph!=0 || pw!=1 ||
         group!=ci || co%group || (sw!=2 && sw!=3) || wi<8 ||
         wo!=(wi+2*pw-kw)/sw+1) return 0;
-#if DPDF_MODEL_SIZE == 2
     if(sw==3){depthwise_stride3(x,w,bias,y,ci,wi,co,wo);return 1;}
-#endif
     const __m256i offsets=_mm256_setr_epi32(0,sw,2*sw,3*sw,4*sw,5*sw,6*sw,7*sw);
     int last=(wi+pw-kw)/sw+1;
     if (last>wo) last=wo;

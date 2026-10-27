@@ -15,7 +15,6 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared runtime" ON)
 option(DPDF_SANITIZE "Enable address and undefined-behavior sanitizers" OFF)
 option(DPDF_BUILD_KERNEL_BENCHMARKS "Build private hot-kernel measurement tools" OFF)
-option(DPDF_ALIGN_BRANCHES "Align branches for Skylake/Kaby Lake JCC microcode" OFF)
 set(DPDF_PGO_MODE "OFF" CACHE STRING "Model-8 profile mode: OFF, GENERATE, USE")
 set_property(CACHE DPDF_PGO_MODE PROPERTY STRINGS OFF GENERATE USE)
 set(DPDF_PROFILE_DIR "${CMAKE_BINARY_DIR}/profiles" CACHE PATH "GCC profile directory")
@@ -83,10 +82,13 @@ foreach(size IN ITEMS 2 8)
         ${model_dir}/qaffine4pair64_fused_vnni.S)
     endif()
   endif()
-  if(size EQUAL 2)
-  target_compile_options(backend${size} PRIVATE $<$<COMPILE_LANGUAGE:C>:-fno-math-errno>)
+  if(size EQUAL 8)
+    target_sources(backend8 PRIVATE src/models/dpdfnet2_48khz_hr/qaffine4pair64_fused_avx2.S)
+    target_compile_definitions(backend8 PRIVATE DPDF_QBATCH_FUSED64_AVX2)
   endif()
-  if(DPDF_ALIGN_BRANCHES)
+  target_compile_options(backend${size} PRIVATE $<$<COMPILE_LANGUAGE:C>:-fno-math-errno>)
+  # Only model 8 had a confirmed incremental branch-alignment benefit.
+  if(size EQUAL 8)
     target_compile_options(backend${size} PRIVATE -Wa,-mbranches-within-32B-boundaries)
   endif()
   dpdf_compile(backend${size})
@@ -97,15 +99,13 @@ set_source_files_properties(src/common/fp16.c PROPERTIES COMPILE_OPTIONS "-mavx2
 # Preserve the accepted VNNI machine code when aligning the AVX2/common backend.
 # GNU as source options follow target options; boundary=0 cancels only the
 # extra branch-boundary padding, leaving the existing assembly alignment.
-if(DPDF_ALIGN_BRANCHES OR DPDF_ALIGN_BRANCHES_MODEL2 OR DPDF_ALIGN_BRANCHES_MODEL8)
-  set_property(SOURCE src/common/int8_vnni.c
-    src/common/qdot64_fixed_vnni.S src/common/qdot4pair_fixed_vnni.S
-    src/models/dpdfnet2_48khz_hr/qaffine64_fused_vnni.S
-    src/models/dpdfnet2_48khz_hr/qaffine256_fused_vnni.S
-    src/models/dpdfnet2_48khz_hr/qaffine4pair64_fused_vnni.S
-    src/models/dpdfnet8_48khz_hr/qaffine64_fused_vnni.S
-    APPEND PROPERTY COMPILE_OPTIONS -Wa,-malign-branch-boundary=0)
-endif()
+set_property(SOURCE src/common/int8_vnni.c
+  src/common/qdot64_fixed_vnni.S src/common/qdot4pair_fixed_vnni.S
+  src/models/dpdfnet2_48khz_hr/qaffine64_fused_vnni.S
+  src/models/dpdfnet2_48khz_hr/qaffine256_fused_vnni.S
+  src/models/dpdfnet2_48khz_hr/qaffine4pair64_fused_vnni.S
+  src/models/dpdfnet8_48khz_hr/qaffine64_fused_vnni.S
+  APPEND PROPERTY COMPILE_OPTIONS -Wa,-malign-branch-boundary=0)
 
 add_library(dpdfnet src/runtime.c $<TARGET_OBJECTS:backend2> $<TARGET_OBJECTS:backend8>)
 add_library(DPDFNet::dpdfnet ALIAS dpdfnet)

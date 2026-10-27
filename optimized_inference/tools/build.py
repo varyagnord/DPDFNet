@@ -21,7 +21,7 @@ def main():
     parser.add_argument("--no-pgo", action="store_true")
     parser.add_argument("--sanitize", action="store_true")
     parser.add_argument("--cmake-arg", action="append", default=[],
-                        help="Additional CMake setting, e.g. --cmake-arg=-DDPDF_ALIGN_BRANCHES=ON")
+                        help="Additional CMake setting, e.g. --cmake-arg=-DDPDF_ENABLE_AVX_VNNI=OFF")
     args = parser.parse_args()
     if args.jobs < 1:
         parser.error("--jobs must be positive")

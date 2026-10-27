@@ -1,7 +1,10 @@
 # Building and installing
 
-The validated toolchain is GCC 12.2 and CMake 3.25 on Linux x86-64. GCC,
-CMake 3.18+, and an AVX2/FMA CPU are required. Build and run inside Linux or WSL2;
+The historical package was validated with GCC 12.2 and CMake 3.25.
+The i7-7700T per-model selection is additionally validated with GCC 14.2.0
+on Linux x86-64; a fresh PGO build and all available release contracts also
+passed with GCC 12.4.0. Performance figures remain specific to GCC 14.2.0.
+GCC, CMake 3.18+, and an AVX2/FMA CPU are required. Build and run inside Linux or WSL2;
 the hand-written assembly uses the Linux System V ABI.
 
 ## Recommended release build
@@ -79,21 +82,28 @@ Direct static consumers must link `libm`. Exported CMake targets carry that
 dependency automatically. The shared library exports only the seven public
 functions in `dpdfnet.h`; graph and kernel symbols are private.
 
-### Optional branch alignment experiment
+### Automated PGO linkage checks
 
-`DPDF_ALIGN_BRANCHES` defaults to `OFF`. Enabling it passes GNU assembler's
-`-mbranches-within-32B-boundaries` option to the private model backends, including
-assembly kernels. This can help CPUs affected by the Skylake/Kaby Lake JCC
-microcode mitigation, but changes code layout and is not a portable speedup.
-Measure it against the default build on the intended CPU and workload. It adds
-no instruction-set requirement and needs an assembler supporting that option.
+Native CI covers shared PGO, static PGO, plain static, AVX2-only and
+ASan/UBSan builds. Both PGO jobs first build and run all contracts in
+`DPDF_PGO_MODE=GENERATE`, including linking the optional kernel benchmarks.
+This checks profiling-runtime linkage for direct backend-object tests and
+static-library consumers. The final PGO release uses a separate build and
+fresh training profiles, so test-generated profiles are not used for release.
+CI retains CMake configuration and CTest logs for diagnosis.
 
-```sh
-python3 tools/build.py --build-dir build-aligned \
-  --cmake-arg=-DDPDF_ALIGN_BRANCHES=ON
-```
+### Per-model branch alignment
 
-Use a separate build directory and fresh PGO training for each configuration.
+The accepted configuration aligns branches only for model 8. Model 2's
+unconfirmed alignment path and the experimental alignment switches have
+been removed. See the [result record](../validation/i7_7700t_final.json).
+
+Model 8 uses GNU assembler's `-mbranches-within-32B-boundaries`; VNNI
+sources use `-malign-branch-boundary=0` to preserve their accepted object code.
+The assembler must support both options. This changes layout without adding
+an instruction-set requirement. The selected benefit was measured on the
+i7-7700T; it is not a claim of the same gain on every CPU.
+
 For private microbenchmarks, additionally pass
 `--cmake-arg=-DDPDF_BUILD_KERNEL_BENCHMARKS=ON`; these executables are not part
 of the installed runtime.

@@ -278,6 +278,13 @@ int dpdf_depthwise_stride_avx2(const float *x,const float *w,const float *bias,f
                         __m128 hi=_mm_shuffle_ps(_mm_loadu_ps(p+8),_mm_loadu_ps(p+12),
                                                   _MM_SHUFFLE(2,0,2,0));
                         values=_mm256_insertf128_ps(_mm256_castps128_ps256(lo),hi,1);
+                    } else if (sw==3 && ow*sw+kx-pw+23<wi) {
+                        /* The eight stride-three elements occupy three consecutive
+                         * vectors. Avoid gather while every load is inside input. */
+                        __m256 p0=_mm256_permutevar8x32_ps(_mm256_loadu_ps(p),_mm256_setr_epi32(0,3,6,0,0,0,0,0));
+                        __m256 p1=_mm256_permutevar8x32_ps(_mm256_loadu_ps(p+8),_mm256_setr_epi32(0,0,0,1,4,7,0,0));
+                        __m256 p2=_mm256_permutevar8x32_ps(_mm256_loadu_ps(p+16),_mm256_setr_epi32(0,0,0,0,0,0,2,5));
+                        values=_mm256_blend_ps(_mm256_blend_ps(p0,p1,0x38),p2,0xc0);
                     } else values=_mm256_i32gather_ps(p,offsets,4);
                     sum=_mm256_add_ps(sum,_mm256_mul_ps(_mm256_set1_ps(weight[kx]),values));
                 }

@@ -324,6 +324,9 @@ for (int i=0;i<219;++i) bytes+=dpdf_dense_bytes(m->dense[i]);
 for (int i=0;i<21;++i) bytes+=dpdf_convop_bytes(m->conv[i]);
 return bytes;
 }
+/* Each DPRNN state chunk is consumed by its own block before being replaced.
+ * Write its new state directly; final packing handles the other chunks only
+ * after all old-state reads. This retains supported in-place state updates. */
 int dpdf_model_process(dpdf_model *m,const float *spec,const float *state_in,float *spec_out,float *state_out) {
     if (!m || !spec || !state_in || !spec_out || !state_out) return -1;
 /* 0: Mul /Mul */
@@ -434,10 +437,10 @@ m->transpose((m->arena+17696),(m->arena+76912),40,64);
 for (int i=0;i<2560;++i) (m->arena+74352)[i]=((m->arena+76912)[i]>0?(m->arena+76912)[i]:0.0f);
 /* 57: Slice /model/enc/dprnn_erb/blocks.0/inter_gru/Slice */
 /* 58: DpdfDprnn /model/enc/dprnn_erb/blocks.0/Native */
-if (dpdf_process_layout(m->blocks[0],(m->arena+74352),(state_in+2020),(m->arena+76912),(m->arena+15136),2)) return -1;
+if (dpdf_process_layout(m->blocks[0],(m->arena+74352),(state_in+2020),(m->arena+76912),(state_out+2020),2)) return -1;
 /* 59: Slice /model/enc/dprnn_erb/blocks.1/inter_gru/Slice */
 /* 60: DpdfDprnn /model/enc/dprnn_erb/blocks.1/Native */
-if (dpdf_process_layout(m->blocks[1],(m->arena+76912),(state_in+4580),(m->arena+17696),(m->arena+20256),1)) return -1;
+if (dpdf_process_layout(m->blocks[1],(m->arena+76912),(state_in+4580),(m->arena+17696),(state_out+4580),1)) return -1;
 /* 61: Transpose /model/enc/df_conv0_buffer/Transpose */
 for (int t2=0;t2<2;++t2) for (int t3=0;t3<96;++t3) (m->arena+976)[t2*96+t3*1]=(m->arena+1568)[t2*1+t3*2];
 /* 62: Slice /model/enc/df_conv0_buffer/Slice */
@@ -475,10 +478,10 @@ m->transpose((m->arena+76912),(m->arena+22816),48,64);
 for (int i=0;i<3072;++i) (m->arena+25888)[i]=((m->arena+22816)[i]>0?(m->arena+22816)[i]:0.0f);
 /* 79: Slice /model/enc/dprnn_df/blocks.0/inter_gru/Slice */
 /* 80: DpdfDprnn /model/enc/dprnn_df/blocks.0/Native */
-if (dpdf_process_layout(m->blocks[2],(m->arena+25888),(state_in+7716),(m->arena+22816),(m->arena+35104),2)) return -1;
+if (dpdf_process_layout(m->blocks[2],(m->arena+25888),(state_in+7716),(m->arena+22816),(state_out+7716),2)) return -1;
 /* 81: Slice /model/enc/dprnn_df/blocks.1/inter_gru/Slice */
 /* 82: DpdfDprnn /model/enc/dprnn_df/blocks.1/Native */
-if (dpdf_process_layout(m->blocks[3],(m->arena+22816),(state_in+10788),(m->arena+25888),(m->arena+76912),1)) return -1;
+if (dpdf_process_layout(m->blocks[3],(m->arena+22816),(state_in+10788),(m->arena+25888),(state_out+10788),1)) return -1;
 /* 83: Transpose /model/enc/Transpose */
 for (int t2=0;t2<48;++t2) for (int t3=0;t3<64;++t3) (m->arena+22816)[t2*64+t3*1]=(m->arena+25888)[t2*1+t3*48];
 /* 84: Flatten /model/enc/Flatten */
@@ -845,11 +848,7 @@ for (int i=0;i<962;++i) spec_out[i]=(m->arena+0)[i]*(m->weights+8)[0];
 memcpy(state_out+0,(m->arena+2944),481*sizeof(float));
 memcpy(state_out+481,(m->arena+1472),96*sizeof(float));
 memcpy(state_out+577,(m->arena+3440),1443*sizeof(float));
-memcpy(state_out+2020,(m->arena+15136),2560*sizeof(float));
-memcpy(state_out+4580,(m->arena+20256),2560*sizeof(float));
 memcpy(state_out+7140,(m->arena+1568),576*sizeof(float));
-memcpy(state_out+7716,(m->arena+35104),3072*sizeof(float));
-memcpy(state_out+10788,(m->arena+76912),3072*sizeof(float));
 memcpy(state_out+13860,(m->arena+976),256*sizeof(float));
 memcpy(state_out+14116,(m->arena+38176),256*sizeof(float));
 memcpy(state_out+14372,(m->arena+20000),256*sizeof(float));

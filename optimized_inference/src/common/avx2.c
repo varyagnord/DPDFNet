@@ -418,13 +418,9 @@ static inline __m256 tanh8(__m256 x) {
 }
 void dpdf_gates_avx2(const float *a, const float *b, const float *old, float *out, int rows) {
     for (int r=0; r<rows; ++r) {
-        float resets[64],updates[64];
         for (int c=0; c<64; c+=8) {
-            _mm256_storeu_ps(resets+c,sigmoid8(_mm256_add_ps(_mm256_loadu_ps(a+r*192+c),_mm256_loadu_ps(b+r*192+c))));
-            _mm256_storeu_ps(updates+c,sigmoid8(_mm256_add_ps(_mm256_loadu_ps(a+r*192+64+c),_mm256_loadu_ps(b+r*192+64+c))));
-        }
-        for (int c=0; c<64; c+=8) {
-            __m256 reset=_mm256_loadu_ps(resets+c),update=_mm256_loadu_ps(updates+c);
+            __m256 reset=sigmoid8(_mm256_add_ps(_mm256_loadu_ps(a+r*192+c),_mm256_loadu_ps(b+r*192+c)));
+            __m256 update=sigmoid8(_mm256_add_ps(_mm256_loadu_ps(a+r*192+64+c),_mm256_loadu_ps(b+r*192+64+c)));
             __m256 candidate=tanh8(_mm256_fmadd_ps(reset,_mm256_loadu_ps(b+r*192+128+c),_mm256_loadu_ps(a+r*192+128+c)));
             __m256 result=_mm256_fmadd_ps(update,_mm256_sub_ps(_mm256_loadu_ps(old+r*64+c),candidate),candidate);
             _mm256_storeu_ps(out+r*64+c,result);

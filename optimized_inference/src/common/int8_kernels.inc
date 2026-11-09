@@ -294,6 +294,12 @@ static void qaffine_batch_tiled(const dpdf_qmatrix *q,const float *x,const float
     for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
 #endif
     for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=16) {
+#ifndef DPDF_INT8_VNNI
+        if (c+16<n && k>=64) {
+            __builtin_prefetch(q->packed+(c+16)*k,0,3);
+            __builtin_prefetch(q->packed+(c+16)*k+256,0,3);
+        }
+#endif
         __m256i sums[8];
         qdot4pair(activation+r*k,q->packed+c*k,q->packed+(c+8)*k,k,sums);
         for (int t=0;t<4;++t) for (int tile=0;tile<2;++tile) {
@@ -437,6 +443,14 @@ void DPDF_QPAIR_IMPL(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float *
     for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
 #endif
     for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=8) {
+#ifndef DPDF_INT8_VNNI
+        if (c+8<n && k>=64) {
+            __builtin_prefetch(q0->packed+(c+8)*k,0,3);
+            __builtin_prefetch(q1->packed+(c+8)*k,0,3);
+            __builtin_prefetch(q0->packed+(c+8)*k+256,0,3);
+            __builtin_prefetch(q1->packed+(c+8)*k+256,0,3);
+        }
+#endif
         __m256i sums[8];
         qdot4pair(activation+r*k,q0->packed+c*k,q1->packed+c*k,k,sums);
         const __m256i weight_sum0=_mm256_loadu_si256((const __m256i *)(q0->sum+c));

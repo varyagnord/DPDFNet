@@ -276,7 +276,7 @@ static inline __attribute__((always_inline)) void qpair_fused4(
 static void qaffine_batch_tiled(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int m) {
     int8_t activation[48*512]; float scales[48]; int zp[48];
     const int k=q->k,n=q->n;
-#if DPDF_MODEL_SIZE == 2
+#if DPDF_MODEL_SIZE == 2 || !defined(DPDF_INT8_VNNI)
     if (k==64) {
         for (int r=0;r<m;++r) quantize64(x+r*64,activation+r*64,scales+r,zp+r);
     } else {
@@ -311,7 +311,7 @@ static void qaffine_batch(const dpdf_qmatrix *q,const float *x,const float *bias
     /* Callers split larger batches into at most 48 rows. */
     int8_t activation[48*512]; float scales[48]; int zp[48];
     const int k=q->k,n=q->n;
-#if DPDF_MODEL_SIZE == 2
+#if DPDF_MODEL_SIZE == 2 || !defined(DPDF_INT8_VNNI)
     if (k==64) {
         for (int r=0;r<m;++r) quantize64(x+r*64,activation+r*64,scales+r,zp+r);
     } else {
@@ -419,7 +419,7 @@ void DPDF_QPAIR_IMPL(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float *
     }
     int8_t activation[48*512]; float scales[48]; int zp[48];
     const int k=q0->k,n=q0->n;
-#if DPDF_MODEL_SIZE == 2
+#if DPDF_MODEL_SIZE == 2 || !defined(DPDF_INT8_VNNI)
     if (k==64) {
         for (int r=0;r<m;++r) quantize64(x+r*64,activation+r*64,scales+r,zp+r);
     } else {

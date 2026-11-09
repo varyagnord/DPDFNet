@@ -10,6 +10,10 @@
     _mm256_maddubs_epi16(a,w),_mm256_set1_epi16(1)))
 #endif
 
+#if defined(DPDF_QPAIR_FUSED64) || (defined(DPDF_QPAIR_FUSED64_AVX2) && !defined(DPDF_INT8_VNNI))
+#define DPDF_USE_QPAIR_FUSED64
+#endif
+
 static void quantize(const float *x,int8_t *out,int k,float *scale,int *zp) {
     __m256 lo=_mm256_setzero_ps(),hi=lo;
     for (int j=0;j<k;j+=8) { __m256 v=_mm256_loadu_ps(x+j); lo=_mm256_min_ps(lo,v); hi=_mm256_max_ps(hi,v); }
@@ -252,9 +256,9 @@ static __attribute__((noinline)) void qdot4pair(const int8_t *activation,
     qdot4pair_generic(activation,packed0,packed1,k,out);
 }
 
-#if DPDF_MODEL_SIZE == 2
+#if DPDF_MODEL_SIZE == 2 || defined(DPDF_USE_QPAIR_FUSED64)
 
-#ifdef DPDF_QPAIR_FUSED64
+#ifdef DPDF_USE_QPAIR_FUSED64
 #include "pair_fused_args.h"
 static inline __attribute__((always_inline)) void qpair_fused4(
         const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const int8_t *activation,
@@ -282,7 +286,10 @@ static void qaffine_batch_tiled(const dpdf_qmatrix *q,const float *x,const float
     } else {
         for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
     }
-#ifdef DPDF_QPAIR_FUSED64
+#else
+    for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
+#endif
+#ifdef DPDF_USE_QPAIR_FUSED64
     if (k==64) {
         for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=16)
             qpair_fused4(q,q,activation+r*64,scales+r,zp+r,bias,bias,
@@ -290,9 +297,7 @@ static void qaffine_batch_tiled(const dpdf_qmatrix *q,const float *x,const float
         return;
     }
 #endif
-#else
-    for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
-#endif
+
     for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=16) {
         __m256i sums[8];
         qdot4pair(activation+r*k,q->packed+c*k,q->packed+(c+8)*k,k,sums);
@@ -425,7 +430,10 @@ void DPDF_QPAIR_IMPL(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float *
     } else {
         for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
     }
-#ifdef DPDF_QPAIR_FUSED64
+#else
+    for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
+#endif
+#ifdef DPDF_USE_QPAIR_FUSED64
     if (k==64) {
         for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=8)
             qpair_fused4(q0,q1,activation+r*64,scales+r,zp+r,bias0,bias1,
@@ -433,9 +441,7 @@ void DPDF_QPAIR_IMPL(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float *
         return;
     }
 #endif
-#else
-    for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
-#endif
+
     for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=8) {
         __m256i sums[8];
         qdot4pair(activation+r*k,q0->packed+c*k,q1->packed+c*k,k,sums);

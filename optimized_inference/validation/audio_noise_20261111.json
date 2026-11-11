@@ -1,0 +1,3349 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-11",
+  "scope": "Local native HushMic DSP and laboratory diagnostics; no production audio-device/server scheduling claim",
+  "publication": false,
+  "default_promoted": false,
+  "tests": {
+    "ctest": {
+      "native": 49,
+      "asan": 49,
+      "avx2": 38,
+      "static": 48
+    },
+    "lab_behavioral": 58,
+    "audio_contracts": 10,
+    "native_pcm_reset_pairs_before": 4,
+    "native_pcm_reset_pairs_after": 4
+  },
+  "primary": {
+    "passed": true,
+    "processes": 160,
+    "calls": 81920,
+    "independently_verified_report_intervals": 12,
+    "mean_and_tail_intervals_reconstructed": 16,
+    "mean_and_call_sd_verified": true,
+    "late": 0,
+    "major_faults": 0,
+    "minor_faults": 30,
+    "maximum_observed_ms": 2.268077,
+    "restores": [
+      {
+        "cpu": 3,
+        "receipt": {
+          "restored": true,
+          "errors": [],
+          "mismatched_files": [],
+          "power_matches": true,
+          "online": "0-23",
+          "timestamp_ns": 1794386544819157772
+        }
+      },
+      {
+        "cpu": 4,
+        "receipt": {
+          "restored": true,
+          "errors": [],
+          "mismatched_files": [],
+          "power_matches": true,
+          "online": "0-23",
+          "timestamp_ns": 1794387139231810469
+        }
+      }
+    ],
+    "cells": [
+      {
+        "cpu": 3,
+        "kind": "aa",
+        "model": 2,
+        "endpoints": {
+          "mean_ms": {
+            "gain_percent": -0.4422224742565595,
+            "interval_percent": [
+              -24.605573011071403,
+              19.03540257648302
+            ],
+            "paired_log_sd_percent": 6.252747332241183
+          },
+          "p99_ms": {
+            "gain_percent": 0.12970053045555652,
+            "interval_percent": [
+              -9.697985718168933,
+              9.076938370031407
+            ],
+            "paired_log_sd_percent": 2.7224228773504855
+          }
+        },
+        "verdict": null,
+        "arms": {
+          "A": {
+            "run_means_ms": {
+              "n": 4,
+              "mean": 0.7585481586914062,
+              "sd": 0.02733430618084752,
+              "min": 0.73278356640625,
+              "p95": 0.796032875,
+              "p99": 0.796032875,
+              "max": 0.796032875
+            },
+            "observations_ms": {
+              "n": 2048,
+              "mean": 0.7585481586914062,
+              "sd": 0.08942183522556814,
+              "min": 0.238028,
+              "p95": 0.873353,
+              "p99": 0.907658,
+              "max": 0.928297
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 4,
+              "mean": 1.0055387356445191,
+              "sd": 0.005993001359382685,
+              "min": 0.9979735177994646,
+              "p95": 1.011757578472212,
+              "p99": 1.011757578472212,
+              "max": 1.011757578472212
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 0,
+            "major_faults": 0
+          },
+          "B": {
+            "run_means_ms": {
+              "n": 4,
+              "mean": 0.7624146840820313,
+              "sd": 0.04165997147467454,
+              "min": 0.702923572265625,
+              "p95": 0.793341505859375,
+              "p99": 0.793341505859375,
+              "max": 0.793341505859375
+            },
+            "observations_ms": {
+              "n": 2048,
+              "mean": 0.7624146840820313,
+              "sd": 0.08179302115172675,
+              "min": 0.396055,
+              "p95": 0.842515,
+              "p99": 0.905403,
+              "max": 0.94122
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 4,
+              "mean": 1.0091058435571512,
+              "sd": 0.005604049473349988,
+              "min": 1.0036941017514818,
+              "p95": 1.0160233878215348,
+              "p99": 1.0160233878215348,
+              "max": 1.0160233878215348
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 0,
+            "major_faults": 0
+          }
+        },
+        "addresses": {
+          "A": 4,
+          "B": 4
+        }
+      },
+      {
+        "cpu": 3,
+        "kind": "aa",
+        "model": 8,
+        "endpoints": {
+          "mean_ms": {
+            "gain_percent": -1.3916868647703584,
+            "interval_percent": [
+              -47.20133992621021,
+              30.161816662558948
+            ],
+            "paired_log_sd_percent": 10.81356754672498
+          },
+          "p99_ms": {
+            "gain_percent": 0.3057181486900151,
+            "interval_percent": [
+              -2.9396377589354206,
+              3.448758415844444
+            ],
+            "paired_log_sd_percent": 0.9291771581691813
+          }
+        },
+        "verdict": null,
+        "arms": {
+          "A": {
+            "run_means_ms": {
+              "n": 4,
+              "mean": 1.462075921875,
+              "sd": 0.09245700021359866,
+              "min": 1.3799720859375,
+              "p95": 1.57117511328125,
+              "p99": 1.57117511328125,
+              "max": 1.57117511328125
+            },
+            "observations_ms": {
+              "n": 2048,
+              "mean": 1.462075921875,
+              "sd": 0.17707148303681375,
+              "min": 0.572267,
+              "p95": 1.732079,
+              "p99": 1.820134,
+              "max": 1.867423
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 4,
+              "mean": 1.2506148282149858,
+              "sd": 0.12455322687068099,
+              "min": 1.1519528626071542,
+              "p95": 1.4119833588944029,
+              "p99": 1.4119833588944029,
+              "max": 1.4119833588944029
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 1,
+            "major_faults": 0
+          },
+          "B": {
+            "run_means_ms": {
+              "n": 4,
+              "mean": 1.4821345937500001,
+              "sd": 0.08594359742259217,
+              "min": 1.361711783203125,
+              "p95": 1.561236337890625,
+              "p99": 1.561236337890625,
+              "max": 1.561236337890625
+            },
+            "observations_ms": {
+              "n": 2048,
+              "mean": 1.48213459375,
+              "sd": 0.16584898372962817,
+              "min": 0.847555,
+              "p95": 1.724094,
+              "p99": 1.81238,
+              "max": 1.87096
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 4,
+              "mean": 1.1890432109474758,
+              "sd": 0.09249263631404431,
+              "min": 1.1078834073710984,
+              "p95": 1.3216307468792257,
+              "p99": 1.3216307468792257,
+              "max": 1.3216307468792257
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 0,
+            "major_faults": 0
+          }
+        },
+        "addresses": {
+          "A": 4,
+          "B": 4
+        }
+      },
+      {
+        "cpu": 3,
+        "kind": "compare",
+        "model": 2,
+        "endpoints": {
+          "mean_ms": {
+            "gain_percent": -0.39350339642429955,
+            "interval_percent": [
+              -5.178597403053753,
+              4.173893044182863
+            ],
+            "paired_log_sd_percent": 5.862235610377661
+          },
+          "p99_ms": {
+            "gain_percent": -1.0132712691811152,
+            "interval_percent": [
+              -3.5435951803099996,
+              1.4552184060002915
+            ],
+            "paired_log_sd_percent": 3.114890069092693
+          }
+        },
+        "verdict": {
+          "version": 2,
+          "role": "guard",
+          "aa_practical_drift_detected": false,
+          "aa_precision_is_diagnostic": true,
+          "mean_noninferiority": false,
+          "process_p99_noninferiority": true,
+          "useful_mean_gain": false,
+          "deadline_fault_guard": true,
+          "passed": false,
+          "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+          "mean_interval_percent": [
+            -5.178597403053864,
+            4.173893044182975
+          ],
+          "process_p99_interval_percent": [
+            -3.5435951803100663,
+            1.455218406000347
+          ],
+          "family_comparisons": 8
+        },
+        "arms": {
+          "A": {
+            "run_means_ms": {
+              "n": 16,
+              "mean": 0.7268235500488281,
+              "sd": 0.03503565551427081,
+              "min": 0.656345865234375,
+              "p95": 0.777739798828125,
+              "p99": 0.777739798828125,
+              "max": 0.777739798828125
+            },
+            "observations_ms": {
+              "n": 8192,
+              "mean": 0.7268235500488281,
+              "sd": 0.09366541820614262,
+              "min": 0.238308,
+              "p95": 0.853746,
+              "p99": 0.896748,
+              "max": 0.937083
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 16,
+              "mean": 1.0062231707911249,
+              "sd": 0.01716644792807451,
+              "min": 0.9751684735143469,
+              "p95": 1.0454645253805148,
+              "p99": 1.0454645253805148,
+              "max": 1.0454645253805148
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 0,
+            "major_faults": 0
+          },
+          "B": {
+            "run_means_ms": {
+              "n": 16,
+              "mean": 0.7296753546142578,
+              "sd": 0.035666402646723744,
+              "min": 0.682752708984375,
+              "p95": 0.8170689140625,
+              "p99": 0.8170689140625,
+              "max": 0.8170689140625
+            },
+            "observations_ms": {
+              "n": 8192,
+              "mean": 0.7296753546142578,
+              "sd": 0.09486354571846442,
+              "min": 0.237898,
+              "p95": 0.854267,
+              "p99": 0.906736,
+              "max": 1.051759
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 16,
+              "mean": 1.0059096263902991,
+              "sd": 0.006638073994417093,
+              "min": 0.9969293186892726,
+              "p95": 1.0200716555017555,
+              "p99": 1.0200716555017555,
+              "max": 1.0200716555017555
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 1,
+            "major_faults": 0
+          }
+        },
+        "addresses": {
+          "A": 16,
+          "B": 16
+        }
+      },
+      {
+        "cpu": 3,
+        "kind": "compare",
+        "model": 8,
+        "endpoints": {
+          "mean_ms": {
+            "gain_percent": 1.4294406009821459,
+            "interval_percent": [
+              -5.590806917289437,
+              7.982944122719992
+            ],
+            "paired_log_sd_percent": 8.661809557210907
+          },
+          "p99_ms": {
+            "gain_percent": -0.12617100538221404,
+            "interval_percent": [
+              -2.524641510601433,
+              2.2161894693150996
+            ],
+            "paired_log_sd_percent": 2.9803332442883383
+          }
+        },
+        "verdict": {
+          "version": 2,
+          "role": "audio",
+          "aa_practical_drift_detected": false,
+          "aa_precision_is_diagnostic": true,
+          "mean_noninferiority": false,
+          "process_p99_noninferiority": true,
+          "useful_mean_gain": false,
+          "deadline_fault_guard": true,
+          "passed": false,
+          "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+          "mean_interval_percent": [
+            -5.590806917289615,
+            7.9829441227201485
+          ],
+          "process_p99_interval_percent": [
+            -2.5246415106014997,
+            2.216189469315155
+          ],
+          "family_comparisons": 8
+        },
+        "arms": {
+          "A": {
+            "run_means_ms": {
+              "n": 16,
+              "mean": 1.487641414794922,
+              "sd": 0.0808707990088428,
+              "min": 1.288602,
+              "p95": 1.5947965546875,
+              "p99": 1.5947965546875,
+              "max": 1.5947965546875
+            },
+            "observations_ms": {
+              "n": 8192,
+              "mean": 1.487641414794922,
+              "sd": 0.16677179606929,
+              "min": 0.564402,
+              "p95": 1.718683,
+              "p99": 1.800056,
+              "max": 1.888793
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 16,
+              "mean": 1.1584311573093362,
+              "sd": 0.0907314972070337,
+              "min": 1.0385452746038375,
+              "p95": 1.3310948910013982,
+              "p99": 1.3310948910013982,
+              "max": 1.3310948910013982
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 4,
+            "major_faults": 0
+          },
+          "B": {
+            "run_means_ms": {
+              "n": 16,
+              "mean": 1.46614973828125,
+              "sd": 0.0752384839333816,
+              "min": 1.3100599921875,
+              "p95": 1.55617741796875,
+              "p99": 1.55617741796875,
+              "max": 1.55617741796875
+            },
+            "observations_ms": {
+              "n": 8192,
+              "mean": 1.46614973828125,
+              "sd": 0.16000202888436535,
+              "min": 0.556647,
+              "p95": 1.718122,
+              "p99": 1.809625,
+              "max": 1.983412
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 16,
+              "mean": 1.167544665174688,
+              "sd": 0.10483131791877966,
+              "min": 1.0499122421787814,
+              "p95": 1.3630892169958289,
+              "p99": 1.3630892169958289,
+              "max": 1.3630892169958289
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 4,
+            "major_faults": 0
+          }
+        },
+        "addresses": {
+          "A": 16,
+          "B": 16
+        }
+      },
+      {
+        "cpu": 4,
+        "kind": "aa",
+        "model": 2,
+        "endpoints": {
+          "mean_ms": {
+            "gain_percent": -0.7505326068231177,
+            "interval_percent": [
+              -3.579308169527118,
+              2.0009884218859963
+            ],
+            "paired_log_sd_percent": 0.8031666084942352
+          },
+          "p99_ms": {
+            "gain_percent": -1.0961019994546461,
+            "interval_percent": [
+              -7.642102968139586,
+              5.0518193377434795
+            ],
+            "paired_log_sd_percent": 1.819817137648653
+          }
+        },
+        "verdict": null,
+        "arms": {
+          "A": {
+            "run_means_ms": {
+              "n": 4,
+              "mean": 0.7963767622070312,
+              "sd": 0.006093923172385291,
+              "min": 0.787788873046875,
+              "p95": 0.802100232421875,
+              "p99": 0.802100232421875,
+              "max": 0.802100232421875
+            },
+            "observations_ms": {
+              "n": 2048,
+              "mean": 0.7963767622070312,
+              "sd": 0.0416028179816378,
+              "min": 0.400143,
+              "p95": 0.82925,
+              "p99": 0.83939,
+              "max": 0.858084
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 4,
+              "mean": 1.0160291518920543,
+              "sd": 0.01061089182388416,
+              "min": 1.0038066545545146,
+              "p95": 1.0275404563230255,
+              "p99": 1.0275404563230255,
+              "max": 1.0275404563230255
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 0,
+            "major_faults": 0
+          },
+          "B": {
+            "run_means_ms": {
+              "n": 4,
+              "mean": 0.8023966826171876,
+              "sd": 0.011364040788172509,
+              "min": 0.78825733203125,
+              "p95": 0.81238857421875,
+              "p99": 0.81238857421875,
+              "max": 0.81238857421875
+            },
+            "observations_ms": {
+              "n": 2048,
+              "mean": 0.8023966826171876,
+              "sd": 0.03671717001109554,
+              "min": 0.522173,
+              "p95": 0.832326,
+              "p99": 0.85012,
+              "max": 1.090802
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 4,
+              "mean": 1.0187284857152412,
+              "sd": 0.01716912252159608,
+              "min": 1.0021623988871142,
+              "p95": 1.0423028449370835,
+              "p99": 1.0423028449370835,
+              "max": 1.0423028449370835
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 0,
+            "major_faults": 0
+          }
+        },
+        "addresses": {
+          "A": 4,
+          "B": 4
+        }
+      },
+      {
+        "cpu": 4,
+        "kind": "aa",
+        "model": 8,
+        "endpoints": {
+          "mean_ms": {
+            "gain_percent": -8.65360773412258,
+            "interval_percent": [
+              -86.9555714727599,
+              36.85341185266201
+            ],
+            "paired_log_sd_percent": 15.741492332379492
+          },
+          "p99_ms": {
+            "gain_percent": -0.7306470250700858,
+            "interval_percent": [
+              -8.490682086103774,
+              6.474334431445938
+            ],
+            "paired_log_sd_percent": 2.1526240902587217
+          }
+        },
+        "verdict": null,
+        "arms": {
+          "A": {
+            "run_means_ms": {
+              "n": 4,
+              "mean": 1.4226177641601563,
+              "sd": 0.2087548487467015,
+              "min": 1.1295035078125,
+              "p95": 1.622027529296875,
+              "p99": 1.622027529296875,
+              "max": 1.622027529296875
+            },
+            "observations_ms": {
+              "n": 2048,
+              "mean": 1.4226177641601563,
+              "sd": 0.22349639136987792,
+              "min": 0.934298,
+              "p95": 1.716029,
+              "p99": 1.748018,
+              "max": 1.80756
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 4,
+              "mean": 1.2653683694338118,
+              "sd": 0.15475097961854226,
+              "min": 1.108512357913994,
+              "p95": 1.476929534144339,
+              "p99": 1.476929534144339,
+              "max": 1.476929534144339
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 0,
+            "major_faults": 0
+          },
+          "B": {
+            "run_means_ms": {
+              "n": 4,
+              "mean": 1.5334147177734376,
+              "sd": 0.06711896677608215,
+              "min": 1.444649232421875,
+              "p95": 1.607654486328125,
+              "p99": 1.607654486328125,
+              "max": 1.607654486328125
+            },
+            "observations_ms": {
+              "n": 2048,
+              "mean": 1.5334147177734374,
+              "sd": 0.11764408230118491,
+              "min": 0.980876,
+              "p95": 1.709867,
+              "p99": 1.747498,
+              "max": 1.79096
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 4,
+              "mean": 1.1744284349654386,
+              "sd": 0.05145088698755398,
+              "min": 1.1195477121930895,
+              "p95": 1.243540081958504,
+              "p99": 1.243540081958504,
+              "max": 1.243540081958504
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 0,
+            "major_faults": 0
+          }
+        },
+        "addresses": {
+          "A": 4,
+          "B": 4
+        }
+      },
+      {
+        "cpu": 4,
+        "kind": "compare",
+        "model": 2,
+        "endpoints": {
+          "mean_ms": {
+            "gain_percent": -2.5193642310239683,
+            "interval_percent": [
+              -6.992909623922339,
+              1.7671350440272793
+            ],
+            "paired_log_sd_percent": 5.377332687556264
+          },
+          "p99_ms": {
+            "gain_percent": -1.4382979835859677,
+            "interval_percent": [
+              -2.357292868185845,
+              -0.5275541143681339
+            ],
+            "paired_log_sd_percent": 1.135480730979163
+          }
+        },
+        "verdict": {
+          "version": 2,
+          "role": "guard",
+          "aa_practical_drift_detected": false,
+          "aa_precision_is_diagnostic": true,
+          "mean_noninferiority": false,
+          "process_p99_noninferiority": true,
+          "useful_mean_gain": false,
+          "deadline_fault_guard": true,
+          "passed": false,
+          "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+          "mean_interval_percent": [
+            -6.99290962392245,
+            1.7671350440273792
+          ],
+          "process_p99_interval_percent": [
+            -2.3572928681858674,
+            -0.5275541143681117
+          ],
+          "family_comparisons": 8
+        },
+        "arms": {
+          "A": {
+            "run_means_ms": {
+              "n": 16,
+              "mean": 0.7672611242675781,
+              "sd": 0.041017244364220266,
+              "min": 0.621536748046875,
+              "p95": 0.80406516015625,
+              "p99": 0.80406516015625,
+              "max": 0.80406516015625
+            },
+            "observations_ms": {
+              "n": 8192,
+              "mean": 0.7672611242675781,
+              "sd": 0.07838448211348145,
+              "min": 0.384293,
+              "p95": 0.82356,
+              "p99": 0.835321,
+              "max": 1.208363
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 16,
+              "mean": 1.0430597013812999,
+              "sd": 0.07475375057427631,
+              "min": 1.0091339811988058,
+              "p95": 1.318988559232847,
+              "p99": 1.318988559232847,
+              "max": 1.318988559232847
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 4,
+            "major_faults": 0
+          },
+          "B": {
+            "run_means_ms": {
+              "n": 16,
+              "mean": 0.7855935517578125,
+              "sd": 0.017639522807061707,
+              "min": 0.760716591796875,
+              "p95": 0.8271654609375,
+              "p99": 0.8271654609375,
+              "max": 0.8271654609375
+            },
+            "observations_ms": {
+              "n": 8192,
+              "mean": 0.7855935517578125,
+              "sd": 0.06389759235882296,
+              "min": 0.384133,
+              "p95": 0.837496,
+              "p99": 0.85071,
+              "max": 1.247166
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 16,
+              "mean": 1.0210372225885436,
+              "sd": 0.015646323260367787,
+              "min": 1.003717741026329,
+              "p95": 1.0672273288343601,
+              "p99": 1.0672273288343601,
+              "max": 1.0672273288343601
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 1,
+            "major_faults": 0
+          }
+        },
+        "addresses": {
+          "A": 16,
+          "B": 16
+        }
+      },
+      {
+        "cpu": 4,
+        "kind": "compare",
+        "model": 8,
+        "endpoints": {
+          "mean_ms": {
+            "gain_percent": 1.6679630935320877,
+            "interval_percent": [
+              -5.318694592901663,
+              8.191138149307642
+            ],
+            "paired_log_sd_percent": 8.641964483201473
+          },
+          "p99_ms": {
+            "gain_percent": -0.975518356434879,
+            "interval_percent": [
+              -3.0950691065110725,
+              1.100456154534224
+            ],
+            "paired_log_sd_percent": 2.6153964933505263
+          }
+        },
+        "verdict": {
+          "version": 2,
+          "role": "audio",
+          "aa_practical_drift_detected": false,
+          "aa_precision_is_diagnostic": true,
+          "mean_noninferiority": false,
+          "process_p99_noninferiority": true,
+          "useful_mean_gain": false,
+          "deadline_fault_guard": true,
+          "passed": false,
+          "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+          "mean_interval_percent": [
+            -5.31869459290184,
+            8.191138149307797
+          ],
+          "process_p99_interval_percent": [
+            -3.095069106511117,
+            1.1004561545342795
+          ],
+          "family_comparisons": 8
+        },
+        "arms": {
+          "A": {
+            "run_means_ms": {
+              "n": 16,
+              "mean": 1.528025387451172,
+              "sd": 0.06424908376695355,
+              "min": 1.41623484765625,
+              "p95": 1.611813927734375,
+              "p99": 1.611813927734375,
+              "max": 1.611813927734375
+            },
+            "observations_ms": {
+              "n": 8192,
+              "mean": 1.5280253874511718,
+              "sd": 0.12982583070171677,
+              "min": 0.93047,
+              "p95": 1.700109,
+              "p99": 1.735174,
+              "max": 1.835984
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 16,
+              "mean": 1.1406721606984869,
+              "sd": 0.06517119501548518,
+              "min": 1.043357211483397,
+              "p95": 1.261012312248426,
+              "p99": 1.261012312248426,
+              "max": 1.261012312248426
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 5,
+            "major_faults": 0
+          },
+          "B": {
+            "run_means_ms": {
+              "n": 16,
+              "mean": 1.5060481861572266,
+              "sd": 0.11858069226359846,
+              "min": 1.184969208984375,
+              "p95": 1.6451985546875,
+              "p99": 1.6451985546875,
+              "max": 1.6451985546875
+            },
+            "observations_ms": {
+              "n": 8192,
+              "mean": 1.5060481861572266,
+              "sd": 0.1945068166584389,
+              "min": 0.899822,
+              "p95": 1.715107,
+              "p99": 1.756265,
+              "max": 2.268077
+            },
+            "observation_unit": "call",
+            "hardware_frequency_ratios": {
+              "n": 16,
+              "mean": 1.1602638506121736,
+              "sd": 0.07819803959670413,
+              "min": 1.0732550884275915,
+              "p95": 1.3561775467465047,
+              "p99": 1.3561775467465047,
+              "max": 1.3561775467465047
+            },
+            "late": 0,
+            "over_10ms": 0,
+            "minor_faults": 10,
+            "major_faults": 0
+          }
+        },
+        "addresses": {
+          "A": 16,
+          "B": 16
+        }
+      }
+    ],
+    "all_registered_audio_cells_passed": false,
+    "family_comparisons": 8,
+    "no_optional_extension": true,
+    "default_promoted": false,
+    "publication": false
+  },
+  "profiles": [
+    {
+      "cpu": 3,
+      "jobs": 12,
+      "counter_summary": [
+        {
+          "collector": "native-affinity",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-affinity",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-affinity",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-affinity",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1262.09375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 281614.34375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1353209.8984375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4574770.0703125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1343932.96875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1265.875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 281605.671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1457087.46875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4575723.921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1451603.28125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2017.34375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 449745.390625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3851928.03125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 10152600.3046875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2961913.125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1848.9921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 436843.4609375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3679276.7890625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9692860.9140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2842646.71875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 25957.8203125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 5428.484375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 30131.2734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9441.796875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 58010.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9039.6484375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 65066.7109375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 12106.890625,
+          "sample_sd_per_call": null
+        }
+      ]
+    },
+    {
+      "cpu": 4,
+      "jobs": 12,
+      "counter_summary": [
+        {
+          "collector": "native-affinity",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-affinity",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-affinity",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-affinity",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1727.453125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 281614.984375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1562723.3671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4574769.796875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1562123.4375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1747.421875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 281605.765625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1575458.0546875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4575722.75,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1575974.375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2021.6171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 449745.671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3433724.1484375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 10152599.3671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3147695.78125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2036.8125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 436844.296875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3450926.015625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9692861.59375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-core",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3274646.5625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 44710.1171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 6144.2734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 66850.03125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 8616.0078125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 71493.375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "native10",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 12192.9765625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 77228.4609375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "native-kernel",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "native10",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 14906.609375,
+          "sample_sd_per_call": null
+        }
+      ]
+    }
+  ],
+  "diagnostic_counter_fix": {
+    "jobs": 16,
+    "calls": 2048,
+    "warmed_child_creation_syscalls_zero": true,
+    "minor_faults": 3,
+    "records": [
+      {
+        "cell": "cpu3-boost-original",
+        "collector": "idle-sched-irq",
+        "mean_ms": 1.4355605703125,
+        "sample_sd_ms": 0.2301848433750609,
+        "wake_mean_us": 27.557796874999998,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9536425878913762,
+          "max": 2.6234666713991626,
+          "mean": 1.1391095074204944,
+          "sample_sd": 0.4013007769556521
+        },
+        "counters_per_call": null,
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 0.0,
+          "cpu1": 0.0,
+          "cpu10": 14.235500878734623,
+          "cpu11": 20.811287477954146,
+          "cpu12": 0.0,
+          "cpu13": 0.0,
+          "cpu14": 0.0,
+          "cpu16": 55.20282186948854,
+          "cpu17": 35.512367491166074,
+          "cpu18": 56.063268892794376,
+          "cpu19": 32.6278659611993,
+          "cpu2": 0.0,
+          "cpu20": 39.50617283950617,
+          "cpu21": 43.485915492957744,
+          "cpu22": 52.38095238095238,
+          "cpu23": 44.46397188049209,
+          "cpu3": 11.190053285968029,
+          "cpu4": 16.93121693121693,
+          "cpu5": 23.80952380952381,
+          "cpu6": 15.044247787610619,
+          "cpu7": 16.134751773049647,
+          "cpu8": 15.19434628975265,
+          "cpu9": 13.628318584070797
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 49000,
+            "max": 51000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 20595000,
+            "max": 31707000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 20595000,
+            "max": 31707000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 65250,
+            "max": 74375,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 54000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 1,
+            "max": 2,
+            "unit": "percent"
+          }
+        },
+        "trace": {
+          "event_counts": {
+            "power:cpu_idle": 2732,
+            "sched:sched_wakeup": 149,
+            "sched:sched_switch": 268
+          },
+          "idle_states": {
+            "3": 980,
+            "2": 380,
+            "1": 6
+          },
+          "body_switch_outs": 0,
+          "body_hardirq_overlap_us": 0.0,
+          "body_softirq_overlap_us": 0.0
+        }
+      },
+      {
+        "cell": "cpu3-boost-original",
+        "collector": "softirq",
+        "mean_ms": 1.4390223203125,
+        "sample_sd_ms": 0.195480124558444,
+        "wake_mean_us": 17.2279140625,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 1.0058747406761679,
+          "max": 2.6235635022846355,
+          "mean": 1.0864594317057727,
+          "sample_sd": 0.34186634495987933
+        },
+        "counters_per_call": null,
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 0.0,
+          "cpu1": 0.0,
+          "cpu10": 11.208791208791208,
+          "cpu11": 15.350877192982455,
+          "cpu12": 0.0,
+          "cpu13": 0.0,
+          "cpu14": 0.0,
+          "cpu16": 38.852097130242825,
+          "cpu17": 43.14159292035398,
+          "cpu18": 30.76923076923077,
+          "cpu19": 54.1019955654102,
+          "cpu2": 0.0,
+          "cpu20": 61.1353711790393,
+          "cpu21": 37.250554323725055,
+          "cpu22": 76.0,
+          "cpu23": 57.45614035087719,
+          "cpu3": 14.473684210526315,
+          "cpu4": 23.28159645232816,
+          "cpu5": 18.30065359477124,
+          "cpu6": 17.439293598233995,
+          "cpu7": 17.035398230088497,
+          "cpu8": 10.572687224669604,
+          "cpu9": 14.666666666666666
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 49000,
+            "max": 50000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 19359000,
+            "max": 23234000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 19359000,
+            "max": 23234000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 63125,
+            "max": 65875,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 1,
+            "unit": "percent"
+          }
+        },
+        "trace": {
+          "event_counts": {
+            "irq:softirq_entry": 1331,
+            "irq:softirq_exit": 1330
+          },
+          "idle_states": {},
+          "body_switch_outs": 0,
+          "body_hardirq_overlap_us": 0.0,
+          "body_softirq_overlap_us": 78.395
+        }
+      },
+      {
+        "cell": "cpu3-boost-original",
+        "collector": "clocks",
+        "mean_ms": 1.42896075,
+        "sample_sd_ms": 0.16879436888380456,
+        "wake_mean_us": 47.27975,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 1.004022044477818,
+          "max": 2.623412578994884,
+          "mean": 1.180332021353901,
+          "sample_sd": 0.28568724736464735
+        },
+        "counters_per_call": {
+          "cycles": 3321150.9921875,
+          "instructions": 10164411.5234375,
+          "ref-cycles": 2871935.46875
+        },
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 0.0,
+          "cpu1": 0.0,
+          "cpu10": 15.172413793103448,
+          "cpu11": 9.931506849315069,
+          "cpu12": 0.0,
+          "cpu13": 0.0,
+          "cpu14": 0.0,
+          "cpu16": 31.27147766323024,
+          "cpu17": 34.58904109589041,
+          "cpu18": 61.64383561643836,
+          "cpu19": 46.735395189003434,
+          "cpu2": 0.0,
+          "cpu20": 47.781569965870304,
+          "cpu21": 41.03448275862069,
+          "cpu22": 39.6551724137931,
+          "cpu23": 36.76975945017182,
+          "cpu3": 22.333333333333332,
+          "cpu4": 20.0,
+          "cpu5": 11.764705882352942,
+          "cpu6": 11.805555555555555,
+          "cpu7": 15.41095890410959,
+          "cpu8": 13.84083044982699,
+          "cpu9": 17.647058823529413
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 49000,
+            "max": 50000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 16473000,
+            "max": 22130000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 16473000,
+            "max": 22130000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 61250,
+            "max": 65125,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 1,
+            "max": 1,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "cell": "cpu3-boost-original",
+        "collector": "probe-syscalls",
+        "mean_ms": 1.16412284375,
+        "sample_sd_ms": 0.16913412722263127,
+        "wake_mean_us": 36.4502578125,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 1.1681233812471146,
+          "max": 2.624099330475752,
+          "mean": 1.4495459827847288,
+          "sample_sd": 0.3245345034462228
+        },
+        "counters_per_call": {
+          "syscalls:sys_enter_fork": 0.0,
+          "syscalls:sys_enter_clone": 0.0,
+          "syscalls:sys_enter_clone3": 0.0
+        },
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 0.0,
+          "cpu1": 0.0,
+          "cpu10": 14.0893470790378,
+          "cpu11": 12.5,
+          "cpu12": 0.0,
+          "cpu13": 0.3472222222222222,
+          "cpu14": 0.0,
+          "cpu16": 35.49488054607509,
+          "cpu17": 22.06896551724138,
+          "cpu18": 55.36332179930796,
+          "cpu19": 32.17993079584775,
+          "cpu2": 0.0,
+          "cpu20": 35.172413793103445,
+          "cpu21": 36.80555555555556,
+          "cpu22": 33.10344827586207,
+          "cpu23": 41.522491349480966,
+          "cpu3": 15.120274914089347,
+          "cpu4": 15.570934256055363,
+          "cpu5": 20.962199312714777,
+          "cpu6": 10.689655172413794,
+          "cpu7": 27.586206896551722,
+          "cpu8": 23.875432525951556,
+          "cpu9": 18.556701030927837
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 49000,
+            "max": 49000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 20231000,
+            "max": 23352000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 20231000,
+            "max": 23352000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 62625,
+            "max": 64375,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 1,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "cell": "cpu3-steady-shallow",
+        "collector": "idle-sched-irq",
+        "mean_ms": 1.4836915078125,
+        "sample_sd_ms": 0.0036759439025564034,
+        "wake_mean_us": 5.4673203125,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9967786529280069,
+          "max": 1.0004334643990715,
+          "mean": 0.9985904627115538,
+          "sample_sd": 0.0007865488042683328
+        },
+        "counters_per_call": null,
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 2.719665271966527,
+          "cpu1": 0.0,
+          "cpu10": 21.074380165289256,
+          "cpu11": 16.977225672877847,
+          "cpu12": 0.0,
+          "cpu13": 0.0,
+          "cpu14": 0.0,
+          "cpu16": 37.31958762886598,
+          "cpu17": 46.3768115942029,
+          "cpu18": 44.969199178644764,
+          "cpu19": 51.239669421487605,
+          "cpu2": 0.0,
+          "cpu20": 53.18275154004107,
+          "cpu21": 39.75155279503105,
+          "cpu22": 48.559670781893004,
+          "cpu23": 59.465020576131685,
+          "cpu3": 15.885947046843178,
+          "cpu4": 30.145530145530145,
+          "cpu5": 26.804123711340207,
+          "cpu6": 24.84472049689441,
+          "cpu7": 19.834710743801654,
+          "cpu8": 19.587628865979383,
+          "cpu9": 25.15463917525773
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 47000,
+            "max": 47000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 8335000,
+            "max": 11869000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 8335000,
+            "max": 11869000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 51625,
+            "max": 52125,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 1,
+            "unit": "percent"
+          }
+        },
+        "trace": {
+          "event_counts": {
+            "power:cpu_idle": 282,
+            "sched:sched_wakeup": 132,
+            "sched:sched_switch": 264
+          },
+          "idle_states": {
+            "1": 141
+          },
+          "body_switch_outs": 0,
+          "body_hardirq_overlap_us": 0.0,
+          "body_softirq_overlap_us": 0.0
+        }
+      },
+      {
+        "cell": "cpu3-steady-shallow",
+        "collector": "softirq",
+        "mean_ms": 1.4860759921875,
+        "sample_sd_ms": 0.0024391673663123957,
+        "wake_mean_us": 3.8607421874999996,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9959823349107335,
+          "max": 0.999562085756797,
+          "mean": 0.9976823335600575,
+          "sample_sd": 0.0006545885203349581
+        },
+        "counters_per_call": null,
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 1.5817223198594024,
+          "cpu1": 0.0,
+          "cpu10": 36.7595818815331,
+          "cpu11": 42.013888888888886,
+          "cpu12": 0.0,
+          "cpu13": 0.0,
+          "cpu14": 0.0,
+          "cpu16": 71.25435540069687,
+          "cpu17": 80.5944055944056,
+          "cpu18": 72.52173913043478,
+          "cpu19": 74.47916666666667,
+          "cpu2": 0.0,
+          "cpu20": 75.34965034965035,
+          "cpu21": 73.55516637478108,
+          "cpu22": 78.04878048780488,
+          "cpu23": 72.12543554006969,
+          "cpu3": 11.228070175438596,
+          "cpu4": 41.84027777777778,
+          "cpu5": 37.08838821490468,
+          "cpu6": 43.229166666666664,
+          "cpu7": 39.09249563699826,
+          "cpu8": 38.92733564013841,
+          "cpu9": 40.83769633507853
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 46000,
+            "max": 47000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 12328000,
+            "max": 13927000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 12328000,
+            "max": 13927000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 51750,
+            "max": 52500,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 57000,
+            "max": 59000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 1,
+            "unit": "percent"
+          }
+        },
+        "trace": {
+          "event_counts": {
+            "irq:softirq_entry": 180,
+            "irq:softirq_exit": 180
+          },
+          "idle_states": {},
+          "body_switch_outs": 0,
+          "body_hardirq_overlap_us": 0.0,
+          "body_softirq_overlap_us": 166.07
+        }
+      },
+      {
+        "cell": "cpu3-steady-shallow",
+        "collector": "clocks",
+        "mean_ms": 1.483881796875,
+        "sample_sd_ms": 0.001766846380318252,
+        "wake_mean_us": 6.386296875,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9977636752338497,
+          "max": 1.0007587294496674,
+          "mean": 0.9990085967959481,
+          "sample_sd": 0.0005462219963809624
+        },
+        "counters_per_call": {
+          "cycles": 2966413.0546875,
+          "instructions": 10165062.90625,
+          "ref-cycles": 2969210.9375
+        },
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 2.2082018927444795,
+          "cpu1": 0.0,
+          "cpu10": 33.4375,
+          "cpu11": 30.094043887147336,
+          "cpu12": 0.0,
+          "cpu13": 0.0,
+          "cpu14": 0.0,
+          "cpu16": 71.65109034267913,
+          "cpu17": 54.6583850931677,
+          "cpu18": 66.04361370716511,
+          "cpu19": 64.89028213166144,
+          "cpu2": 0.0,
+          "cpu20": 63.009404388714735,
+          "cpu21": 59.874608150470216,
+          "cpu22": 75.0778816199377,
+          "cpu23": 76.48902821316615,
+          "cpu3": 20.189274447949526,
+          "cpu4": 35.3125,
+          "cpu5": 44.0625,
+          "cpu6": 36.990595611285265,
+          "cpu7": 38.75,
+          "cpu8": 35.82554517133956,
+          "cpu9": 40.25157232704402
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 46000,
+            "max": 47000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 11590000,
+            "max": 14053000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 11590000,
+            "max": 14053000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 51500,
+            "max": 52125,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 57000,
+            "max": 59000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 1,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "cell": "cpu3-steady-shallow",
+        "collector": "probe-syscalls",
+        "mean_ms": 1.481465515625,
+        "sample_sd_ms": 0.0036364374666110863,
+        "wake_mean_us": 5.1254453125,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9975916067664703,
+          "max": 1.0002360119732903,
+          "mean": 0.9990414638116377,
+          "sample_sd": 0.0005080261821625963
+        },
+        "counters_per_call": {
+          "syscalls:sys_enter_fork": 0.0,
+          "syscalls:sys_enter_clone": 0.0,
+          "syscalls:sys_enter_clone3": 0.0
+        },
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 3.559870550161812,
+          "cpu1": 0.0,
+          "cpu10": 13.14102564102564,
+          "cpu11": 9.70873786407767,
+          "cpu12": 0.0,
+          "cpu13": 0.0,
+          "cpu14": 0.0,
+          "cpu16": 43.648208469055376,
+          "cpu17": 25.483870967741936,
+          "cpu18": 33.22683706070288,
+          "cpu19": 30.89171974522293,
+          "cpu2": 0.0,
+          "cpu20": 15.635179153094462,
+          "cpu21": 39.61661341853035,
+          "cpu22": 28.70967741935484,
+          "cpu23": 36.655948553054664,
+          "cpu3": 17.56756756756757,
+          "cpu4": 8.709677419354838,
+          "cpu5": 9.74025974025974,
+          "cpu6": 10.679611650485437,
+          "cpu7": 9.70873786407767,
+          "cpu8": 13.504823151125402,
+          "cpu9": 10.064935064935066
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 46000,
+            "max": 47000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 8329000,
+            "max": 11531000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 8329000,
+            "max": 11531000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 50375,
+            "max": 51500,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 59000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 1,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "cell": "cpu4-boost-original",
+        "collector": "idle-sched-irq",
+        "mean_ms": 1.4315412734375,
+        "sample_sd_ms": 0.0396887946275474,
+        "wake_mean_us": 256.349203125,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 1.139470766662722,
+          "max": 1.3338625208090709,
+          "mean": 1.2806993882674287,
+          "sample_sd": 0.033910940168787214
+        },
+        "counters_per_call": null,
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 21.365638766519822,
+          "cpu1": 17.37193763919822,
+          "cpu10": 0.0,
+          "cpu11": 0.0,
+          "cpu12": 25.165562913907284,
+          "cpu13": 20.71269487750557,
+          "cpu14": 43.80530973451327,
+          "cpu15": 44.24778761061947,
+          "cpu17": 0.0,
+          "cpu18": 0.0,
+          "cpu19": 0.0,
+          "cpu2": 20.84257206208426,
+          "cpu20": 0.0,
+          "cpu21": 0.0,
+          "cpu22": 0.0,
+          "cpu23": 0.0,
+          "cpu3": 36.44444444444444,
+          "cpu4": 12.751677852348994,
+          "cpu5": 0.0,
+          "cpu6": 0.6711409395973155,
+          "cpu7": 0.0,
+          "cpu8": 0.0,
+          "cpu9": 0.0
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 38850,
+            "max": 38850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 47000,
+            "max": 49000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 26067000,
+            "max": 36326000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 26067000,
+            "max": 36326000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 81125,
+            "max": 87500,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 2,
+            "unit": "percent"
+          }
+        },
+        "trace": {
+          "event_counts": {
+            "power:cpu_idle": 314,
+            "sched:sched_wakeup": 132,
+            "sched:sched_switch": 263
+          },
+          "idle_states": {
+            "3": 152,
+            "2": 5
+          },
+          "body_switch_outs": 0,
+          "body_hardirq_overlap_us": 0.0,
+          "body_softirq_overlap_us": 0.0
+        }
+      },
+      {
+        "cell": "cpu4-boost-original",
+        "collector": "softirq",
+        "mean_ms": 1.4184051171875,
+        "sample_sd_ms": 0.03698286066675204,
+        "wake_mean_us": 252.49296875,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 1.1513875507698121,
+          "max": 1.3591252102169007,
+          "mean": 1.30128598414343,
+          "sample_sd": 0.03703789743817442
+        },
+        "counters_per_call": null,
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 24.324324324324323,
+          "cpu1": 19.501133786848072,
+          "cpu10": 0.0,
+          "cpu11": 0.0,
+          "cpu12": 30.542986425339368,
+          "cpu13": 21.71945701357466,
+          "cpu14": 51.80995475113122,
+          "cpu15": 65.22727272727273,
+          "cpu17": 0.0,
+          "cpu18": 0.0,
+          "cpu19": 0.0,
+          "cpu2": 29.545454545454547,
+          "cpu20": 0.0,
+          "cpu21": 0.0,
+          "cpu22": 0.0,
+          "cpu23": 0.0,
+          "cpu3": 23.80952380952381,
+          "cpu4": 13.013698630136986,
+          "cpu5": 0.0,
+          "cpu6": 0.9153318077803204,
+          "cpu7": 0.0,
+          "cpu8": 0.0,
+          "cpu9": 0.0
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 38850,
+            "max": 38850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 48000,
+            "max": 49000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 27979000,
+            "max": 32963000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 27979000,
+            "max": 32963000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 82625,
+            "max": 86125,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 0,
+            "unit": "percent"
+          }
+        },
+        "trace": {
+          "event_counts": {
+            "irq:softirq_entry": 89,
+            "irq:softirq_exit": 89
+          },
+          "idle_states": {},
+          "body_switch_outs": 0,
+          "body_hardirq_overlap_us": 0.0,
+          "body_softirq_overlap_us": 491.408
+        }
+      },
+      {
+        "cell": "cpu4-boost-original",
+        "collector": "clocks",
+        "mean_ms": 1.5939547109375,
+        "sample_sd_ms": 0.09315711364438885,
+        "wake_mean_us": 216.22250000000003,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9925020791177992,
+          "max": 1.379981458499542,
+          "mean": 1.1376709325193846,
+          "sample_sd": 0.09079714588339277
+        },
+        "counters_per_call": {
+          "cycles": 3662937.9296875,
+          "instructions": 10162835.2890625,
+          "ref-cycles": 3223600.15625
+        },
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 36.91275167785235,
+          "cpu1": 27.60942760942761,
+          "cpu10": 0.0,
+          "cpu11": 0.0,
+          "cpu12": 42.95302013422819,
+          "cpu13": 29.39189189189189,
+          "cpu14": 73.22033898305085,
+          "cpu15": 72.39057239057239,
+          "cpu17": 0.0,
+          "cpu18": 0.0,
+          "cpu19": 0.0,
+          "cpu2": 30.06756756756757,
+          "cpu20": 0.0,
+          "cpu21": 0.0,
+          "cpu22": 0.0,
+          "cpu23": 0.0,
+          "cpu3": 30.743243243243242,
+          "cpu4": 17.770034843205575,
+          "cpu5": 0.0,
+          "cpu6": 1.023890784982935,
+          "cpu7": 0.0,
+          "cpu8": 0.0,
+          "cpu9": 0.0
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 38850,
+            "max": 38850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 48000,
+            "max": 50000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 32199000,
+            "max": 35445000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 32199000,
+            "max": 35445000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 84750,
+            "max": 86000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 0,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "cell": "cpu4-boost-original",
+        "collector": "probe-syscalls",
+        "mean_ms": 1.599077984375,
+        "sample_sd_ms": 0.09393449919990399,
+        "wake_mean_us": 222.8196640625,
+        "minor_faults": 1,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 1.0008984910836762,
+          "max": 1.4438327073876946,
+          "mean": 1.1454731665565276,
+          "sample_sd": 0.08545433994447003
+        },
+        "counters_per_call": {
+          "syscalls:sys_enter_fork": 0.0,
+          "syscalls:sys_enter_clone": 0.0,
+          "syscalls:sys_enter_clone3": 0.0
+        },
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 44.44444444444444,
+          "cpu1": 45.91836734693877,
+          "cpu10": 0.0,
+          "cpu11": 0.0,
+          "cpu12": 46.917808219178085,
+          "cpu13": 31.164383561643834,
+          "cpu14": 76.61016949152543,
+          "cpu15": 76.45051194539249,
+          "cpu17": 0.0,
+          "cpu18": 0.0,
+          "cpu19": 0.0,
+          "cpu2": 36.3013698630137,
+          "cpu20": 0.0,
+          "cpu21": 0.0,
+          "cpu22": 0.0,
+          "cpu23": 0.0,
+          "cpu3": 30.16949152542373,
+          "cpu4": 21.54882154882155,
+          "cpu5": 0.0,
+          "cpu6": 1.3745704467353952,
+          "cpu7": 0.0,
+          "cpu8": 0.0,
+          "cpu9": 0.0
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 38850,
+            "max": 38850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 48000,
+            "max": 50000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 35313000,
+            "max": 36457000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 35313000,
+            "max": 36457000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 86000,
+            "max": 87125,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 54000,
+            "max": 56000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 0,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "cell": "cpu4-steady-shallow",
+        "collector": "idle-sched-irq",
+        "mean_ms": 1.5130695859375,
+        "sample_sd_ms": 0.004851133023800095,
+        "wake_mean_us": 5.952195312500001,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9878570105084835,
+          "max": 0.9940434065422425,
+          "mean": 0.9917211155627718,
+          "sample_sd": 0.0016795283808448886
+        },
+        "counters_per_call": null,
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 45.11434511434511,
+          "cpu1": 35.196687370600415,
+          "cpu10": 0.0,
+          "cpu11": 0.0,
+          "cpu12": 42.88702928870293,
+          "cpu13": 34.029227557411275,
+          "cpu14": 75.51867219917013,
+          "cpu15": 80.37578288100208,
+          "cpu17": 0.0,
+          "cpu18": 0.0,
+          "cpu19": 0.0,
+          "cpu2": 35.13513513513514,
+          "cpu20": 0.0,
+          "cpu21": 0.0,
+          "cpu22": 0.0,
+          "cpu23": 0.0,
+          "cpu3": 32.150313152400834,
+          "cpu4": 11.397849462365592,
+          "cpu5": 0.0,
+          "cpu6": 0.6302521008403361,
+          "cpu7": 0.0,
+          "cpu8": 0.0,
+          "cpu9": 0.0
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 38850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 45000,
+            "max": 46000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 7694000,
+            "max": 8782000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 7694000,
+            "max": 8782000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 50500,
+            "max": 51500,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 56000,
+            "max": 56000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 0,
+            "unit": "percent"
+          }
+        },
+        "trace": {
+          "event_counts": {
+            "power:cpu_idle": 274,
+            "sched:sched_wakeup": 131,
+            "sched:sched_switch": 261
+          },
+          "idle_states": {
+            "1": 137
+          },
+          "body_switch_outs": 0,
+          "body_hardirq_overlap_us": 0.0,
+          "body_softirq_overlap_us": 0.0
+        }
+      },
+      {
+        "cell": "cpu4-steady-shallow",
+        "collector": "softirq",
+        "mean_ms": 1.5161445859375,
+        "sample_sd_ms": 0.004302571021393064,
+        "wake_mean_us": 4.2120703125,
+        "minor_faults": 1,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9921221344813015,
+          "max": 0.9943713382619391,
+          "mean": 0.9932479756225561,
+          "sample_sd": 0.00043217331244381274
+        },
+        "counters_per_call": null,
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 67.19576719576719,
+          "cpu1": 67.55319148936171,
+          "cpu10": 0.0,
+          "cpu11": 0.0,
+          "cpu12": 83.42151675485009,
+          "cpu13": 71.50442477876106,
+          "cpu14": 93.80530973451327,
+          "cpu15": 82.47787610619469,
+          "cpu17": 0.0,
+          "cpu18": 0.0,
+          "cpu19": 0.0,
+          "cpu2": 56.63716814159292,
+          "cpu20": 0.0,
+          "cpu21": 0.0,
+          "cpu22": 0.0,
+          "cpu23": 0.0,
+          "cpu3": 69.43462897526501,
+          "cpu4": 9.454545454545455,
+          "cpu5": 0.17699115044247787,
+          "cpu6": 0.5328596802841918,
+          "cpu7": 0.0,
+          "cpu8": 0.0,
+          "cpu9": 0.0
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 45000,
+            "max": 45000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 8180000,
+            "max": 10381000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 8180000,
+            "max": 10381000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 50500,
+            "max": 51875,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 54000,
+            "max": 56000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 0,
+            "unit": "percent"
+          }
+        },
+        "trace": {
+          "event_counts": {
+            "irq:softirq_entry": 127,
+            "irq:softirq_exit": 127
+          },
+          "idle_states": {},
+          "body_switch_outs": 0,
+          "body_hardirq_overlap_us": 0.0,
+          "body_softirq_overlap_us": 120.166
+        }
+      },
+      {
+        "cell": "cpu4-steady-shallow",
+        "collector": "clocks",
+        "mean_ms": 1.507628484375,
+        "sample_sd_ms": 0.004099731702349555,
+        "wake_mean_us": 6.875375,
+        "minor_faults": 1,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9927837755291743,
+          "max": 0.9948502471455027,
+          "mean": 0.993713478300425,
+          "sample_sd": 0.0004331499992579846
+        },
+        "counters_per_call": {
+          "cycles": 2999512.046875,
+          "instructions": 10161392.0,
+          "ref-cycles": 3018336.25
+        },
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 83.28358208955224,
+          "cpu1": 78.27380952380952,
+          "cpu10": 0.0,
+          "cpu11": 0.0,
+          "cpu12": 82.73809523809524,
+          "cpu13": 81.73652694610779,
+          "cpu14": 91.07142857142857,
+          "cpu15": 89.22155688622755,
+          "cpu17": 0.0,
+          "cpu18": 0.0,
+          "cpu19": 0.0,
+          "cpu2": 79.04191616766467,
+          "cpu20": 0.0,
+          "cpu21": 0.0,
+          "cpu22": 0.0,
+          "cpu23": 0.0,
+          "cpu3": 79.70149253731343,
+          "cpu4": 19.21921921921922,
+          "cpu5": 0.0,
+          "cpu6": 0.5970149253731343,
+          "cpu7": 0.0,
+          "cpu8": 0.0,
+          "cpu9": 0.0
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 44000,
+            "max": 45000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 9942000,
+            "max": 10171000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 9942000,
+            "max": 10171000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 51375,
+            "max": 51875,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 54000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 0,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "cell": "cpu4-steady-shallow",
+        "collector": "probe-syscalls",
+        "mean_ms": 1.51684546875,
+        "sample_sd_ms": 0.004997805099245007,
+        "wake_mean_us": 4.7332421875,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "late": 0,
+        "aperf_mperf": {
+          "min": 0.9927305081830571,
+          "max": 0.9979274886038376,
+          "mean": 0.9939078127412702,
+          "sample_sd": 0.0007376360025895677
+        },
+        "counters_per_call": {
+          "syscalls:sys_enter_fork": 0.0,
+          "syscalls:sys_enter_clone": 0.0,
+          "syscalls:sys_enter_clone3": 0.0
+        },
+        "sensor_availability": {
+          "temperature": true,
+          "power": true,
+          "energy": false,
+          "gpu": true,
+          "throttling": false
+        },
+        "host_ac": [],
+        "cpu_busy_percent": {
+          "cpu0": 74.61773700305811,
+          "cpu1": 78.419452887538,
+          "cpu10": 0.0,
+          "cpu11": 0.0,
+          "cpu12": 91.9753086419753,
+          "cpu13": 82.6219512195122,
+          "cpu14": 90.79754601226993,
+          "cpu15": 94.80122324159021,
+          "cpu17": 0.0,
+          "cpu18": 0.0,
+          "cpu19": 0.0,
+          "cpu2": 72.94832826747721,
+          "cpu20": 0.0,
+          "cpu21": 0.0,
+          "cpu22": 0.0,
+          "cpu23": 0.0,
+          "cpu3": 72.2560975609756,
+          "cpu4": 23.008849557522122,
+          "cpu5": 0.0,
+          "cpu6": 0.3076923076923077,
+          "cpu7": 0.0,
+          "cpu8": 0.0,
+          "cpu9": 0.0
+        },
+        "sensors": {
+          "/sys/class/hwmon/hwmon0/temp1_input": {
+            "min": 20000,
+            "max": 20000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon1/temp1_input": {
+            "min": 37850,
+            "max": 37850,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/temp1_input": {
+            "min": 44000,
+            "max": 45000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon2/power1_input": {
+            "min": 9868000,
+            "max": 10140000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon2/power1_average": {
+            "min": 9868000,
+            "max": 10140000,
+            "unit": "microwatt"
+          },
+          "/sys/class/hwmon/hwmon3/temp1_input": {
+            "min": 51000,
+            "max": 51500,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/hwmon/hwmon4/temp1_input": {
+            "min": 54000,
+            "max": 57000,
+            "unit": "millidegree_C_or_driver_mV"
+          },
+          "/sys/class/drm/card1/device/gpu_busy_percent": {
+            "min": 0,
+            "max": 0,
+            "unit": "percent"
+          }
+        }
+      }
+    ]
+  },
+  "initial_diagnostics": {
+    "jobs": 12,
+    "calls": 1536,
+    "contaminated": true,
+    "reason": "Redundant RDPRU permission-probe fork after paced warmup; not used as clean warmed PMU evidence",
+    "raw_preserved": true
+  },
+  "historical_counter_enabled_audio_pilot_note": "Earlier40 instrumented diagnostic passes have the same warmed fork; earlier96 counter-disabled A/A processes are unaffected",
+  "teardown": {
+    "no_benchmark_workers": true,
+    "no_perf_processes": true,
+    "no_control_fifos": true,
+    "restoration_audit": {
+      "passed": true,
+      "immediate_exact_receipt": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794387540042424832
+      },
+      "current_static_settings_match": true,
+      "dynamic_irq_changes": [],
+      "irqbalance": "active",
+      "temporary_cgroup_absent": true,
+      "holder_watchdog_inactive": true,
+      "online": "0-23"
+    }
+  },
+  "preregistration_sha256": "62e4210e2bd4cdae60575497e0ef39e1d7f52ebdf6632388ce31c242b2c83cce",
+  "counter_fix_plan_sha256": "6d32bf70792e65097cebbb14d01886bd63a8406db4d0b955b452ba65cab961aa",
+  "baseline_sha256": "fcc69ff8cb3e3a818daa2114f72eb1291f7ab324aa132a4c8c2cd76a6026c7b7",
+  "candidate_sha256": "19e6122ad46c44ca4b88c5344b4a14d09412accfe8fd75e5f163854de05eecab"
+}

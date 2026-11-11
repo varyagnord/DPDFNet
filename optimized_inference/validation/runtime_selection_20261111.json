@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-11",
+  "selection": "Only selected enabled runtime paths; no rejected optimization behind OFF switches",
+  "new_runtime_change": {
+    "model": 8,
+    "isa": "AVX-VNNI",
+    "feature": "Exact fused batch/pair K64 projections",
+    "enabled_for_eligible_shapes": true,
+    "evidence": "Small conditional0.8\u20131.2% gains in six previously qualified conditions; prior global criterion did not pass; user explicitly accepted the scoped gain"
+  },
+  "retained": {
+    "cm_models": [
+      2,
+      8
+    ],
+    "cm_isas": [
+      "AVX2",
+      "AVX-VNNI"
+    ],
+    "legacy_avx2_quantize4_models": [
+      2,
+      8
+    ],
+    "model2_existing_fusion": true,
+    "vnni_quantization": "selected per-row baseline"
+  },
+  "removed": {
+    "implementation": "optimized_inference/src/common/quantize_refined.inc",
+    "options": [
+      "DPDF_ENABLE_QUANTIZE4_REFINEMENT",
+      "DPDF_ENABLE_VNNI_QUANTIZE4"
+    ],
+    "experiment_only_tests": [
+      "quantize4_refined_contract",
+      "quantize4_contract_vnni"
+    ],
+    "selection_branches": true,
+    "source_preserved_in_ignored_archive": true
+  },
+  "excluded": [
+    "EVEX256/domain prototype",
+    "standalone grouped K64 dispatch",
+    "extra dedicated VNNI padding",
+    "failed gate tiling/staging"
+  ],
+  "correctness": {
+    "ctest": {
+      "native": 47,
+      "asan": 47,
+      "avx2": 37,
+      "static": 46
+    },
+    "lab_contracts": 61,
+    "audio_contracts": 10,
+    "installed_shared_and_static_consumers": true,
+    "retired_option_negative_cases": 4,
+    "exports": [
+      "dpdfnet_cpu_supported",
+      "dpdfnet_create",
+      "dpdfnet_destroy",
+      "dpdfnet_get_model_info",
+      "dpdfnet_init_state",
+      "dpdfnet_owned_bytes",
+      "dpdfnet_process"
+    ]
+  },
+  "binary_identity": {
+    "passed": true,
+    "sha256": "fcc69ff8cb3e3a818daa2114f72eb1291f7ab324aa132a4c8c2cd76a6026c7b7",
+    "fresh_source_matching_pgo": true,
+    "stale_profile_failure_retained": true,
+    "coverage_mismatch_not_suppressed": true,
+    "measured_default_byte_identical": true,
+    "performance_recollection_unnecessary_for_inactive_code_removal": true
+  },
+  "scope_limitations": [
+    "Live physical audio device/audio-server/service concurrency not qualified",
+    "Historical original reference corpus unavailable; regenerated/input corpus results retained"
+  ],
+  "publication": false,
+  "deployment": false,
+  "prior_studies_unchanged": true,
+  "hardware_acceptance_scope": {
+    "date": "2026-11-11",
+    "authority": "explicit_user_instruction",
+    "machines": [
+      "current local PC",
+      "remote Intel Core i7-7700T"
+    ],
+    "local_paths": [
+      "AVX2",
+      "usable VNNI"
+    ],
+    "remote_paths": [
+      "AVX2"
+    ],
+    "additional_processors_required": false,
+    "additional_vnni_host_required": false,
+    "additional_hardware_blockers": [],
+    "deployment_matrix_changed": false,
+    "unperformed_tests_marked_passed": false,
+    "policy": "optimized_inference/docs/HARDWARE_SCOPE.md"
+  }
+}

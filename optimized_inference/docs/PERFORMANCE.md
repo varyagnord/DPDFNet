@@ -1,10 +1,60 @@
 # Performance, memory and output quality
 
-Latest verification (2026-11-08): a direct cumulative comparison from `afa8292` (before the three i7 optimization stages) to `cf16ba6` measures the combined result without adding historical component percentages. Continuous/performance time reductions are 11.948% / 9.019% for models 2 / 8; throughput increases are 13.569% / 9.913%. See [the direct cumulative study](#direct-cumulative-comparison-2026-11-08) for original-power results, SD/SE and adjusted intervals, and [portable evidence](../validation/i7_7700t_total.json). Earlier incremental component measurements remain below.
+Current selection (2026-11-10): CM is enabled for both models and both ISAs;
+legacy AVX2 four-row quantization remains enabled, while experimental range
+reuse and VNNI four-row quantization remain OFF. See the
+[final qualification](#selected-avx2vnni-defaults-and-final-qualification-2026-11-10)
+for native Ryzen evidence, condition-specific uncertainty and portable paired
+results. Additional [model-8 grouped VNNI experiments](MODEL8_VNNI_EXPERIMENTS.md)
+record the later local user decision: batch + pair fusion is now the model-8
+VNNI default, pending a future PR after existing submitted work is merged.
 
-The current defaults were selected separately for models 2 and 8 on an
-Intel Core i7-7700T. The older i7-8700 latency/quality records below describe
+Historical verification (2026-11-08): a direct cumulative comparison from `afa8292` (before the three i7 optimization stages) to `cf16ba6` measures the combined result without adding historical component percentages. Continuous/performance time reductions are 11.948% / 9.019% for models 2 / 8; throughput increases are 13.569% / 9.913%. See [the direct cumulative study](#direct-cumulative-comparison-2026-11-08) for original-power results, SD/SE and adjusted intervals, and [portable evidence](../validation/i7_7700t_total.json). Earlier incremental component measurements remain below.
+
+The original AVX2 graph/kernel factors were selected separately for models 2
+and 8 on an Intel Core i7-7700T. The older i7-8700 latency/quality records below describe
 the historical package baseline; they were not remeasured for these defaults.
+
+## Model-8 grouped VNNI research and native cumulative checks (2026-11-10)
+
+The [independent four-factor study](MODEL8_VNNI_EXPERIMENTS.md) completed all
+16 fresh-native-PGO combinations of grouped batch fusion, paired fusion,
+scalar K64 selection and dedicated VNNI padding. Batch + pair fusion was the
+frozen finalist. It confirms roughly 0.8–1.2% incremental reductions in six
+model-8 conditions, but fails the registered global promotion rule. The user
+subsequently accepted this conditional benefit and explicitly selected batch +
+pair fusion as the local model-8 VNNI default. This is a policy decision, not a
+retroactive statistical pass. Rejected grouped K64/extra VNNI padding code and
+all four temporary switches are removed. CM and existing quantize4 defaults
+are unchanged. No push or PR update is authorized now; publication waits for
+the already submitted work to be accepted/merged.
+
+Separate same-compiler historical native comparisons on the fast Ryzen core
+measure the common historical group and the study's pre-fusion CM/default
+directly. These figures retain that measured baseline after the later user decision. These are whole-runtime contrasts, not sums of earlier percentages.
+
+| Contrast / continuous calls | Model | Steady time reduction | Isolated Boost time reduction |
+| --- | --- | ---: | ---: |
+| afa8292 → 41d0aa8 | 2 | +3.450% [3.080, 3.819]% | +3.307% [2.890, 3.721]% |
+| afa8292 → 41d0aa8 | 8 | +2.741% [2.469, 3.012]% | +2.646% [2.482, 2.809]% |
+| afa8292 → pre-fusion CM default | 2 | +6.419% [6.181, 6.656]% | +6.348% [5.930, 6.764]% |
+| afa8292 → pre-fusion CM default | 8 | +4.314% [3.500, 5.120]% | +3.983% [3.376, 4.585]% |
+
+All eight cells above pass their fixed family-24 A/A/useful-effect gates.
+Individual native G/V/S/J effects were not isolated. Same-artifact AVX2 to
+VNNI comparison, using verified private dispatch-mask test wrappers, confirms
+model-8 reductions of 24.945% [24.784, 25.106]% steady continuous,
+24.873% [24.649, 25.097]% steady paced, and 25.458% [25.174, 25.742]%
+Boost continuous. Model-2 point estimates are about 19–20%, with positive
+adjusted intervals, but their strict A/A precision gates fail; no formal
+acceptance is substituted. This controls common native-PGO code generation,
+and does not compare against a separately AVX2-trained build.
+
+[Portable results](../validation/model8_vnni_experiments_20261110.json) retain
+every condition's call/process SD, frequency feedback, tails and qualification;
+[paired evidence](../validation/model8_vnni_blocks_20261110.json) permits
+independent recomputation. No cross-profile pooling, optional sample extension,
+private audio publication or production plugin deployment occurred.
 
 ## i7-7700T final per-model selection (2026-10-27)
 
@@ -555,3 +605,136 @@ irqbalance, absent temporary cgroup/workers, an inactive restoration timer and
 unchanged global ASLR.
 See [BENCHMARK_LAB.md](BENCHMARK_LAB.md) for the mandatory reproducible workflow
 and [QUANTIZE4_DESIGN.md](QUANTIZE4_DESIGN.md) for exact refinement details.
+
+## Private CPU-feature qualification (2026-11-10)
+
+The [portable CPU-aware study record](../validation/cpu_optimization_20261110.json)
+reports an isolated candidate using high YMM registers and EVEX256 VNNI, with
+independent capability/layout selection and a per-call CPU-domain guard. It is
+not enabled in the accepted runtime. Both core classes and steady/Boost profiles
+were tested, with continuous, paced spectral and complete host-audio callbacks,
+plus a separate randomized-layout cohort. All raw observations were retained;
+means/sample SD and family-adjusted paired intervals were audited independently.
+
+Model8 has qualified continuous-call gains, but the preregistered A/A precision
+and practical noninferiority guards do not all pass. This does not establish a
+universal slowdown or an accepted real-audio benefit. Gates candidates were
+rejected for regression, code/spill growth or failed NaN payload exactness.
+No failed candidate/default or public experiment flag is added. Existing CM,
+quantize4 and accepted model8 fusion decisions remain unchanged. No publication
+or deployment occurred. See [CPU_OPTIMIZATION_PLAN.md](CPU_OPTIMIZATION_PLAN.md)
+for the detailed candidate disposition and remaining research scope.
+
+
+## Short workload-specific reconsideration (2026-11-11)
+
+The [new independent study](../validation/reconsideration_20261111.json) uses
+prospectively registered v2 criteria: useful throughput superiority, separate
+audio mean/per-process-p99 noninferiority, and a practical A/A drift check rather
+than a universal 0.5% precision veto. Old v1 verdicts are unchanged. Strict
+numerical/ISA/memory checks and laboratory restoration are unchanged.
+
+EVEX256 model8 continuous Boost qualifies on both core classes with randomized
+layout: fast +1.628% [1.283, 1.972]%, compact +1.128% [0.650, 1.604]%. These are
+paired geometric process-mean ratios with the registered 14-endpoint family.
+All four audio mean/tail guards remain inconclusive; model8 audio point estimates
+are negative and their intervals span benefit and harm. No global harmlessness,
+resolved audio slowdown, population-p99/WCET or default-promotion claim follows.
+
+K64 and extra padding again lack a useful screening point gain. Fresh incremental
+Q4 passes steady screening but was not independently confirmed in this fixed
+one-finalist budget. Its effect cannot be added to EVEX's. The study retains
+320 processes, 106,496 raw observations and 160 separate profiling jobs, with all
+48 intervals independently verified. Existing runtime/defaults and publication
+hold remain unchanged.
+
+
+## Prepared future PR and Q4 follow-up (2026-11-11)
+
+The [future PR scope](FUTURE_PR_SCOPE.md) selects only the previously accepted
+model8 batch+pair VNNI fusion as new runtime code. The new independent
+[Q4 qualification](../validation/future_pr_qualification_20261111.json) confirms
+model8 continuous Boost reductions of +0.749% [0.572, 0.924]% on the fast core
+and +0.765% [0.039, 1.486]% on the compact core. Audio mean/tail guards remain
+inconclusive, so existing quantize4 options/defaults are unchanged. EVEX audio
+was not recollected, and no Q4+EVEX combined gain is asserted.
+
+Fresh selected-default PGO 47 / ASan 47 / AVX2-only 36 / static 46 CTests and installed
+shared/static consumers pass. The native DSO is byte-identical to the accepted
+fusion artifact. PR23 remains open and no publication/deployment was performed.
+
+## Native DSP and residual audio noise audit (2026-11-11)
+
+The [new native audio record](../validation/audio_noise_20261111.json) keeps one
+independent cohort:160 processes/81,920 callbacks, CPU3/4, both models, original
+idle with Boost and performance governor/EPP,4 A/A and16 A/B pairs per cell.
+The exact HushMic FFT/inference/IFFT adapter has no per-hop Python callback.
+An eight-endpoint family covers mean and per-process-p99 noninferiority.
+All four tail guards pass at5%; all four mean guards remain inconclusive at2%.
+Model8 mean points favor EVEX1.429% fast /1.668% compact, but corrected intervals
+are [-5.591,7.983]% /[-5.319,8.191]%. Compact model2 has a resolved1.438% p99
+cost [0.528,2.357]%, inside the declared safety margin. No default promotion,
+pooled old/new cohort, optional extension or public experiment flag follows.
+Observed maximum body2.268077ms; zero late/major faults,30 minor faults retained.
+Each process p99 has six upper-order observations, not a population/WCET bound.
+
+The diagnostic helper previously repeated its RDPRU permission fork after
+warmup. Historical counter-enabled pilot diagnostics and initial12 noise passes
+are retained with that contamination note; primary timing and fresh24
+counter-disabled native PMU passes are unaffected. The fix binds preparation
+to thread/process/single CPU before warmup. Fresh16-pass diagnostic-only
+regression observes zero warmed fork/clone/clone3 calls and3 total minor faults.
+Steady callback sample SD is1.8–5.0us versus37–230us in Boost in these diagnostic
+passes; tracing/counter/telemetry timing is not speed evidence. Fixed order,
+one-host scope, variable package load and unavailable throttle/energy/host-AC
+sources limit attribution. No reboot-time isolation change was made.
+
+All11 sessions restore, including deliberate worker failure. Real privileged
+child interruption and failure-path tests verify teardown. Current checks:
+58 laboratory contracts,10 audio contracts, native49 /ASan49 /AVX2-only38 /
+static48 CTests. Original settings and production audio components remain intact.
+
+## Exact-binary repeat after suspected background load (2026-11-11)
+
+The [independent repeat](../validation/audio_repeat_20261111.json) keeps the
+previous model/DSP/timer binaries, both models/core classes, Boost/original idle,
+128-hop paced warmup,512-hop processes,4 A/A and16 A/B pairs per cell and the
+eight-endpoint family.160 processes/81,920 callbacks plus24 separate PMU jobs
+complete without extensions, filtering or pooling old/new cohorts.
+
+A15s quiet preflight passes. Hash-bound per-process environment boundaries show
+A/B housekeeping activity averaging0.308/0.314 logical CPUs on fast/compact
+sessions; one process barely exceeds the registered one-logical-CPU sum threshold
+(1.004). Every process remains in the estimate. CPU deltas include launch/warmup/
+teardown and laboratory overhead; GPU/temperature endpoints cannot exclude short
+peaks. The previous cohort lacked these per-process load receipts, so changed
+variance cannot be causally assigned to prior load.
+
+Mean paired-log SD decreases from5.86/8.66/5.38/8.64% to1.15/4.52/1.86/3.95%
+(fast model2/model8, compact model2/model8). Model2 has corrected mean slowdowns
+of2.404% [1.470,3.347]% fast and1.529% [0.044,3.036]% compact. Model8 mean gains
+are -0.961% [-4.654,2.602]% and -0.478% [-3.681,2.627]%; benefit remains
+unconfirmed. All mean NI guards fail; fast p99 guards pass, compact p99 remains
+inconclusive. No detected practical A/A drift proves neither equivalence nor
+absence of drift. No default or EVEX PR scope is promoted.
+
+Observed deadline misses, major and minor faults are all zero; maximum body
+2.179480ms. Every raw mean/SD, sidecar/environment hash and interval is audited.
+61 lab contracts,10 audio contracts and49 native CTests pass before timing.
+Both sessions restore; independent final audit finds no temporary lab resources.
+
+## Final selected runtime without disabled experiments (2026-11-11)
+
+The [selection/cleanup record](../validation/runtime_selection_20261111.json)
+removes refined quantize4 and four-row VNNI quantization implementations/options
+instead of shipping them disabled. Existing AVX2 four-row quantization, CM for
+both models and eligible model8 VNNI batch/pair fusion remain selected. EVEX and
+other rejected prototypes remain private. No runtime/public ABI default changes
+are inferred from inconclusive measurements.
+
+Fresh PGO is required after changed source locations; coverage-mismatch errors
+are not suppressed. The rebuilt library is byte-identical to the selected,
+measured FCC69ff8 artifact, so removing inactive paths does not invalidate those
+timings. Native47 /ASan47 /AVX2-only37 /static46 CTests and both installed consumers
+pass; count reduction comes from deleted experiment-only contracts. Benchmark
+tooling remains separate from the installed runtime. Publication stays deferred.

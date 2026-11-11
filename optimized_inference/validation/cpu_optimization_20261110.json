@@ -1,0 +1,5969 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-10",
+  "scope": "Ryzen AI 9 HX 470; fast/compact; steady/Boost; fixed and secondary randomized layout",
+  "publication_held": true,
+  "runtime_candidate_promoted": false,
+  "accepted_runtime_unchanged": true,
+  "decision_reason": "Registered A/A precision and noninferiority guards did not all pass. Qualified continuous model8 gains do not qualify all paced/full-audio scopes.",
+  "candidate_sha256": "19e6122ad46c44ca4b88c5344b4a14d09412accfe8fd75e5f163854de05eecab",
+  "baseline_sha256": "fcc69ff8cb3e3a818daa2114f72eb1291f7ab324aa132a4c8c2cd76a6026c7b7",
+  "correctness": {
+    "library_sha256": "19e6122ad46c44ca4b88c5344b4a14d09412accfe8fd75e5f163854de05eecab",
+    "numerical_records": {
+      "wide-final-stream.json": {
+        "sha256": "43322ad2011975edb79167120d42859f2e29bf30be33e45908da5afde8550ae7",
+        "passed": true
+      },
+      "wide-final-pcm.json": {
+        "sha256": "5e73608aab4434cf62d79dc4c3073d3337f6cfbd17736df8a5da7989d5521972",
+        "passed": true
+      },
+      "wide-final-contract.json": {
+        "sha256": "b3f3ff311f636352fd133a5202403e414c8d71cc1d23dcfeeb9bfb928dc56c57",
+        "passed": true
+      },
+      "qops-contract.json": {
+        "sha256": "1d5800a9563f2f2b417ae8fd6e4192a6a9599dfd5fa5b69fc26a399f7e8f3fa1",
+        "passed": true
+      }
+    },
+    "release_contracts": 49,
+    "asan_ubsan_contracts": 48,
+    "avx2_only_contracts": 37,
+    "static_contracts": 47,
+    "added_baseline_audit_passed": true,
+    "qemu_haswell_public_api": true,
+    "qemu_nehalem_and_k8_metadata": true,
+    "installed_shared_static_consumers": true,
+    "publication_held": true
+  },
+  "observation_audit": {
+    "passed": true,
+    "processes": 864,
+    "raw_observations": 184320,
+    "scipy_intervals_verified": 54,
+    "layouts": [
+      {
+        "session": "confirm-cpu3-steady",
+        "layout": "fixed",
+        "addresses": [
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          }
+        ]
+      },
+      {
+        "session": "confirm-cpu3-boost",
+        "layout": "fixed",
+        "addresses": [
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          }
+        ]
+      },
+      {
+        "session": "confirm-cpu4-steady",
+        "layout": "fixed",
+        "addresses": [
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          }
+        ]
+      },
+      {
+        "session": "confirm-cpu4-boost",
+        "layout": "fixed",
+        "addresses": [
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 2,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 1,
+            "state_addresses": 1
+          }
+        ]
+      },
+      {
+        "session": "confirm-randomized-boost",
+        "layout": "randomized",
+        "addresses": [
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 8,
+            "state_addresses": 8
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 8,
+            "state_addresses": 8
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 8,
+            "state_addresses": 8
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 8,
+            "state_addresses": 8
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 8,
+            "state_addresses": 8
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "aa",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 8,
+            "state_addresses": 8
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "baseline",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "gain-0.5.pcm",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "audio10",
+            "input": "original-03.pcm",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "gain-0.5.f32",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "continuous",
+            "input": "original-03.f32",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "gain-0.5.f32",
+            "api_addresses": 4,
+            "state_addresses": 4
+          },
+          {
+            "arm": "candidate",
+            "model": 8,
+            "phase": "compare",
+            "condition": "paced10",
+            "input": "original-03.f32",
+            "api_addresses": 4,
+            "state_addresses": 4
+          }
+        ]
+      }
+    ]
+  },
+  "sessions": [
+    {
+      "name": "confirm-cpu3-steady",
+      "cpu": 3,
+      "power": "steady",
+      "layout": "fixed",
+      "restoration": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794342927125247017
+      },
+      "aa_processes": 96,
+      "ab_processes": 96,
+      "aa_calls": 20480,
+      "ab_calls": 20480
+    },
+    {
+      "name": "confirm-cpu3-boost",
+      "cpu": 3,
+      "power": "boost",
+      "layout": "fixed",
+      "restoration": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794343156233887405
+      },
+      "aa_processes": 96,
+      "ab_processes": 96,
+      "aa_calls": 20480,
+      "ab_calls": 20480
+    },
+    {
+      "name": "confirm-cpu4-steady",
+      "cpu": 4,
+      "power": "steady",
+      "layout": "fixed",
+      "restoration": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794343487531373369
+      },
+      "aa_processes": 96,
+      "ab_processes": 96,
+      "aa_calls": 20480,
+      "ab_calls": 20480
+    },
+    {
+      "name": "confirm-cpu4-boost",
+      "cpu": 4,
+      "power": "boost",
+      "layout": "fixed",
+      "restoration": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794343726109187461
+      },
+      "aa_processes": 96,
+      "ab_processes": 96,
+      "aa_calls": 20480,
+      "ab_calls": 20480
+    },
+    {
+      "name": "confirm-randomized-boost",
+      "cpu": 3,
+      "power": "boost",
+      "layout": "randomized",
+      "restoration": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794343821719551574
+      },
+      "aa_processes": 48,
+      "ab_processes": 48,
+      "aa_calls": 10240,
+      "ab_calls": 10240
+    }
+  ],
+  "conditions": [
+    {
+      "session": "confirm-cpu3-steady",
+      "gain_percent": -0.14459389023380176,
+      "interval_percent": [
+        -0.7757628099526404,
+        0.48262195392292373
+      ],
+      "paired_log_sd": 0.003552966461466417,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.6901242773437499,
+            "sd": 0.003164244158869728,
+            "min": 0.686103625,
+            "p95": 0.6971465625,
+            "p99": 0.6971465625,
+            "max": 0.6971465625
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 0.69012427734375,
+            "sd": 0.01610088301723056,
+            "min": 0.679489,
+            "p95": 0.702822,
+            "p99": 0.741525,
+            "max": 0.838948
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9965308452505339,
+            "sd": 0.0007344526332819992,
+            "min": 0.9953195623669258,
+            "p95": 0.9975227187554508,
+            "p99": 0.9975227187554508,
+            "max": 0.9975227187554508
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.69111700390625,
+            "sd": 0.001365234971317321,
+            "min": 0.68824409375,
+            "p95": 0.6925661875,
+            "p99": 0.6925661875,
+            "max": 0.6925661875
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 0.69111700390625,
+            "sd": 0.00996992920088066,
+            "min": 0.681793,
+            "p95": 0.707512,
+            "p99": 0.73893,
+            "max": 0.743188
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.996585686010576,
+            "sd": 0.0005855087247623478,
+            "min": 0.9953998533866547,
+            "p95": 0.9971703403732698,
+            "p99": 0.9971703403732698,
+            "max": 0.9971703403732698
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.8120599788142946,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "gain_percent": -0.03780868172535978,
+      "interval_percent": [
+        -0.34573874327810117,
+        0.2691764376305694
+      ],
+      "paired_log_sd": 0.0017380344672833481,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.613077785644375,
+            "sd": 0.0005337010890215694,
+            "min": 0.612481755859,
+            "p95": 0.614032576172,
+            "p99": 0.614032576172,
+            "max": 0.614032576172
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.6130777856445313,
+            "sd": 0.002303228021839148,
+            "min": 0.607313,
+            "p95": 0.616339,
+            "p99": 0.618604,
+            "max": 0.641236
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9968544000101952,
+            "sd": 0.0006184584376676779,
+            "min": 0.9961764042812307,
+            "p95": 0.9981166908368179,
+            "p99": 0.9981166908368179,
+            "max": 0.9981166908368179
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.613309805908375,
+            "sd": 0.0007736463546184269,
+            "min": 0.612432619141,
+            "p95": 0.614369691406,
+            "p99": 0.614369691406,
+            "max": 0.614369691406
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.6133098059082032,
+            "sd": 0.0024254869821412183,
+            "min": 0.607353,
+            "p95": 0.616781,
+            "p99": 0.619756,
+            "max": 0.637851
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9969155972658105,
+            "sd": 0.0003951160801009865,
+            "min": 0.9963764320053884,
+            "p95": 0.997529428488374,
+            "p99": 0.997529428488374,
+            "max": 0.997529428488374
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 1.0957510698193618,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "gain_percent": -0.24926294150509065,
+      "interval_percent": [
+        -1.3612639700858908,
+        0.8505386901943801
+      ],
+      "paired_log_sd": 0.006238273383772987,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.6135448554688749,
+            "sd": 0.002008889005320142,
+            "min": 0.611156104167,
+            "p95": 0.6173450625,
+            "p99": 0.6173450625,
+            "max": 0.6173450625
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 0.61354485546875,
+            "sd": 0.0025771068941511524,
+            "min": 0.608204,
+            "p95": 0.617913,
+            "p99": 0.620307,
+            "max": 0.63221
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9967779434243917,
+            "sd": 0.00038382646024627055,
+            "min": 0.9959522465696112,
+            "p95": 0.9972953973521403,
+            "p99": 0.9972953973521403,
+            "max": 0.9972953973521403
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.6150772304686251,
+            "sd": 0.002888443374933228,
+            "min": 0.61238628125,
+            "p95": 0.621060989583,
+            "p99": 0.621060989583,
+            "max": 0.621060989583
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 0.61507723046875,
+            "sd": 0.02132162449316771,
+            "min": 0.608545,
+            "p95": 0.619015,
+            "p99": 0.628693,
+            "max": 1.04161
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9969094087539376,
+            "sd": 0.0006467405429277516,
+            "min": 0.9956136515600709,
+            "p95": 0.9977704150981984,
+            "p99": 0.9977704150981984,
+            "max": 0.9977704150981984
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.7358061899676915,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "gain_percent": 1.0393015718234366,
+      "interval_percent": [
+        0.431401717190083,
+        1.643489992936209
+      ],
+      "paired_log_sd": 0.00346319389789044,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.55092012109375,
+            "sd": 0.0017076768491445149,
+            "min": 1.5491601875,
+            "p95": 1.55358171875,
+            "p99": 1.55358171875,
+            "max": 1.55358171875
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.55092012109375,
+            "sd": 0.009892538378672787,
+            "min": 1.54113,
+            "p95": 1.565054,
+            "p99": 1.600862,
+            "max": 1.603247
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9966537977600342,
+            "sd": 0.0005850316997095937,
+            "min": 0.9959116411443781,
+            "p95": 0.9975912894962251,
+            "p99": 0.9975912894962251,
+            "max": 0.9975912894962251
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.53480461328125,
+            "sd": 0.003764996595978276,
+            "min": 1.528728875,
+            "p95": 1.5397149375,
+            "p99": 1.5397149375,
+            "max": 1.5397149375
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.53480461328125,
+            "sd": 0.010947091233804284,
+            "min": 1.521442,
+            "p95": 1.550547,
+            "p99": 1.586925,
+            "max": 1.58937
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9965737021528869,
+            "sd": 0.0009780756556653477,
+            "min": 0.9953393954508797,
+            "p95": 0.9983076255402614,
+            "p99": 0.9983076255402614,
+            "max": 0.9983076255402614
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.6340934973602108,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "gain_percent": 1.1127162012991687,
+      "interval_percent": [
+        0.8443244921469972,
+        1.380381435550404
+      ],
+      "paired_log_sd": 0.0015327734510140977,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.471569618408375,
+            "sd": 0.0013649476541253696,
+            "min": 1.469695322266,
+            "p95": 1.473395517578,
+            "p99": 1.473395517578,
+            "max": 1.473395517578
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 1.4715696184082032,
+            "sd": 0.0033479255502118304,
+            "min": 1.462812,
+            "p95": 1.476658,
+            "p99": 1.480856,
+            "max": 1.503469
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9974216130555313,
+            "sd": 0.0006029148334679582,
+            "min": 0.9965587593200018,
+            "p95": 0.9984846030836994,
+            "p99": 0.9984846030836994,
+            "max": 0.9984846030836994
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.4551958728027499,
+            "sd": 0.0019942341045480184,
+            "min": 1.452764455078,
+            "p95": 1.457428070313,
+            "p99": 1.457428070313,
+            "max": 1.457428070313
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 1.4551958728027343,
+            "sd": 0.00399999492254654,
+            "min": 1.4455,
+            "p95": 1.460748,
+            "p99": 1.464205,
+            "max": 1.564514
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9967941220073596,
+            "sd": 0.0005031423414564805,
+            "min": 0.9957971305517989,
+            "p95": 0.9974690048271444,
+            "p99": 0.9974690048271444,
+            "max": 0.9974690048271444
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.19730915249047687,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": true
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "gain_percent": 1.0362015912520506,
+      "interval_percent": [
+        0.8443585500458983,
+        1.2276734609149575
+      ],
+      "paired_log_sd": 0.0010951840485602406,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.472222859374875,
+            "sd": 0.0014472475487039553,
+            "min": 1.470051260417,
+            "p95": 1.474849697917,
+            "p99": 1.474849697917,
+            "max": 1.474849697917
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.472222859375,
+            "sd": 0.0028983143814970856,
+            "min": 1.464114,
+            "p95": 1.476368,
+            "p99": 1.481297,
+            "max": 1.49333
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9967426171295515,
+            "sd": 0.0005832770397341265,
+            "min": 0.9959128572297552,
+            "p95": 0.9975948653561515,
+            "p99": 0.9975948653561515,
+            "max": 0.9975948653561515
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.45696859765625,
+            "sd": 0.0022735615989898793,
+            "min": 1.45433540625,
+            "p95": 1.46119865625,
+            "p99": 1.46119865625,
+            "max": 1.46119865625
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.45696859765625,
+            "sd": 0.003995618637073368,
+            "min": 1.448766,
+            "p95": 1.463624,
+            "p99": 1.471258,
+            "max": 1.484282
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9970261276090632,
+            "sd": 0.0008556390170566434,
+            "min": 0.9956680877843634,
+            "p95": 0.9984482860811731,
+            "p99": 0.9984482860811731,
+            "max": 0.9984482860811731
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.3560591544176095,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": true
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "gain_percent": -2.897109901433259,
+      "interval_percent": [
+        -12.959029937752398,
+        6.268536194917829
+      ],
+      "paired_log_sd": 0.052759336017558854,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.096821328125,
+            "sd": 0.049380054702666494,
+            "min": 1.0254799375,
+            "p95": 1.1740160625,
+            "p99": 1.1740160625,
+            "max": 1.1740160625
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.096821328125,
+            "sd": 0.21126235703186816,
+            "min": 0.282942,
+            "p95": 1.441773,
+            "p99": 1.500934,
+            "max": 1.538945
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.1782828004733201,
+            "sd": 0.0313862932054013,
+            "min": 1.1304240856972103,
+            "p95": 1.2166011223501372,
+            "p99": 1.2166011223501372,
+            "max": 1.2166011223501372
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.12801365234375,
+            "sd": 0.032248624303872396,
+            "min": 1.07320540625,
+            "p95": 1.1701975625,
+            "p99": 1.1701975625,
+            "max": 1.1701975625
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.12801365234375,
+            "sd": 0.2019043204242851,
+            "min": 0.283894,
+            "p95": 1.431122,
+            "p99": 1.570144,
+            "max": 1.830644
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.1858350870538288,
+            "sd": 0.05391117878439562,
+            "min": 1.1221198662040446,
+            "p95": 1.271190897333257,
+            "p99": 1.271190897333257,
+            "max": 1.271190897333257
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 9.935314118048133,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "gain_percent": -0.016358682875661223,
+      "interval_percent": [
+        -0.27223048291726837,
+        0.23886019084985444
+      ],
+      "paired_log_sd": 0.001444888944467126,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.238484675292875,
+            "sd": 0.00019957046992376037,
+            "min": 0.238264001953,
+            "p95": 0.238928607422,
+            "p99": 0.238928607422,
+            "max": 0.238928607422
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.23848467529296874,
+            "sd": 0.001376876238927624,
+            "min": 0.235302,
+            "p95": 0.240663,
+            "p99": 0.242025,
+            "max": 0.258136
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.5590924992369812,
+            "sd": 0.0014384624352152644,
+            "min": 2.557062645239675,
+            "p95": 2.561202648163588,
+            "p99": 2.561202648163588,
+            "max": 2.561202648163588
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.238523833252125,
+            "sd": 0.0003448205219058969,
+            "min": 0.238006902344,
+            "p95": 0.239110359375,
+            "p99": 0.239110359375,
+            "max": 0.239110359375
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.23852383325195312,
+            "sd": 0.0014039152979740234,
+            "min": 0.235443,
+            "p95": 0.240803,
+            "p99": 0.242536,
+            "max": 0.253607
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.559761298402267,
+            "sd": 0.0025191183111015277,
+            "min": 2.5554052628431423,
+            "p95": 2.5631270795660037,
+            "p99": 2.5631270795660037,
+            "max": 2.5631270795660037
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.2911755643786096,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "gain_percent": -0.8698279052103963,
+      "interval_percent": [
+        -4.783647164000904,
+        2.897804600159448
+      ],
+      "paired_log_sd": 0.02152708214629293,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.774139459635375,
+            "sd": 0.00983517727360386,
+            "min": 0.762393635417,
+            "p95": 0.78973359375,
+            "p99": 0.78973359375,
+            "max": 0.78973359375
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 0.7741394596354166,
+            "sd": 0.09165285268022705,
+            "min": 0.236024,
+            "p95": 0.976127,
+            "p99": 0.998629,
+            "max": 1.078148
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.0264163844281011,
+            "sd": 0.008192436437036299,
+            "min": 1.0169846869208685,
+            "p95": 1.0413630332635733,
+            "p99": 1.0413630332635733,
+            "max": 1.0413630332635733
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.780891109375,
+            "sd": 0.01143204132524458,
+            "min": 0.7679866875,
+            "p95": 0.799810333333,
+            "p99": 0.799810333333,
+            "max": 0.799810333333
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 0.780891109375,
+            "sd": 0.09726234995965867,
+            "min": 0.235984,
+            "p95": 0.98876,
+            "p99": 1.016392,
+            "max": 1.208484
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.0307543086926303,
+            "sd": 0.01279363520403717,
+            "min": 1.012321602381558,
+            "p95": 1.055580284775984,
+            "p99": 1.055580284775984,
+            "max": 1.055580284775984
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 4.7506372908427075,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "gain_percent": -1.7058119711451436,
+      "interval_percent": [
+        -13.999508449533371,
+        9.262133412714125
+      ],
+      "paired_log_sd": 0.06452983178593469,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.63428231640625,
+            "sd": 0.09032235554920125,
+            "min": 1.4883743125,
+            "p95": 1.77288559375,
+            "p99": 1.77288559375,
+            "max": 1.77288559375
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.63428231640625,
+            "sd": 0.27432819203742626,
+            "min": 0.620607,
+            "p95": 1.974365,
+            "p99": 2.270773,
+            "max": 2.292423
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.5089517769081944,
+            "sd": 0.07181780811190573,
+            "min": 1.4021088358955993,
+            "p95": 1.623309895019347,
+            "p99": 1.623309895019347,
+            "max": 1.623309895019347
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.66047305859375,
+            "sd": 0.04540257805864653,
+            "min": 1.57468678125,
+            "p95": 1.71404971875,
+            "p99": 1.71404971875,
+            "max": 1.71404971875
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.66047305859375,
+            "sd": 0.27199931098672914,
+            "min": 0.614165,
+            "p95": 2.00919,
+            "p99": 2.270733,
+            "max": 2.451633
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.4783453450569197,
+            "sd": 0.1142675890007084,
+            "min": 1.2100608789561058,
+            "p95": 1.5730900180416827,
+            "p99": 1.5730900180416827,
+            "max": 1.5730900180416827
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 8.810531357799366,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "gain_percent": 1.4898715219005099,
+      "interval_percent": [
+        1.2213800936064723,
+        1.7576331602143225
+      ],
+      "paired_log_sd": 0.001539204734475279,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.576085850830125,
+            "sd": 0.0009709005036397061,
+            "min": 0.574918503906,
+            "p95": 0.577653072266,
+            "p99": 0.577653072266,
+            "max": 0.577653072266
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.5760858508300781,
+            "sd": 0.001935836037685085,
+            "min": 0.569331,
+            "p95": 0.579571,
+            "p99": 0.581594,
+            "max": 0.587416
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.5448214746911333,
+            "sd": 0.0032780541093072363,
+            "min": 2.5399957871322396,
+            "p95": 2.5487656117622626,
+            "p99": 2.5487656117622626,
+            "max": 2.5487656117622626
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.567502342041,
+            "sd": 0.00041861789858384403,
+            "min": 0.566657667969,
+            "p95": 0.567993820313,
+            "p99": 0.567993820313,
+            "max": 0.567993820313
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.5675023420410156,
+            "sd": 0.0015339236767535525,
+            "min": 0.561637,
+            "p95": 0.569682,
+            "p99": 0.571405,
+            "max": 0.580512
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.5511801389445723,
+            "sd": 0.0017026710159611558,
+            "min": 2.5497227410571743,
+            "p95": 2.554168519702462,
+            "p99": 2.554168519702462,
+            "max": 2.554168519702462
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.2496554325047251,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": true
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "gain_percent": -2.377659531552423,
+      "interval_percent": [
+        -15.467155626621508,
+        9.227995491195928
+      ],
+      "paired_log_sd": 0.06804045176684789,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.436893714843625,
+            "sd": 0.06291792956042402,
+            "min": 1.369676875,
+            "p95": 1.522370520833,
+            "p99": 1.522370520833,
+            "max": 1.522370520833
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.43689371484375,
+            "sd": 0.20376222480434997,
+            "min": 0.572216,
+            "p95": 1.768447,
+            "p99": 1.929631,
+            "max": 2.084292
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.367111578650168,
+            "sd": 0.0689007922146303,
+            "min": 1.2640133657701664,
+            "p95": 1.439682805916457,
+            "p99": 1.439682805916457,
+            "max": 1.439682805916457
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.47039433723975,
+            "sd": 0.04309663270567324,
+            "min": 1.405956479167,
+            "p95": 1.520538666667,
+            "p99": 1.520538666667,
+            "max": 1.520538666667
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.4703943372395833,
+            "sd": 0.18956056210700972,
+            "min": 0.564052,
+            "p95": 1.760793,
+            "p99": 1.924931,
+            "max": 1.969295
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.3374032287501447,
+            "sd": 0.06406110308532822,
+            "min": 1.2478155466892862,
+            "p95": 1.4333161637996268,
+            "p99": 1.4333161637996268,
+            "max": 1.4333161637996268
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 7.92377238413664,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "gain_percent": -0.713258462785693,
+      "interval_percent": [
+        -2.469363690661752,
+        1.0127508860851675
+      ],
+      "paired_log_sd": 0.009775586080549476,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.7013524999999999,
+            "sd": 0.0026089200961471244,
+            "min": 0.6971101875,
+            "p95": 0.70605778125,
+            "p99": 0.70605778125,
+            "max": 0.70605778125
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 0.7013525,
+            "sd": 0.012947830190845893,
+            "min": 0.687163,
+            "p95": 0.725765,
+            "p99": 0.760611,
+            "max": 0.768736
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9914367608235076,
+            "sd": 0.0008912000299464697,
+            "min": 0.9903801394083703,
+            "p95": 0.9932145996200727,
+            "p99": 0.9932145996200727,
+            "max": 0.9932145996200727
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.70637103515625,
+            "sd": 0.005746334654242502,
+            "min": 0.69901040625,
+            "p95": 0.71822875,
+            "p99": 0.71822875,
+            "max": 0.71822875
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 0.70637103515625,
+            "sd": 0.02837166562947823,
+            "min": 0.686281,
+            "p95": 0.732789,
+            "p99": 0.764618,
+            "max": 1.104448
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9913092142289694,
+            "sd": 0.0012764918400688728,
+            "min": 0.9895843844627974,
+            "p95": 0.9929129931935711,
+            "p99": 0.9929129931935711,
+            "max": 0.9929129931935711
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 2.2463568179090454,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "gain_percent": 0.02189373906865688,
+      "interval_percent": [
+        -0.4018842989759408,
+        0.44388308732140613
+      ],
+      "paired_log_sd": 0.00239195363152551,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.621772688476375,
+            "sd": 0.0007655745383655835,
+            "min": 0.621122941406,
+            "p95": 0.62356575,
+            "p99": 0.62356575,
+            "max": 0.62356575
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.6217726884765625,
+            "sd": 0.002544254063676874,
+            "min": 0.613814,
+            "p95": 0.625877,
+            "p99": 0.628091,
+            "max": 0.652278
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9906247510201746,
+            "sd": 0.0007417282516334402,
+            "min": 0.9896385680388049,
+            "p95": 0.9918854026875381,
+            "p99": 0.9918854026875381,
+            "max": 0.9918854026875381
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.62163659960925,
+            "sd": 0.0008014302165967256,
+            "min": 0.620328953125,
+            "p95": 0.622678988281,
+            "p99": 0.622678988281,
+            "max": 0.622678988281
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.621636599609375,
+            "sd": 0.002599526146326623,
+            "min": 0.612934,
+            "p95": 0.625567,
+            "p99": 0.627841,
+            "max": 0.648921
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9907742435417727,
+            "sd": 0.0005642725576907385,
+            "min": 0.9901960378199177,
+            "p95": 0.9917128904955208,
+            "p99": 0.9917128904955208,
+            "max": 0.9917128904955208
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.5904239871837635,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "gain_percent": -0.010210541271571394,
+      "interval_percent": [
+        -1.4998379037152842,
+        1.4575548189781573
+      ],
+      "paired_log_sd": 0.00836097374361451,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.62358896614575,
+            "sd": 0.004055884004641959,
+            "min": 0.6190674375,
+            "p95": 0.631860802083,
+            "p99": 0.631860802083,
+            "max": 0.631860802083
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 0.6235889661458334,
+            "sd": 0.005775855570043029,
+            "min": 0.614335,
+            "p95": 0.640625,
+            "p99": 0.64331,
+            "max": 0.646677
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9909076207581954,
+            "sd": 0.0010738683402166105,
+            "min": 0.9896873381891926,
+            "p95": 0.9925445635126582,
+            "p99": 0.9925445635126582,
+            "max": 0.9925445635126582
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.623649,
+            "sd": 0.003352577708354393,
+            "min": 0.62007059375,
+            "p95": 0.629882260417,
+            "p99": 0.629882260417,
+            "max": 0.629882260417
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 0.623649,
+            "sd": 0.024933029896872363,
+            "min": 0.614086,
+            "p95": 0.627871,
+            "p99": 0.642419,
+            "max": 1.027683
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.991656858931705,
+            "sd": 0.0005078530189037388,
+            "min": 0.9908795389733528,
+            "p95": 0.9923988740193216,
+            "p99": 0.9923988740193216,
+            "max": 0.9923988740193216
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 1.6176065296384934,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "gain_percent": 0.9227359625001208,
+      "interval_percent": [
+        -0.3122213629391357,
+        2.142489561265448
+      ],
+      "paired_log_sd": 0.00700524399434091,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.59664635546875,
+            "sd": 0.007410763333036261,
+            "min": 1.58470653125,
+            "p95": 1.60846415625,
+            "p99": 1.60846415625,
+            "max": 1.60846415625
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.59664635546875,
+            "sd": 0.023595728123893014,
+            "min": 1.565295,
+            "p95": 1.655214,
+            "p99": 1.672917,
+            "max": 1.693206
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9902607715081597,
+            "sd": 0.002063281859925996,
+            "min": 0.9855490858795461,
+            "p95": 0.9923233583217086,
+            "p99": 0.9923233583217086,
+            "max": 0.9923233583217086
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.58191351171875,
+            "sd": 0.007337470606173989,
+            "min": 1.57224490625,
+            "p95": 1.59232015625,
+            "p99": 1.59232015625,
+            "max": 1.59232015625
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.58191351171875,
+            "sd": 0.02521092111919541,
+            "min": 1.552802,
+            "p95": 1.644884,
+            "p99": 1.667257,
+            "max": 1.681994
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9917540431138094,
+            "sd": 0.0010361513013120594,
+            "min": 0.9905945906159012,
+            "p95": 0.993785013294265,
+            "p99": 0.993785013294265,
+            "max": 0.993785013294265
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 1.1346476368294445,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "gain_percent": 1.0955267505271982,
+      "interval_percent": [
+        0.7429027545174938,
+        1.4468980030453826
+      ],
+      "paired_log_sd": 0.0020126159046633717,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.4928071796875,
+            "sd": 0.0038857423473470302,
+            "min": 1.487514421875,
+            "p95": 1.499715744141,
+            "p99": 1.499715744141,
+            "max": 1.499715744141
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 1.4928071796875,
+            "sd": 0.005326727530672049,
+            "min": 1.475626,
+            "p95": 1.501706,
+            "p99": 1.507176,
+            "max": 1.540568
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9912814809731385,
+            "sd": 0.0005758769018121685,
+            "min": 0.9903035207888146,
+            "p95": 0.9923595665550895,
+            "p99": 0.9923595665550895,
+            "max": 0.9923595665550895
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.476450612793,
+            "sd": 0.002536841082446323,
+            "min": 1.472261523438,
+            "p95": 1.480062763672,
+            "p99": 1.480062763672,
+            "max": 1.480062763672
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 1.4764506127929689,
+            "sd": 0.004838482167473053,
+            "min": 1.459206,
+            "p95": 1.484293,
+            "p99": 1.489663,
+            "max": 1.517205
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9910981967458162,
+            "sd": 0.0006023981414516619,
+            "min": 0.9899201101192435,
+            "p95": 0.9919102638713809,
+            "p99": 0.9919102638713809,
+            "max": 0.9919102638713809
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.4522584552372533,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": true
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "gain_percent": 0.9753234938911337,
+      "interval_percent": [
+        -0.36374443359104003,
+        2.296525378963954
+      ],
+      "paired_log_sd": 0.007595864668461679,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.5010566653645,
+            "sd": 0.007003113155545362,
+            "min": 1.494712708333,
+            "p95": 1.512257416667,
+            "p99": 1.512257416667,
+            "max": 1.512257416667
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.5010566653645834,
+            "sd": 0.04111030111386622,
+            "min": 1.479975,
+            "p95": 1.516563,
+            "p99": 1.536421,
+            "max": 2.376611
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9912153835674065,
+            "sd": 0.001110991091012875,
+            "min": 0.9898502868177507,
+            "p95": 0.993194141632756,
+            "p99": 0.993194141632756,
+            "max": 0.993194141632756
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 12,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.4864158671875,
+            "sd": 0.006764472718888429,
+            "min": 1.474934864583,
+            "p95": 1.49575328125,
+            "p99": 1.49575328125,
+            "max": 1.49575328125
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.4864158671875,
+            "sd": 0.027763809060998065,
+            "min": 1.458434,
+            "p95": 1.506644,
+            "p99": 1.531782,
+            "max": 1.919141
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 0.9910514794423637,
+            "sd": 0.0007041999919252854,
+            "min": 0.9901462081167103,
+            "p95": 0.9921868315941179,
+            "p99": 0.9921868315941179,
+            "max": 0.9921868315941179
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.8131153096575194,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "gain_percent": -1.4760829115040286,
+      "interval_percent": [
+        -15.505832971900801,
+        10.849563713656796
+      ],
+      "paired_log_sd": 0.07323197254930963,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.17120573046875,
+            "sd": 0.03357503076958875,
+            "min": 1.1279430625,
+            "p95": 1.22557884375,
+            "p99": 1.22557884375,
+            "max": 1.22557884375
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.17120573046875,
+            "sd": 0.19641572747796857,
+            "min": 0.451259,
+            "p95": 1.534017,
+            "p99": 1.597536,
+            "max": 1.63159
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.119980282549185,
+            "sd": 0.03083171651050483,
+            "min": 1.0678438327076478,
+            "p95": 1.1609595473303362,
+            "p99": 1.1609595473303362,
+            "max": 1.1609595473303362
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.189846421875,
+            "sd": 0.06938842799772749,
+            "min": 1.08262834375,
+            "p95": 1.2877778125,
+            "p99": 1.2877778125,
+            "max": 1.2877778125
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.189846421875,
+            "sd": 0.20547918006144392,
+            "min": 0.448563,
+            "p95": 1.510061,
+            "p99": 1.600251,
+            "max": 1.635998
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.151025106952567,
+            "sd": 0.04301807507942459,
+            "min": 1.1107509975157304,
+            "p95": 1.2277159143406244,
+            "p99": 1.2277159143406244,
+            "max": 1.2277159143406244
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 5.904594964578314,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "gain_percent": -0.07003654002486481,
+      "interval_percent": [
+        -0.33792997068622377,
+        0.19714163878492563
+      ],
+      "paired_log_sd": 0.0015118731560342768,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.37108809863275,
+            "sd": 0.00039346291519534835,
+            "min": 0.370695132812,
+            "p95": 0.371871839844,
+            "p99": 0.371871839844,
+            "max": 0.371871839844
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.3710880986328125,
+            "sd": 0.0012974153298980786,
+            "min": 0.368263,
+            "p95": 0.373322,
+            "p99": 0.374174,
+            "max": 0.387469
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.6572320456192597,
+            "sd": 0.0003631876691933681,
+            "min": 1.6568294283025693,
+            "p95": 1.6580115019470194,
+            "p99": 1.6580115019470194,
+            "max": 1.6580115019470194
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.3713480720215,
+            "sd": 0.00046863365507136004,
+            "min": 0.370773425781,
+            "p95": 0.372146820313,
+            "p99": 0.372146820313,
+            "max": 0.372146820313
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.3713480720214844,
+            "sd": 0.0014615324230502957,
+            "min": 0.368834,
+            "p95": 0.373473,
+            "p99": 0.374715,
+            "max": 0.389252
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.6572591562875953,
+            "sd": 0.00030570110862197585,
+            "min": 1.656990792637463,
+            "p95": 1.6578494224869342,
+            "p99": 1.6578494224869342,
+            "max": 1.6578494224869342
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.23592889556085517,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "gain_percent": -1.1383607589927847,
+      "interval_percent": [
+        -4.0548245074964795,
+        1.6963599195802925
+      ],
+      "paired_log_sd": 0.016076478041730746,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 2,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.804552290364625,
+            "sd": 0.012749961817296299,
+            "min": 0.782288385417,
+            "p95": 0.820219625,
+            "p99": 0.820219625,
+            "max": 0.820219625
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 0.8045522903645833,
+            "sd": 0.09680280991848872,
+            "min": 0.370377,
+            "p95": 0.989412,
+            "p99": 0.997086,
+            "max": 1.005612
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.020620559025922,
+            "sd": 0.009012858873163294,
+            "min": 1.0072962650879165,
+            "p95": 1.0364527035828732,
+            "p99": 1.0364527035828732,
+            "max": 1.0364527035828732
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.813733378906375,
+            "sd": 0.014476801921513323,
+            "min": 0.7952328125,
+            "p95": 0.834810416667,
+            "p99": 0.834810416667,
+            "max": 0.834810416667
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 0.81373337890625,
+            "sd": 0.1019970334581183,
+            "min": 0.37244,
+            "p95": 1.011603,
+            "p99": 1.045417,
+            "max": 1.067849
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.0280644505196004,
+            "sd": 0.014572741737695183,
+            "min": 1.0104490027197548,
+            "p95": 1.0471130925650403,
+            "p99": 1.0471130925650403,
+            "max": 1.0471130925650403
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 3.3863448555071285,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "gain_percent": 2.0831684870921907,
+      "interval_percent": [
+        -3.2204688661862324,
+        7.114296235598749
+      ],
+      "paired_log_sd": 0.029829769790185055,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.86154955859375,
+            "sd": 0.034362837037446706,
+            "min": 1.81329125,
+            "p95": 1.8993586875,
+            "p99": 1.8993586875,
+            "max": 1.8993586875
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.86154955859375,
+            "sd": 0.2523213351302001,
+            "min": 1.018286,
+            "p95": 2.306429,
+            "p99": 2.35486,
+            "max": 2.372223
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.2565699903664964,
+            "sd": 0.02789687921901122,
+            "min": 1.2158596313535113,
+            "p95": 1.2896255620475152,
+            "p99": 1.2896255620475152,
+            "max": 1.2896255620475152
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.8230431640625,
+            "sd": 0.04787031161997675,
+            "min": 1.7542785,
+            "p95": 1.9108086875,
+            "p99": 1.9108086875,
+            "max": 1.9108086875
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.8230431640625,
+            "sd": 0.24122373401561406,
+            "min": 1.019969,
+            "p95": 2.280971,
+            "p99": 2.377332,
+            "max": 2.410735
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.2857541643087291,
+            "sd": 0.03499212004738342,
+            "min": 1.23114011199686,
+            "p95": 1.3341980851729287,
+            "p99": 1.3341980851729287,
+            "max": 1.3341980851729287
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 8.065570087544472,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "gain_percent": 0.7920883119734157,
+      "interval_percent": [
+        0.13221187324163886,
+        1.4476046169467516
+      ],
+      "paired_log_sd": 0.00374898736059081,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.894679165283125,
+            "sd": 0.0029423677325988128,
+            "min": 0.891006138672,
+            "p95": 0.900014478516,
+            "p99": 0.900014478516,
+            "max": 0.900014478516
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.8946791652832031,
+            "sd": 0.0031365476190113204,
+            "min": 0.88748,
+            "p95": 0.900384,
+            "p99": 0.902067,
+            "max": 0.917906
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.6572979287013399,
+            "sd": 0.00014794436568065696,
+            "min": 1.6570476046697231,
+            "p95": 1.657482267424884,
+            "p99": 1.657482267424884,
+            "max": 1.657482267424884
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.887594984130875,
+            "sd": 0.0036765950114099437,
+            "min": 0.882390730469,
+            "p95": 0.8928203125,
+            "p99": 0.8928203125,
+            "max": 0.8928203125
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.8875949841308594,
+            "sd": 0.009045693758477207,
+            "min": 0.878462,
+            "p95": 0.89337,
+            "p99": 0.895315,
+            "max": 1.268156
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.6572477031255088,
+            "sd": 0.0001334291466529079,
+            "min": 1.657067453369163,
+            "p95": 1.6574442822906759,
+            "p99": 1.6574442822906759,
+            "max": 1.6574442822906759
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 1.1164605426108087,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "gain_percent": -0.7634272615575144,
+      "interval_percent": [
+        -11.574744821078319,
+        9.000300293968733
+      ],
+      "paired_log_sd": 0.057636058601869905,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.52758388802075,
+            "sd": 0.06341517669706027,
+            "min": 1.433369708333,
+            "p95": 1.6386940625,
+            "p99": 1.6386940625,
+            "max": 1.6386940625
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.5275838880208332,
+            "sd": 0.1675257076436792,
+            "min": 0.895114,
+            "p95": 1.836826,
+            "p99": 1.928789,
+            "max": 2.000684
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.2189698033255363,
+            "sd": 0.05610305443782481,
+            "min": 1.1035798823821354,
+            "p95": 1.2667087832529975,
+            "p99": 1.2667087832529975,
+            "max": 1.2667087832529975
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 1,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.538847205729,
+            "sd": 0.05124565947647494,
+            "min": 1.458890020833,
+            "p95": 1.603682614583,
+            "p99": 1.603682614583,
+            "max": 1.603682614583
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.5388472057291667,
+            "sd": 0.16790376793865208,
+            "min": 0.884194,
+            "p95": 1.883444,
+            "p99": 1.947454,
+            "max": 2.042433
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.2231742552892917,
+            "sd": 0.03360982539456541,
+            "min": 1.178639439805745,
+            "p95": 1.2656314502876103,
+            "p99": 1.2656314502876103,
+            "max": 1.2656314502876103
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 4.9634194700124645,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-randomized-boost",
+      "gain_percent": 1.1329364351205684,
+      "interval_percent": [
+        -5.798766819465984,
+        7.610489689153388
+      ],
+      "paired_log_sd": 0.03832028876325814,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.66778745703125,
+            "sd": 0.05472109003076271,
+            "min": 1.5778940625,
+            "p95": 1.74385365625,
+            "p99": 1.74385365625,
+            "max": 1.74385365625
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.66778745703125,
+            "sd": 0.2847754122897656,
+            "min": 0.62165,
+            "p95": 2.13149,
+            "p99": 2.249302,
+            "max": 2.322649
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.4920299192395103,
+            "sd": 0.042961742830793924,
+            "min": 1.4434644115442667,
+            "p95": 1.556457620211899,
+            "p99": 1.556457620211899,
+            "max": 1.556457620211899
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 133,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.6484922890625,
+            "sd": 0.03770478953833625,
+            "min": 1.59300184375,
+            "p95": 1.70111021875,
+            "p99": 1.70111021875,
+            "max": 1.70111021875
+          },
+          "observations_ms": {
+            "n": 256,
+            "mean": 1.6484922890625,
+            "sd": 0.27584608534641847,
+            "min": 0.613745,
+            "p95": 2.047232,
+            "p99": 2.291681,
+            "max": 2.449839
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.5123846410785566,
+            "sd": 0.04176190283305389,
+            "min": 1.4600787562717388,
+            "p95": 1.5902839949784289,
+            "p99": 1.5902839949784289,
+            "max": 1.5902839949784289
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 132,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 6.653226665690115,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-randomized-boost",
+      "gain_percent": 1.5955073064656489,
+      "interval_percent": [
+        0.924823656436502,
+        2.2616508024923654
+      ],
+      "paired_log_sd": 0.0038411831325739195,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.577943798095625,
+            "sd": 0.00201526325501025,
+            "min": 0.576178675781,
+            "p95": 0.582087113281,
+            "p99": 0.582087113281,
+            "max": 0.582087113281
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.5779437980957032,
+            "sd": 0.007307628677211987,
+            "min": 0.570754,
+            "p95": 0.581885,
+            "p99": 0.585371,
+            "max": 0.869085
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.538114565197137,
+            "sd": 0.004597981825672869,
+            "min": 2.531327736936204,
+            "p95": 2.5430602552823203,
+            "p99": 2.5430602552823203,
+            "max": 2.5430602552823203
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 22,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.5687208879395,
+            "sd": 0.0012718550956336877,
+            "min": 0.567203460938,
+            "p95": 0.571245953125,
+            "p99": 0.571245953125,
+            "max": 0.571245953125
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.5687208879394531,
+            "sd": 0.0019211546681592404,
+            "min": 0.562468,
+            "p95": 0.571806,
+            "p99": 0.57403,
+            "max": 0.583347
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.5482958774375684,
+            "sd": 0.0006791585394459361,
+            "min": 2.547527898430106,
+            "p95": 2.5495684568342103,
+            "p99": 2.5495684568342103,
+            "max": 2.5495684568342103
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.7180171943175551,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    },
+    {
+      "session": "confirm-randomized-boost",
+      "gain_percent": -0.2615865073560597,
+      "interval_percent": [
+        -4.630095989986871,
+        3.9245292297728884
+      ],
+      "paired_log_sd": 0.024118083265110522,
+      "paired_blocks": 8,
+      "isa": "selected",
+      "model": 8,
+      "mode": "paced10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.468861045573,
+            "sd": 0.05600095350176307,
+            "min": 1.33575446875,
+            "p95": 1.5036549375,
+            "p99": 1.5036549375,
+            "max": 1.5036549375
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.4688610455729167,
+            "sd": 0.18311488122795563,
+            "min": 0.572998,
+            "p95": 1.75917,
+            "p99": 1.9133,
+            "max": 1.959287
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.3323353049058044,
+            "sd": 0.05819142034280325,
+            "min": 1.278535652729928,
+            "p95": 1.4597016801418363,
+            "p99": 1.4597016801418363,
+            "max": 1.4597016801418363
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.472094378906375,
+            "sd": 0.03535304707680118,
+            "min": 1.413077197917,
+            "p95": 1.516573208333,
+            "p99": 1.516573208333,
+            "max": 1.516573208333
+          },
+          "observations_ms": {
+            "n": 768,
+            "mean": 1.47209437890625,
+            "sd": 0.18729204962141557,
+            "min": 0.564983,
+            "p95": 1.707873,
+            "p99": 1.926294,
+            "max": 2.032054
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.3256903328281882,
+            "sd": 0.042804566602669424,
+            "min": 1.248497775076665,
+            "p95": 1.3893345002439816,
+            "p99": 1.3893345002439816,
+            "max": 1.3893345002439816
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 8.469949158757228,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false
+    }
+  ],
+  "profile_coverage": [
+    {
+      "session": "confirm-cpu3-steady",
+      "jobs": 136,
+      "collected": 128,
+      "collectors": {
+        "primary": {
+          "collected": 8
+        },
+        "cache-tlb": {
+          "collected": 8
+        },
+        "dispatch": {
+          "collected": 8
+        },
+        "loads-stores": {
+          "collected": 8
+        },
+        "fp-mix": {
+          "collected": 8
+        },
+        "cycles": {
+          "collected": 4
+        },
+        "lbr": {
+          "collected": 4
+        },
+        "ibs-op": {
+          "collected": 4
+        },
+        "ibs-fetch": {
+          "collected": 4
+        },
+        "ibs-l3miss": {
+          "empty": 4
+        },
+        "ibs-ldlat": {
+          "empty": 4
+        },
+        "l3": {
+          "collected": 8
+        },
+        "df0": {
+          "collected": 8
+        },
+        "umc0": {
+          "collected": 8
+        },
+        "umc1": {
+          "collected": 8
+        },
+        "umc2": {
+          "collected": 8
+        },
+        "umc3": {
+          "collected": 8
+        },
+        "energy": {
+          "collected": 8
+        },
+        "kernel-cost": {
+          "collected": 8
+        },
+        "affinity-calls": {
+          "collected": 8
+        }
+      },
+      "unavailable": [],
+      "empty": [
+        {
+          "collector": "ibs-l3miss",
+          "model": 2,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 8,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 2,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 8,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 8,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 2,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 2,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 8,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        }
+      ]
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "jobs": 136,
+      "collected": 128,
+      "collectors": {
+        "primary": {
+          "collected": 8
+        },
+        "cache-tlb": {
+          "collected": 8
+        },
+        "dispatch": {
+          "collected": 8
+        },
+        "loads-stores": {
+          "collected": 8
+        },
+        "fp-mix": {
+          "collected": 8
+        },
+        "cycles": {
+          "collected": 4
+        },
+        "lbr": {
+          "collected": 4
+        },
+        "ibs-op": {
+          "collected": 4
+        },
+        "ibs-fetch": {
+          "collected": 4
+        },
+        "ibs-l3miss": {
+          "empty": 4
+        },
+        "ibs-ldlat": {
+          "empty": 4
+        },
+        "l3": {
+          "collected": 8
+        },
+        "df0": {
+          "collected": 8
+        },
+        "umc0": {
+          "collected": 8
+        },
+        "umc1": {
+          "collected": 8
+        },
+        "umc2": {
+          "collected": 8
+        },
+        "umc3": {
+          "collected": 8
+        },
+        "energy": {
+          "collected": 8
+        },
+        "kernel-cost": {
+          "collected": 8
+        },
+        "affinity-calls": {
+          "collected": 8
+        }
+      },
+      "unavailable": [],
+      "empty": [
+        {
+          "collector": "ibs-l3miss",
+          "model": 2,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 8,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 2,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 8,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 8,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 2,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 8,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 2,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        }
+      ]
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "jobs": 136,
+      "collected": 128,
+      "collectors": {
+        "primary": {
+          "collected": 8
+        },
+        "cache-tlb": {
+          "collected": 8
+        },
+        "dispatch": {
+          "collected": 8
+        },
+        "loads-stores": {
+          "collected": 8
+        },
+        "fp-mix": {
+          "collected": 8
+        },
+        "cycles": {
+          "collected": 4
+        },
+        "lbr": {
+          "collected": 4
+        },
+        "ibs-op": {
+          "collected": 4
+        },
+        "ibs-fetch": {
+          "collected": 4
+        },
+        "ibs-l3miss": {
+          "empty": 4
+        },
+        "ibs-ldlat": {
+          "empty": 4
+        },
+        "l3": {
+          "collected": 8
+        },
+        "df0": {
+          "collected": 8
+        },
+        "umc0": {
+          "collected": 8
+        },
+        "umc1": {
+          "collected": 8
+        },
+        "umc2": {
+          "collected": 8
+        },
+        "umc3": {
+          "collected": 8
+        },
+        "energy": {
+          "collected": 8
+        },
+        "kernel-cost": {
+          "collected": 8
+        },
+        "affinity-calls": {
+          "collected": 8
+        }
+      },
+      "unavailable": [],
+      "empty": [
+        {
+          "collector": "ibs-l3miss",
+          "model": 8,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 2,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 8,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 2,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 2,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 2,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 8,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 8,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        }
+      ]
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "jobs": 136,
+      "collected": 131,
+      "collectors": {
+        "primary": {
+          "collected": 8
+        },
+        "cache-tlb": {
+          "collected": 8
+        },
+        "dispatch": {
+          "collected": 8
+        },
+        "loads-stores": {
+          "collected": 8
+        },
+        "fp-mix": {
+          "collected": 8
+        },
+        "cycles": {
+          "collected": 4
+        },
+        "lbr": {
+          "collected": 4
+        },
+        "ibs-op": {
+          "collected": 4
+        },
+        "ibs-fetch": {
+          "collected": 4
+        },
+        "ibs-l3miss": {
+          "collected": 2,
+          "empty": 2
+        },
+        "ibs-ldlat": {
+          "empty": 3,
+          "collected": 1
+        },
+        "l3": {
+          "collected": 8
+        },
+        "df0": {
+          "collected": 8
+        },
+        "umc0": {
+          "collected": 8
+        },
+        "umc1": {
+          "collected": 8
+        },
+        "umc2": {
+          "collected": 8
+        },
+        "umc3": {
+          "collected": 8
+        },
+        "energy": {
+          "collected": 8
+        },
+        "kernel-cost": {
+          "collected": 8
+        },
+        "affinity-calls": {
+          "collected": 8
+        }
+      },
+      "unavailable": [],
+      "empty": [
+        {
+          "collector": "ibs-l3miss",
+          "model": 2,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-l3miss",
+          "model": 8,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 2,
+          "arm": "candidate",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 8,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        },
+        {
+          "collector": "ibs-ldlat",
+          "model": 2,
+          "arm": "baseline",
+          "reason": "No observed samples in fixed warmed window; not evidence of zero misses/latency"
+        }
+      ]
+    }
+  ],
+  "selected_counter_means_and_sample_sd": [
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 0.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 0.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3395.46484375,
+      "sample_sd_per_call": 25.886737317501264
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2828.498046875,
+      "sample_sd_per_call": 24.54157715172842
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4598.771484375,
+      "sample_sd_per_call": 98.29612899252214
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4116.7890625,
+      "sample_sd_per_call": 80.48863907724999
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 8526.447265625,
+      "sample_sd_per_call": 751.0496006470819
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 6815.880859375,
+      "sample_sd_per_call": 39.379771013189874
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 9485.85546875,
+      "sample_sd_per_call": 173.15277304305582
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 8161.96875,
+      "sample_sd_per_call": 43.61964956444515
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1408411.0078125,
+      "sample_sd_per_call": 140.91312323833168
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 292192.662109375,
+      "sample_sd_per_call": 148.50071045676702
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1409501.8515625,
+      "sample_sd_per_call": 1812.1213306706406
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 292559.22265625,
+      "sample_sd_per_call": 294.65912970085355
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3445682.859375,
+      "sample_sd_per_call": 849.1744772160354
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 622489.470703125,
+      "sample_sd_per_call": 277.44826113220756
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3089803.08984375,
+      "sample_sd_per_call": 860.4992342584761
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 553643.783203125,
+      "sample_sd_per_call": 34.91615945694979
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1217243.5390625,
+      "sample_sd_per_call": 274.0867417857075
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4527768.77734375,
+      "sample_sd_per_call": 0.005524271728019903
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1217120.095703125,
+      "sample_sd_per_call": 251.82116458592324
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4528639.171875,
+      "sample_sd_per_call": 0.03866990209613932
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2923560.876953125,
+      "sample_sd_per_call": 1402.9965286293507
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 10105739.3515625,
+      "sample_sd_per_call": 0.03314563036811941
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2881973.234375,
+      "sample_sd_per_call": 416.1654863586513
+    },
+    {
+      "session": "confirm-cpu3-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 9645893.765625,
+      "sample_sd_per_call": 0.09391261937633834
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 0.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 0.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1751.451171875,
+      "sample_sd_per_call": 1.6600436542699808
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1239.2890625,
+      "sample_sd_per_call": 27.2567567060502
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3174.64453125,
+      "sample_sd_per_call": 77.50000807239121
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2503.17578125,
+      "sample_sd_per_call": 35.06255265774232
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4568.552734375,
+      "sample_sd_per_call": 659.1201948211026
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2974.01171875,
+      "sample_sd_per_call": 78.37284300541836
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 5631.8984375,
+      "sample_sd_per_call": 169.4017925397303
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4248.953125,
+      "sample_sd_per_call": 100.71852214525886
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1408214.5078125,
+      "sample_sd_per_call": 73.78217319943381
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 292294.08203125,
+      "sample_sd_per_call": 120.34073532318556
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1408743.166015625,
+      "sample_sd_per_call": 928.7654221374821
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 292333.2421875,
+      "sample_sd_per_call": 154.61884139554905
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3446948.888671875,
+      "sample_sd_per_call": 96.72171155003646
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 622499.939453125,
+      "sample_sd_per_call": 42.56175152852934
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3089483.625,
+      "sample_sd_per_call": 1046.402026449802
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 553698.048828125,
+      "sample_sd_per_call": 71.17747907967244
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1217250.951171875,
+      "sample_sd_per_call": 1257.4430171394822
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4527768.48828125,
+      "sample_sd_per_call": 0.016572815184059706
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1216133.240234375,
+      "sample_sd_per_call": 1223.789153772385
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4528638.85546875,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2922808.34375,
+      "sample_sd_per_call": 211.95525766066763
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 10105738.6328125,
+      "sample_sd_per_call": 0.005524271728019903
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2888002.240234375,
+      "sample_sd_per_call": 2570.3911544662446
+    },
+    {
+      "session": "confirm-cpu3-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 9645892.98828125,
+      "sample_sd_per_call": 0.04419417382415922
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 0.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 0.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3332.544921875,
+      "sample_sd_per_call": 98.92037169778838
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2837.4296875,
+      "sample_sd_per_call": 30.11280518943649
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4751.01171875,
+      "sample_sd_per_call": 309.97793520265276
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4195.009765625,
+      "sample_sd_per_call": 41.67234378031814
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 7971.271484375,
+      "sample_sd_per_call": 22.541790786185214
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 6733.798828125,
+      "sample_sd_per_call": 20.022722878208135
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 10093.91015625,
+      "sample_sd_per_call": 151.8014628142589
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 8158.125,
+      "sample_sd_per_call": 52.486105687917096
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1408515.349609375,
+      "sample_sd_per_call": 581.3715945209506
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 292291.3828125,
+      "sample_sd_per_call": 83.72033803814162
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1409691.1328125,
+      "sample_sd_per_call": 1243.0992455976786
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 292857.123046875,
+      "sample_sd_per_call": 80.53559538693816
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3445620.572265625,
+      "sample_sd_per_call": 546.1709350700077
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 622216.099609375,
+      "sample_sd_per_call": 110.89146853240752
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3090282.123046875,
+      "sample_sd_per_call": 812.0154634375095
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 553915.111328125,
+      "sample_sd_per_call": 269.23919334437
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1225516.158203125,
+      "sample_sd_per_call": 954.6024410094312
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4527768.7890625,
+      "sample_sd_per_call": 0.011048543456039806
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1225555.30078125,
+      "sample_sd_per_call": 64.13127049058305
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4528639.162109375,
+      "sample_sd_per_call": 0.013810679320049757
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2942942.46875,
+      "sample_sd_per_call": 4184.5198242687875
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 10105739.3515625,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2908399.0390625,
+      "sample_sd_per_call": 655.2670152908088
+    },
+    {
+      "session": "confirm-cpu4-steady",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 9645893.6953125,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 0.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 0.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "affinity-calls",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "syscalls:sys_enter_sched_getaffinity",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1.0,
+      "sample_sd_per_call": 0.0
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2744.65234375,
+      "sample_sd_per_call": 31.239756621952548
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1874.51171875,
+      "sample_sd_per_call": 12.48485410532498
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4208.90234375,
+      "sample_sd_per_call": 152.66324920383002
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3110.685546875,
+      "sample_sd_per_call": 12.703062838581765
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 6437.5234375,
+      "sample_sd_per_call": 809.084837285795
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4365.015625,
+      "sample_sd_per_call": 89.33852238553786
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 8237.677734375,
+      "sample_sd_per_call": 661.4182918599589
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "kernel-cost",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:k",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 5628.541015625,
+      "sample_sd_per_call": 176.81812733459702
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1408042.275390625,
+      "sample_sd_per_call": 191.9933017714677
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 292174.779296875,
+      "sample_sd_per_call": 20.199499573504774
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1408837.7578125,
+      "sample_sd_per_call": 246.57586858016836
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 292603.15234375,
+      "sample_sd_per_call": 180.98066608166002
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3447328.876953125,
+      "sample_sd_per_call": 601.9108368057285
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 622562.93359375,
+      "sample_sd_per_call": 48.41471742436642
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.ld_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 3090719.228515625,
+      "sample_sd_per_call": 1409.2997226710213
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "loads-stores",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "ls_dispatch.store_dispatch:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 553561.5546875,
+      "sample_sd_per_call": 314.24819724841217
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1225984.326171875,
+      "sample_sd_per_call": 1925.8301777843383
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4527768.626953125,
+      "sample_sd_per_call": 0.06905339660024878
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 1224049.853515625,
+      "sample_sd_per_call": 77.73478962083206
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 2,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 4528638.986328125,
+      "sample_sd_per_call": 0.06352912487222888
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2948513.49609375,
+      "sample_sd_per_call": 4531.206545104133
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "baseline",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 10105738.78515625,
+      "sample_sd_per_call": 0.03866990209613932
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "cycles:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 2910769.919921875,
+      "sample_sd_per_call": 5551.658305111561
+    },
+    {
+      "session": "confirm-cpu4-boost",
+      "collector": "primary",
+      "isa": "selected",
+      "model": 8,
+      "arm": "candidate",
+      "mode": "continuous",
+      "event": "instructions:u",
+      "unit": "",
+      "n": 2,
+      "mean_per_call": 9645893.181640625,
+      "sample_sd_per_call": 0.06905339660024878
+    }
+  ],
+  "all_guards_pass": false,
+  "qualified_useful_model8_cells": 4,
+  "family_comparisons": 32,
+  "independent_blocks": 8,
+  "aa_noise_limit_percent": 0.5,
+  "minimum_useful_gain_percent": 0.3,
+  "noninferiority_margin_percent": 0.5,
+  "no_optional_extension": true,
+  "no_observations_removed": true,
+  "private_artifact_directory": ".local/cpu-optimization-20261110",
+  "profile_audit": {
+    "passed": true,
+    "hardware_jobs": 544,
+    "collected": 515,
+    "empty": 29,
+    "unavailable": 0,
+    "wide_symbol_confirmed_in_all_four_model8_scopes": [
+      "confirm-cpu3-steady",
+      "confirm-cpu3-boost",
+      "confirm-cpu4-steady",
+      "confirm-cpu4-boost"
+    ],
+    "affinity_syscall_count_verified_in_all_32_stat_jobs": true,
+    "memory_reports_failed": [],
+    "unparsed_memory_load_samples": 0,
+    "lbr_recordings_with_actual_stacks": 16
+  },
+  "final_restoration_audit": {
+    "passed": true,
+    "journal_paths_verified": 46,
+    "kernel_tasks_verified": 0,
+    "power_restored": true,
+    "online": "0-23",
+    "boost": "1",
+    "irqbalance": "active",
+    "temporary_cgroup_absent": true,
+    "holder_and_watchdog_inactive": true,
+    "global_aslr_current": "2"
+  },
+  "accepted_source_verification": {
+    "accepted_runtime_source_unchanged_from_task_start": true,
+    "cmake_production_configuration_unchanged": true,
+    "cmake_test_only_addition": "benchmark_pmu registration",
+    "candidate_integration": false,
+    "publication_hold": true
+  }
+}

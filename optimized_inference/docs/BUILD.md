@@ -218,34 +218,37 @@ Ryzen core: 3.637% for model 2 and 1.609% for model 8. Neither the sub-percent
 quantize4 increment nor its addition to CM passed the predeclared A/A guard.
 No gain was confirmed at a 10 ms cadence. These measurements do not replace
 the earlier study, establish a WCET bound, or imply compact-core/other-CPU gains.
-## Exact quantize4 refinement experiment (2026-11-10)
+## Model-8 grouped VNNI experiments (2026-11-10)
 
-The range-reuse implementation is available for AVX2 and optional native VNNI.
-Both experimental options default OFF: later studies confirm conditional gains,
-but not global acceptance across models and workloads. See the [design and selection](QUANTIZE4_DESIGN.md)
-and [aggregate evidence](../validation/quantize4_refinement_20261110.json).
+Model-8 VNNI batch and paired-projection fusion are part of the default VNNI
+backend. No additional CMake experiment switches are required. Building with
+DPDF_ENABLE_AVX_VNNI=OFF retains the AVX2 path. Standalone grouped K64 and
+extra dedicated VNNI padding experiments were rejected and removed. See the
+[study and deferred-publication decision](MODEL8_VNNI_EXPERIMENTS.md).
 
-From the repository root, configure an AVX2-only experimental build:
+## Retired quantize4 experiments (2026-11-11)
 
-```sh
-cmake -S optimized_inference -B build-q4-avx2 \
-  -DCMAKE_BUILD_TYPE=Release -DDPDF_ENABLE_AVX_VNNI=OFF \
-  -DDPDF_ENABLE_QUANTIZE4_REFINEMENT=ON
-```
+The refined AVX2 quantizer and four-row VNNI quantizer were rejected for the
+production scope. Their implementation, selection branches, build options and
+experiment-only contract targets have been removed. Current builds retain the
+selected exact quantizer, existing AVX2 four-row helper, per-row VNNI quantization,
+CM for both models and eligible model8 VNNI batch/pair fusion.
 
-For the native experiment, use a separate directory and additionally enable
-VNNI quantize4:
+The old `DPDF_ENABLE_QUANTIZE4_REFINEMENT` and `DPDF_ENABLE_VNNI_QUANTIZE4`
+settings are rejected, including stale cached OFF values. Remove them from an
+existing cache with `cmake -U DPDF_ENABLE_QUANTIZE4_REFINEMENT -U
+DPDF_ENABLE_VNNI_QUANTIZE4 ...`, or configure a fresh build. Do not silently
+rebuild a historical candidate against current source. Research source and
+binaries remain in ignored local archives; the
+[historical design/evidence](QUANTIZE4_DESIGN.md) is retained as a record.
 
-```sh
-cmake -S optimized_inference -B build-q4-native \
-  -DCMAKE_BUILD_TYPE=Release -DDPDF_ENABLE_QUANTIZE4_REFINEMENT=ON \
-  -DDPDF_ENABLE_VNNI_QUANTIZE4=ON
-```
+Source-line changes invalidate old GCC PGO location checksums even when the
+selected quantization algorithm is unchanged. Generate a fresh profile using
+the normal GENERATE/train/USE recipe above; never suppress coverage-mismatch
+errors or reuse an old-source profile.
 
-Build and run CTest normally. Recreate model-8 PGO for each configuration;
-do not reuse a profile from another option combination. The independent
-`quantize4_refined_contract` and `quantize4_contract_vnni` check the candidate
-even when the default library retains legacy quantization.
+The following study results describe the archived implementation, not current
+build options.
 
 The short study used eight paired blocks per ISA/model/cadence, two A/A pairs,
 160 fresh processes / 56,000 calls and 40 separate hardware jobs. It retained
@@ -261,7 +264,7 @@ deep-idle restriction. It retained 200 unprofiled processes / 60,800 calls plus
 40 separate hardware jobs. Only native model-8 batch passed the planned A/A and
 effect gates: +0.832% time reduction, adjusted interval [0.580,1.084]%. This is
 a controlled non-boost result; ordinary-power and paced acceptance remains
-outstanding, and both experimental options still default OFF.
+outstanding. Both options were disabled at that stage and are now removed.
 
 The [extended cadence/power matrix](../validation/quantize4_regimes_20261110.json)
 then covers 48 conditions with family size48, eight A/A and eight comparative
@@ -290,7 +293,7 @@ paced10 (1.472%) and complete audio (1.448%). Native quantize4 adds 0.810%
 environment. No quantize4 model-2, AVX2 or complete-audio condition passes every
 superiority gate. Compact/Boost native model-8 continuous passes practical
 noninferiority at the 0.5% loss margin, not useful superiority. Both options
-remain OFF.
+were disabled at that stage and are now removed.
 
 The complete regenerated 65-fixture numerical corpus passes 130 spectral/state
 jobs and 130 PCM jobs on the PC; red passes 130 AVX2 portability jobs. All 130

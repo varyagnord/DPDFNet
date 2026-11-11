@@ -5,6 +5,12 @@ compiled from shared kernels, a model-specific graph, and its final assembly
 specializations. Backend symbols are isolated at compile time; neither graph
 can accidentally bind to the other model's kernels.
 
+Future optional ISA work follows the [CPU-aware optimization and dispatch
+plan](CPU_OPTIMIZATION_PLAN.md): independent capability/OS-state prerequisites,
+layout-compatible creation-time operation bindings, and measured width policy.
+This is a design for future work; the current runtime still selects AVX2 or
+VEX AVX-VNNI and has no AVX-512 backend.
+
 ## Numerical implementation
 
 Quantized matrices use signed **7-bit weights** and dynamically scaled **8-bit
@@ -20,6 +26,14 @@ fixed graph's common 64-input projections. Model 2 also uses fused paired
 projections, a 256-input assembly projection, and AVX2 arithmetic surrounding
 unchanged scalar libm calls in its generated GRU cells. Model 8 uses its
 accepted fixed-row kernels and compiler profile.
+
+Model-8 VNNI batch and paired projections reuse the namespaced four-row fused
+assembly by default. One private backend definition selects both call sites;
+there are no public fusion experiment switches and no implicit quantize4
+promotion. Standalone grouped scalar K64 and extra dedicated VNNI branch
+padding were rejected and removed after evaluation. The existing general
+model-8 branch alignment is unchanged. See the
+[study and explicit selection decision](MODEL8_VNNI_EXPERIMENTS.md).
 
 The K64N64 channel-major pointwise path supports both AVX2 and AVX-VNNI.
 It reads and writes frequency positions directly, avoiding the eight eligible
@@ -87,16 +101,15 @@ preserve FP order and empty-row behavior, and repeat the numerical and ISA gates
 The [exact quantize4 refinement design](QUANTIZE4_DESIGN.md) specifies shared
 range/packing helpers, complete empty-mask coverage, scalar versus neutral-lane
 mixed-group candidates, and an independent CM-relative acceptance study.
-The refinement is now implemented in `quantize_refined.inc`: ranges and packing
-are shared, all-empty groups bypass divisions, and mixed groups use safe
-neutral lanes before exact divisions and skip empty-row packing. The scalar
-mixed alternative was tested separately and regressed on some diagnostic masks.
-Both experimental CMake options default OFF after an inconclusive short
-graph-level study. Compile-time selection retains `quantize_legacy.inc`;
-final default/candidate libraries match their respective measured binaries
-byte for byte. No callback dispatch, persistent cache or ABI was introduced.
-Do not add public presets, per-context state, or a vendor-specific dispatcher
-on the basis of one CPU's microbenchmark.
+The refinement was numerically validated, but did not establish robust full-audio
+acceptance. On2026-11-11 the user rejected retaining disabled runtime experiments.
+The refined implementation, both build options, conditional selection branches
+and experiment-only test targets are removed. Current kernels include only
+`quantize_legacy.inc`; AVX2 keeps its existing four-row helper and VNNI keeps its
+selected per-row quantization. CM and accepted model8 VNNI fusion are unchanged.
+Archived source/binaries and study reports retain the research evidence without
+adding a callback branch, public flag, persistent state or ABI to the product.
+The numerical/performance paragraphs below refer to that historical research.
 
 The [Ryzen recheck](../validation/ryzen_vnni_retest_20261110.json) supports
 retaining the selected CM-only VNNI branch. It found no SIMD stack spills in
@@ -136,3 +149,14 @@ The original historical reference corpus and real device/service-load behavior
 are not certified. Secondary cumulative binary comparisons are exploratory;
 do not add separately estimated percentages. All laboratory settings are
 independently verified restored, and production services remain unchanged.
+
+## Private CPU-domain prototype boundary
+
+The CPU-feature execution study retained capability-domain discovery, immutable
+qops bindings and the EVEX256 wide kernel outside the accepted runtime because
+its complete registered performance gates did not pass. The installed ABI and
+current context lifecycle are unchanged. The prototype's joined probe thread,
+per-call affinity guard, additional Threads dependency and bounded CPU mask are
+not current API promises. See [CPU_OPTIMIZATION_PLAN.md](CPU_OPTIMIZATION_PLAN.md)
+and its linked validation record. Advanced profiling is maintained in the
+common laboratory independently of runtime promotion.

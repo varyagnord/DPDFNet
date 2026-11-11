@@ -1,7 +1,8 @@
 # Exact four-row quantization refinement
 
-Status: full registered qualification completed, 2026-11-10. Both experimental
-build options remain OFF by default. Complete regenerated spectral/state/PCM
+Status: archived research, removed from production on2026-11-11 by user
+decision. No disabled-by-default implementation or build flag is retained.
+The full registered qualification completed on2026-11-10. Complete regenerated spectral/state/PCM
 equivalence and red AVX2 portability passed for both models. The final
 72-condition study confirms incremental native model-8 gains on the fast
 Ryzen core at steady frequency: continuous +0.810%, paced10 +0.863%. Global
@@ -12,18 +13,19 @@ The earlier native quantize4 experiment is `1e2cb70`.
 
 ## Implementation and selection
 
-`src/common/quantize_refined.inc` implements the shared helpers and candidate V.
-`quantize_legacy.inc` preserves the selected baseline; `int8_kernels.inc`
-selects between them at compile time. There is no new runtime branch or ABI.
-The R and refactor-only diagnostic sources are retained in the local study.
-Independent numerical contracts check the refined AVX2 and VNNI helpers even
-when the baseline library is selected. The frozen oracle is intentionally
-independent of both implementations.
+The historical `quantize_refined.inc` implemented shared range/packing helpers
+and candidate V. It has been removed from production along with both experiment
+options and experiment-only tests. `quantize_legacy.inc` is the sole selected
+runtime implementation. The original AVX2 four-row helper remains enabled for
+both models; VNNI retains the selected per-row quantizer. This does not remove
+CM or the accepted model8 VNNI batch/pair fusion.
 
-Enable `DPDF_ENABLE_QUANTIZE4_REFINEMENT=ON` for the AVX2 refinement. Additionally
-enable `DPDF_ENABLE_VNNI_QUANTIZE4=ON` to apply it to native row-major VNNI
-calls. The latter requires the former. Keep a fresh model-8 PGO profile per
-configuration. These are experimental build controls, not performance presets.
+Historical sources and binaries are preserved in ignored local research
+archives, including `.local/runtime-selection-20261111/before/`. Reproducing
+an old candidate requires its frozen source/profile/binary, not current CMake
+options. Current CMake rejects the retired option names rather than silently
+building a different variant. The following numerical and performance results
+remain unchanged historical evidence.
 
 The [short refinement study](../validation/quantize4_refinement_20261110.json)
 contains 160 unprofiled processes / 56,000 calls, 16 helper discovery processes

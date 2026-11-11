@@ -1,4 +1,4 @@
-/* Selected quantization baseline. Keep until the refinement passes confirmation. */
+/* Selected exact quantization implementation shared by the runtime backends. */
 static void quantize(const float *x,int8_t *out,int k,float *scale,int *zp) {
     __m256 lo=_mm256_setzero_ps(),hi=lo;
     for (int j=0;j<k;j+=8) { __m256 v=_mm256_loadu_ps(x+j); lo=_mm256_min_ps(lo,v); hi=_mm256_max_ps(hi,v); }

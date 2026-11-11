@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-11",
+  "scope": "Baseline-only method pilot; one HX470 fast core, original/restricted idle crossed with fixed/Boost frequency; fixed policy order, four pairs per adapter.",
+  "pilot": {
+    "cells": [
+      {
+        "profile": "steady-original",
+        "adapter": "buffered",
+        "paired_log_sd": 0.03683963440168783,
+        "aa_gain_percent": -1.7501622133228034,
+        "aa_interval_percent": [
+          -17.77419337575463,
+          12.093683567788938
+        ],
+        "process_mean_cv_percent": 2.206528799333541,
+        "mean_ms": 2.0276829365234375,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "wake_mean_ms": 0.27566850390625
+      },
+      {
+        "profile": "steady-original",
+        "adapter": "legacy",
+        "paired_log_sd": 0.02631647188576133,
+        "aa_gain_percent": -0.8866357665993307,
+        "aa_interval_percent": [
+          -11.99683162109042,
+          9.121417731376146
+        ],
+        "process_mean_cv_percent": 4.529043514330756,
+        "mean_ms": 2.0368501884765626,
+        "minor_faults": 454,
+        "major_faults": 0,
+        "wake_mean_ms": null
+      },
+      {
+        "profile": "steady-original",
+        "adapter": "native",
+        "paired_log_sd": 0.02241724097845743,
+        "aa_gain_percent": -0.638864830107555,
+        "aa_interval_percent": [
+          -10.005698185834898,
+          7.930395594754436
+        ],
+        "process_mean_cv_percent": 1.3993737905347436,
+        "mean_ms": 1.7146421923828126,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "wake_mean_ms": 0.271197845703125
+      },
+      {
+        "profile": "steady-shallow",
+        "adapter": "buffered",
+        "paired_log_sd": 0.0018395563621724847,
+        "aa_gain_percent": 0.14961867049988475,
+        "aa_interval_percent": [
+          -0.5822386966428228,
+          0.8761508906506288
+        ],
+        "process_mean_cv_percent": 0.2755899563782407,
+        "mean_ms": 1.5299673916015626,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "wake_mean_ms": 0.004332255859375
+      },
+      {
+        "profile": "steady-shallow",
+        "adapter": "legacy",
+        "paired_log_sd": 0.0061432078170711776,
+        "aa_gain_percent": 0.2385069192453071,
+        "aa_interval_percent": [
+          -2.2243632552927384,
+          2.642039678479724
+        ],
+        "process_mean_cv_percent": 0.41086652128082735,
+        "mean_ms": 1.54758277734375,
+        "minor_faults": 456,
+        "major_faults": 0,
+        "wake_mean_ms": null
+      },
+      {
+        "profile": "steady-shallow",
+        "adapter": "native",
+        "paired_log_sd": 0.0022516449968940757,
+        "aa_gain_percent": 0.19441589197189968,
+        "aa_interval_percent": [
+          -0.7017204764899532,
+          1.0825776162362244
+        ],
+        "process_mean_cv_percent": 0.2166759006937551,
+        "mean_ms": 1.4820694609375,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "wake_mean_ms": 0.00431778515625
+      },
+      {
+        "profile": "boost-original",
+        "adapter": "buffered",
+        "paired_log_sd": 0.05484471754656776,
+        "aa_gain_percent": 5.263184112190311,
+        "aa_interval_percent": [
+          -17.781284241553628,
+          23.79889264788372
+        ],
+        "process_mean_cv_percent": 3.9671715337003697,
+        "mean_ms": 1.6323856044921876,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "wake_mean_ms": 0.29809473828125
+      },
+      {
+        "profile": "boost-original",
+        "adapter": "legacy",
+        "paired_log_sd": 0.1229052664906479,
+        "aa_gain_percent": -0.8194432129431384,
+        "aa_interval_percent": [
+          -64.22703266149693,
+          38.10665658972873
+        ],
+        "process_mean_cv_percent": 8.154114739124928,
+        "mean_ms": 1.6458599697265626,
+        "minor_faults": 456,
+        "major_faults": 0,
+        "wake_mean_ms": null
+      },
+      {
+        "profile": "boost-original",
+        "adapter": "native",
+        "paired_log_sd": 0.036237296360371325,
+        "aa_gain_percent": -2.275287638464185,
+        "aa_interval_percent": [
+          -18.099279970922822,
+          11.42846540549617
+        ],
+        "process_mean_cv_percent": 4.565592647679466,
+        "mean_ms": 1.470379802734375,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "wake_mean_ms": 0.285480904296875
+      },
+      {
+        "profile": "boost-shallow",
+        "adapter": "buffered",
+        "paired_log_sd": 0.1454328791850685,
+        "aa_gain_percent": 9.462921208357766,
+        "aa_interval_percent": [
+          -61.27482250835865,
+          49.17394724958264
+        ],
+        "process_mean_cv_percent": 9.851695197855866,
+        "mean_ms": 1.2436833837890626,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "wake_mean_ms": 0.00418849609375
+      },
+      {
+        "profile": "boost-shallow",
+        "adapter": "legacy",
+        "paired_log_sd": 0.06271063928503459,
+        "aa_gain_percent": -1.8798803793882657,
+        "aa_interval_percent": [
+          -30.67951797547348,
+          20.57278610358406
+        ],
+        "process_mean_cv_percent": 6.123121714289346,
+        "mean_ms": 1.294433447265625,
+        "minor_faults": 454,
+        "major_faults": 0,
+        "wake_mean_ms": null
+      },
+      {
+        "profile": "boost-shallow",
+        "adapter": "native",
+        "paired_log_sd": 0.2500954549341354,
+        "aa_gain_percent": 8.830724908209175,
+        "aa_interval_percent": [
+          -146.05761858445908,
+          66.21995787580299
+        ],
+        "process_mean_cv_percent": 14.962521682334744,
+        "mean_ms": 1.2008975322265625,
+        "minor_faults": 0,
+        "major_faults": 0,
+        "wake_mean_ms": 0.003896720703125
+      }
+    ],
+    "precision": {
+      "buffered": {
+        "observed_sd_ratio": 0.44623569935256596,
+        "observed_reduction_percent": 55.376430064743396,
+        "practical_drift_detected": false,
+        "preferred_in_this_pilot": true
+      },
+      "native": {
+        "observed_sd_ratio": 0.2948392481060093,
+        "observed_reduction_percent": 70.51607518939906,
+        "practical_drift_detected": false,
+        "preferred_in_this_pilot": true
+      }
+    },
+    "small_pilot_only": true,
+    "not_candidate_acceptance": true,
+    "no_optional_extension": true,
+    "restorations_verified": true
+  },
+  "audit": {
+    "passed": true,
+    "processes": 96,
+    "raw_observations": 12288,
+    "independent_scipy_intervals": 12,
+    "late": 0,
+    "major_faults": 0,
+    "all_sidecars_verified": true,
+    "all_frozen_hashes_verified": true,
+    "native_weights_equal_public": true,
+    "post_collection_change": "Native builder only now rejects an unbridged vendored engine; measured source archived, timing/math unchanged."
+  },
+  "numerical": {
+    "buffered_model_fixture_jobs": 130,
+    "buffered_fft_pcm_equal": true,
+    "buffered_rounding_modes": 4,
+    "buffered_ftz_daz_modes": 4,
+    "native_reference_and_reset": [
+      {
+        "model": 2,
+        "frames": 1657,
+        "bitwise_equal_to_existing_real_dsp": true,
+        "reset_equal": true,
+        "digest": "f6e4d19c05f5e684e6241c91d47a9e1eda432c0f2cf3131fe0d521767d4ef4b9"
+      },
+      {
+        "model": 8,
+        "frames": 1657,
+        "bitwise_equal_to_existing_real_dsp": true,
+        "reset_equal": true,
+        "digest": "6d333c29abaa3193ae17b2e71a888a7f19ebeb4a0110835a7afc35fa4affd386"
+      }
+    ]
+  },
+  "build_gates": {
+    "native_pgo_ctests": 48,
+    "asan_ubsan_ctests": 48,
+    "avx2_only_ctests": 37,
+    "static_ctests": 47,
+    "lab_behavioral_tests": 46,
+    "audio_contracts": 9,
+    "sanitized_and_static_python_numerics": "Skipped explicitly; native C model contracts and release shared numerical replay retained."
+  },
+  "profiles": {
+    "jobs": 40,
+    "collected": 40,
+    "empty": 0,
+    "unavailable": 0,
+    "counter_diagnostics": [
+      {
+        "adapter": "buffered",
+        "diagnostic_samples": 1280,
+        "minimum_ratio": 1.0041368444042307,
+        "maximum_ratio": 2.627306525245346,
+        "descriptive_correlation": -0.8160798651814595,
+        "interpretation": "CPU-wide active-counter diagnostic across separate profiler passes, not independent replicates or primary frequency-adjusted timing."
+      },
+      {
+        "adapter": "native",
+        "diagnostic_samples": 1280,
+        "minimum_ratio": 1.0056260951021934,
+        "maximum_ratio": 2.6276630316431313,
+        "descriptive_correlation": -0.8835409315951823,
+        "interpretation": "CPU-wide active-counter diagnostic across separate profiler passes, not independent replicates or primary frequency-adjusted timing."
+      }
+    ]
+  },
+  "restoration": {
+    "passed": true,
+    "immediate_exact_restoration_receipt": {
+      "restored": true,
+      "errors": [],
+      "mismatched_files": [],
+      "power_matches": true,
+      "online": "0-23",
+      "timestamp_ns": 1794382670650894977
+    },
+    "current_static_settings_match": true,
+    "current_exact_journal_paths": 46,
+    "current_dynamic_irq_changes": [
+      {
+        "path": "/proc/irq/53/smp_affinity_list",
+        "before": "14",
+        "requested_by_lab": "4,5,6,7,8,9,10,11,16,17,18,19,20,21,22,23",
+        "current": "22",
+        "interpretation": "Post-receipt dynamic IRQ change with irqbalance active; current is not the lab mask. Source attribution not asserted."
+      }
+    ],
+    "irqbalance": "active",
+    "online": "0-23",
+    "temporary_cgroup_absent": true,
+    "holder_watchdog_inactive": true,
+    "global_aslr": "2"
+  },
+  "runtime_sha256": "fcc69ff8cb3e3a818daa2114f72eb1291f7ab324aa132a4c8c2cd76a6026c7b7",
+  "runtime_defaults_changed": false,
+  "candidate_acceleration_claim": false,
+  "publication": false,
+  "limitations": [
+    "Four pairs per cell: variance reductions descriptive, not universal guarantees",
+    "Absolute Boost noise remains too large for some sub-percent/2% NI claims",
+    "Native and NumPy different DSP scopes; no cross-adapter speed claim",
+    "Short pilot p99 is second-largest; no population-p99 or WCET bound",
+    "Kernel tracers available as root; no tracer was changed/collected in this pilot",
+    "Post-receipt irqbalance redistribution logged separately from immediate restoration"
+  ]
+}

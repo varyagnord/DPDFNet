@@ -1,0 +1,5415 @@
+{
+  "post_collection_change": "Preflight only: enforce local mean+tail endpoint count; original measured tools archived in frozen-tools and estimators/verdicts unchanged.",
+  "schema_version": 1,
+  "date": "2026-11-11",
+  "policy": {
+    "version": 2,
+    "roles": {
+      "continuous": "throughput",
+      "audio10": "audio"
+    },
+    "model_roles": {
+      "2": "guard"
+    },
+    "minimum_gain_percent": 0.3,
+    "mean_loss_margin_percent": 2.0,
+    "tail_loss_margin_percent": 5.0,
+    "aa_drift_percent": 0.3,
+    "family_comparisons": 14
+  },
+  "candidate": "evx",
+  "historical_results_unchanged": true,
+  "default_promoted": false,
+  "registered_global_scope_passed": false,
+  "processes": 320,
+  "calls": 106496,
+  "independently_verified_intervals": 48,
+  "late": 0,
+  "over_10ms": 0,
+  "major_faults": 0,
+  "maximum_observed_ms": 2.463766,
+  "sessions": [
+    {
+      "session": "screen",
+      "restore": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794377432092533352
+      },
+      "hashes_verified": true,
+      "randomized": false
+    },
+    {
+      "session": "confirm-cpu3",
+      "restore": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794377646124124532
+      },
+      "hashes_verified": true,
+      "randomized": true
+    },
+    {
+      "session": "confirm-cpu4",
+      "restore": {
+        "restored": true,
+        "errors": [],
+        "mismatched_files": [],
+        "power_matches": true,
+        "online": "0-23",
+        "timestamp_ns": 1794377798730376393
+      },
+      "hashes_verified": true,
+      "randomized": true
+    }
+  ],
+  "conditions": [
+    {
+      "session": "screen",
+      "cpu": 3,
+      "power": "steady",
+      "layout": "fixed",
+      "gain_percent": 1.1850717138022437,
+      "interval_percent": [
+        0.8540989319370196,
+        1.5149396291913475
+      ],
+      "paired_log_sd": 0.0012403025314505457,
+      "paired_blocks": 4,
+      "isa": "evx",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 4,
+            "mean": 1.4718590131834999,
+            "sd": 0.0009120397106480108,
+            "min": 1.470519369141,
+            "p95": 1.472465644531,
+            "p99": 1.472465644531,
+            "max": 1.472465644531
+          },
+          "observations_ms": {
+            "n": 2048,
+            "mean": 1.4718590131835938,
+            "sd": 0.0032970474903631338,
+            "min": 1.464305,
+            "p95": 1.476998,
+            "p99": 1.479794,
+            "max": 1.505322
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 4,
+            "mean": 0.9990221503037611,
+            "sd": 0.0006260740398291547,
+            "min": 0.9981471869216765,
+            "p95": 0.9995615893652026,
+            "p99": 0.9995615893652026,
+            "max": 0.9995615893652026
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 4,
+            "mean": 1.4544166826175,
+            "sd": 0.0013411994399636304,
+            "min": 1.453156726563,
+            "p95": 1.455937482422,
+            "p99": 1.455937482422,
+            "max": 1.455937482422
+          },
+          "observations_ms": {
+            "n": 2048,
+            "mean": 1.4544166826171876,
+            "sd": 0.009948907130592852,
+            "min": 1.446251,
+            "p95": 1.459926,
+            "p99": 1.464916,
+            "max": 1.875248
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 4,
+            "mean": 0.9985518571744891,
+            "sd": 0.00034613089302638027,
+            "min": 0.9982240544756719,
+            "p95": 0.9989837980135022,
+            "p99": 0.9989837980135022,
+            "max": 0.9989837980135022
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.525178290035333,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "throughput",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": true,
+        "process_p99_noninferiority": true,
+        "useful_mean_gain": true,
+        "deadline_fault_guard": true,
+        "passed": true,
+        "interpretation": "throughput superiority",
+        "mean_interval_percent": [
+          0.7616258888035188,
+          1.6067107138875714
+        ],
+        "process_p99_interval_percent": [
+          0.3566186987786768,
+          1.6392207152348015
+        ],
+        "family_comparisons": 8
+      }
+    },
+    {
+      "session": "screen",
+      "cpu": 3,
+      "power": "steady",
+      "layout": "fixed",
+      "gain_percent": -0.018718068229350848,
+      "interval_percent": [
+        -0.3319709879198607,
+        0.2935568243105813
+      ],
+      "paired_log_sd": 0.0011598954660390457,
+      "paired_blocks": 4,
+      "isa": "k64",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 4,
+            "mean": 1.47168450292975,
+            "sd": 0.000815312751412351,
+            "min": 1.470815662109,
+            "p95": 1.472499322266,
+            "p99": 1.472499322266,
+            "max": 1.472499322266
+          },
+          "observations_ms": {
+            "n": 2048,
+            "mean": 1.4716845029296874,
+            "sd": 0.003224336717557392,
+            "min": 1.464365,
+            "p95": 1.476759,
+            "p99": 1.480205,
+            "max": 1.504331
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 4,
+            "mean": 0.9981638497127218,
+            "sd": 0.0003016120665488579,
+            "min": 0.997966244182351,
+            "p95": 0.9986072036761587,
+            "p99": 0.9986072036761587,
+            "max": 0.9986072036761587
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 4,
+            "mean": 1.4719602109375,
+            "sd": 0.001263022958229358,
+            "min": 1.470258207031,
+            "p95": 1.473189027344,
+            "p99": 1.473189027344,
+            "max": 1.473189027344
+          },
+          "observations_ms": {
+            "n": 2048,
+            "mean": 1.4719602109375,
+            "sd": 0.003323865671016487,
+            "min": 1.463784,
+            "p95": 1.477169,
+            "p99": 1.480144,
+            "max": 1.503359
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 4,
+            "mean": 0.9979967221869671,
+            "sd": 0.0002712360409827044,
+            "min": 0.9976313379975247,
+            "p95": 0.9982142593599678,
+            "p99": 0.9982142593599678,
+            "max": 0.9982142593599678
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.33260478363608126,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "throughput",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": true,
+        "process_p99_noninferiority": true,
+        "useful_mean_gain": false,
+        "deadline_fault_guard": true,
+        "passed": false,
+        "interpretation": "throughput superiority",
+        "mean_interval_percent": [
+          -0.4194810162640117,
+          0.38044547958044905
+        ],
+        "process_p99_interval_percent": [
+          -0.18677722300299848,
+          0.13718411150217547
+        ],
+        "family_comparisons": 8
+      }
+    },
+    {
+      "session": "screen",
+      "cpu": 3,
+      "power": "steady",
+      "layout": "fixed",
+      "gain_percent": 0.04349338854640061,
+      "interval_percent": [
+        -0.3485631293672409,
+        0.4340181624226003
+      ],
+      "paired_log_sd": 0.0014520163320911235,
+      "paired_blocks": 4,
+      "isa": "pad",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 4,
+            "mean": 1.47203636621075,
+            "sd": 0.0015163276667005115,
+            "min": 1.470863257812,
+            "p95": 1.474225726562,
+            "p99": 1.474225726562,
+            "max": 1.474225726562
+          },
+          "observations_ms": {
+            "n": 2048,
+            "mean": 1.4720363662109375,
+            "sd": 0.003216501995510573,
+            "min": 1.464375,
+            "p95": 1.477089,
+            "p99": 1.479414,
+            "max": 1.498609
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 4,
+            "mean": 0.9983408260823394,
+            "sd": 0.0004333765154465086,
+            "min": 0.9977398117753967,
+            "p95": 0.9987622757279123,
+            "p99": 0.9987622757279123,
+            "max": 0.9987622757279123
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 4,
+            "mean": 1.47139606054675,
+            "sd": 0.0014257209363777554,
+            "min": 1.469835457031,
+            "p95": 1.473158654297,
+            "p99": 1.473158654297,
+            "max": 1.473158654297
+          },
+          "observations_ms": {
+            "n": 2048,
+            "mean": 1.471396060546875,
+            "sd": 0.0032889637955305613,
+            "min": 1.463524,
+            "p95": 1.476398,
+            "p99": 1.480837,
+            "max": 1.508368
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 4,
+            "mean": 0.9983702704758106,
+            "sd": 0.0004786667575863714,
+            "min": 0.9977955699711968,
+            "p95": 0.9987854083080332,
+            "p99": 0.9987854083080332,
+            "max": 0.9987854083080332
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.5046877608386069,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "throughput",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": true,
+        "process_p99_noninferiority": true,
+        "useful_mean_gain": false,
+        "deadline_fault_guard": true,
+        "passed": false,
+        "interpretation": "throughput superiority",
+        "mean_interval_percent": [
+          -0.45814279632998556,
+          0.5426246608793872
+        ],
+        "process_p99_interval_percent": [
+          -0.8615518333285443,
+          0.7613015440878779
+        ],
+        "family_comparisons": 8
+      }
+    },
+    {
+      "session": "screen",
+      "cpu": 3,
+      "power": "steady",
+      "layout": "fixed",
+      "gain_percent": 0.9297629592239565,
+      "interval_percent": [
+        0.735692580446512,
+        1.1234539134841959
+      ],
+      "paired_log_sd": 0.0007258973966467646,
+      "paired_blocks": 4,
+      "isa": "qnt",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 4,
+            "mean": 1.47104164990225,
+            "sd": 0.0007279470484230493,
+            "min": 1.470401751953,
+            "p95": 1.472077041016,
+            "p99": 1.472077041016,
+            "max": 1.472077041016
+          },
+          "observations_ms": {
+            "n": 2048,
+            "mean": 1.4710416499023438,
+            "sd": 0.0031910296650752576,
+            "min": 1.463453,
+            "p95": 1.475946,
+            "p99": 1.480064,
+            "max": 1.49876
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 4,
+            "mean": 0.9985843015748064,
+            "sd": 0.0006456309673834064,
+            "min": 0.9976787386873232,
+            "p95": 0.9992049537644088,
+            "p99": 0.9992049537644088,
+            "max": 0.9992049537644088
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 4,
+            "mean": 1.45736476708975,
+            "sd": 0.0013242970723131586,
+            "min": 1.455645880859,
+            "p95": 1.458714912109,
+            "p99": 1.458714912109,
+            "max": 1.458714912109
+          },
+          "observations_ms": {
+            "n": 2048,
+            "mean": 1.4573647670898437,
+            "sd": 0.003151328431347453,
+            "min": 1.449658,
+            "p95": 1.462251,
+            "p99": 1.465578,
+            "max": 1.481888
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 4,
+            "mean": 0.9984741552642518,
+            "sd": 0.0007567443141338132,
+            "min": 0.997802736157317,
+            "p95": 0.9991563220772357,
+            "p99": 0.9991563220772357,
+            "max": 0.9991563220772357
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.46728826196892337,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": true,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "throughput",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": true,
+        "process_p99_noninferiority": true,
+        "useful_mean_gain": true,
+        "deadline_fault_guard": true,
+        "passed": true,
+        "interpretation": "throughput superiority",
+        "mean_interval_percent": [
+          0.6815178023178214,
+          1.17738763083306
+        ],
+        "process_p99_interval_percent": [
+          0.3525756774823252,
+          1.6142434561467245
+        ],
+        "family_comparisons": 8
+      }
+    },
+    {
+      "session": "confirm-cpu3",
+      "cpu": 3,
+      "power": "boost",
+      "layout": "randomized",
+      "gain_percent": -1.425478181764328,
+      "interval_percent": [
+        -8.502589444950615,
+        5.190026551220884
+      ],
+      "paired_log_sd": 0.04948519621398227,
+      "paired_blocks": 8,
+      "isa": "evx",
+      "model": 2,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.076277837890625,
+            "sd": 0.06683646895659484,
+            "min": 0.971428640625,
+            "p95": 1.159616234375,
+            "p99": 1.159616234375,
+            "max": 1.159616234375
+          },
+          "observations_ms": {
+            "n": 512,
+            "mean": 1.076277837890625,
+            "sd": 0.16598047593554993,
+            "min": 0.283052,
+            "p95": 1.2011,
+            "p99": 1.38202,
+            "max": 1.550277
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.154121881139919,
+            "sd": 0.07751033729488778,
+            "min": 1.0409213947940028,
+            "p95": 1.2760310586198,
+            "p99": 1.2760310586198,
+            "max": 1.2760310586198
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 225,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.090857013671875,
+            "sd": 0.05196022366110177,
+            "min": 1.00010859375,
+            "p95": 1.164662375,
+            "p99": 1.164662375,
+            "max": 1.164662375
+          },
+          "observations_ms": {
+            "n": 512,
+            "mean": 1.090857013671875,
+            "sd": 0.14865539681950135,
+            "min": 0.283934,
+            "p95": 1.207281,
+            "p99": 1.382491,
+            "max": 1.58906
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.169454065591402,
+            "sd": 0.08563965467981448,
+            "min": 1.0278093664703518,
+            "p95": 1.2673738634991456,
+            "p99": 1.2673738634991456,
+            "max": 1.2673738634991456
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 226,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 7.750502952169347,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "guard",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": false,
+        "process_p99_noninferiority": false,
+        "useful_mean_gain": false,
+        "deadline_fault_guard": true,
+        "passed": false,
+        "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+        "mean_interval_percent": [
+          -9.348101694428234,
+          5.923125641935812
+        ],
+        "process_p99_interval_percent": [
+          -16.764648547115748,
+          16.0461398487036
+        ],
+        "family_comparisons": 14
+      }
+    },
+    {
+      "session": "confirm-cpu3",
+      "cpu": 3,
+      "power": "boost",
+      "layout": "randomized",
+      "gain_percent": -0.06894087339945898,
+      "interval_percent": [
+        -0.3968097636157797,
+        0.2578572854915917
+      ],
+      "paired_log_sd": 0.002399858235355779,
+      "paired_blocks": 8,
+      "isa": "evx",
+      "model": 2,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.239304054443125,
+            "sd": 0.0003467721616311325,
+            "min": 0.238922099609,
+            "p95": 0.239822554687,
+            "p99": 0.239822554687,
+            "max": 0.239822554687
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.23930405444335937,
+            "sd": 0.0016390106655010395,
+            "min": 0.235924,
+            "p95": 0.241906,
+            "p99": 0.244039,
+            "max": 0.266572
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.552703729179156,
+            "sd": 0.0014178764248779995,
+            "min": 2.5508554584880874,
+            "p95": 2.554978417850673,
+            "p99": 2.554978417850673,
+            "max": 2.554978417850673
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.239469203613125,
+            "sd": 0.00046244986955098545,
+            "min": 0.238754568359,
+            "p95": 0.240075841797,
+            "p99": 0.240075841797,
+            "max": 0.240075841797
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.23946920361328125,
+            "sd": 0.0017836279688267617,
+            "min": 0.235784,
+            "p95": 0.242366,
+            "p99": 0.245171,
+            "max": 0.257034
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.551358391460521,
+            "sd": 0.0033612163354413507,
+            "min": 2.5467229721388667,
+            "p95": 2.555651704693781,
+            "p99": 2.555651704693781,
+            "max": 2.555651704693781
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.2929329380693124,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "guard",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": true,
+        "process_p99_noninferiority": true,
+        "useful_mean_gain": false,
+        "deadline_fault_guard": true,
+        "passed": true,
+        "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+        "mean_interval_percent": [
+          -0.4346109202881365,
+          0.295397813891507
+        ],
+        "process_p99_interval_percent": [
+          -1.1583666733902653,
+          0.5200696316635556
+        ],
+        "family_comparisons": 14
+      }
+    },
+    {
+      "session": "confirm-cpu3",
+      "cpu": 3,
+      "power": "boost",
+      "layout": "randomized",
+      "gain_percent": -3.6218409946170427,
+      "interval_percent": [
+        -7.943400448225679,
+        0.5267030079911139
+      ],
+      "paired_log_sd": 0.029976557845431552,
+      "paired_blocks": 8,
+      "isa": "evx",
+      "model": 8,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.565139517578125,
+            "sd": 0.05709395581914702,
+            "min": 1.467336421875,
+            "p95": 1.628669421875,
+            "p99": 1.628669421875,
+            "max": 1.628669421875
+          },
+          "observations_ms": {
+            "n": 512,
+            "mean": 1.565139517578125,
+            "sd": 0.1936499526308873,
+            "min": 0.621629,
+            "p95": 1.901858,
+            "p99": 2.090113,
+            "max": 2.456472
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.5258649817760135,
+            "sd": 0.0582151542690189,
+            "min": 1.450571797052805,
+            "p95": 1.5925816301391928,
+            "p99": 1.5925816301391928,
+            "max": 1.5925816301391928
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 226,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.6234193730468751,
+            "sd": 0.09750937745113163,
+            "min": 1.496990734375,
+            "p95": 1.773457359375,
+            "p99": 1.773457359375,
+            "max": 1.773457359375
+          },
+          "observations_ms": {
+            "n": 512,
+            "mean": 1.6234193730468751,
+            "sd": 0.22346453001601696,
+            "min": 0.616399,
+            "p95": 1.981428,
+            "p99": 2.145246,
+            "max": 2.28601
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.4993430981433078,
+            "sd": 0.10148352260035033,
+            "min": 1.3444564409359623,
+            "p95": 1.6192739942370407,
+            "p99": 1.6192739942370407,
+            "max": 1.6192739942370407
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 227,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 10.787446269049994,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "audio",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": false,
+        "process_p99_noninferiority": false,
+        "useful_mean_gain": false,
+        "deadline_fault_guard": true,
+        "passed": false,
+        "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+        "mean_interval_percent": [
+          -8.452165375954301,
+          0.9933467543804197
+        ],
+        "process_p99_interval_percent": [
+          -16.939389602011644,
+          10.787377804944265
+        ],
+        "family_comparisons": 14
+      }
+    },
+    {
+      "session": "confirm-cpu3",
+      "cpu": 3,
+      "power": "boost",
+      "layout": "randomized",
+      "gain_percent": 1.6278553913152805,
+      "interval_percent": [
+        1.3183988475206632,
+        1.9363415074782009
+      ],
+      "paired_log_sd": 0.002304307893249548,
+      "paired_blocks": 8,
+      "isa": "evx",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.580690736084125,
+            "sd": 0.0009204642981426253,
+            "min": 0.579897789063,
+            "p95": 0.582763699219,
+            "p99": 0.582763699219,
+            "max": 0.582763699219
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.5806907360839844,
+            "sd": 0.0027901306454594234,
+            "min": 0.572387,
+            "p95": 0.58477,
+            "p99": 0.586754,
+            "max": 0.610388
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.5283587158498877,
+            "sd": 0.003555865910255145,
+            "min": 2.5240923316943102,
+            "p95": 2.534604730386375,
+            "p99": 2.534604730386375,
+            "max": 2.534604730386375
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.57123751269525,
+            "sd": 0.000522492361998957,
+            "min": 0.570421730469,
+            "p95": 0.572134205078,
+            "p99": 0.572134205078,
+            "max": 0.572134205078
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.5712375126953125,
+            "sd": 0.0023451855734055167,
+            "min": 0.565204,
+            "p95": 0.574831,
+            "p99": 0.576575,
+            "max": 0.592885
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 2.5387909967831708,
+            "sd": 0.002314532582072587,
+            "min": 2.5347520033475863,
+            "p95": 2.541496924626769,
+            "p99": 2.541496924626769,
+            "max": 2.541496924626769
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.1646516074264026,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": true,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "throughput",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": true,
+        "process_p99_noninferiority": true,
+        "useful_mean_gain": true,
+        "deadline_fault_guard": true,
+        "passed": true,
+        "interpretation": "throughput superiority",
+        "mean_interval_percent": [
+          1.2827231043710974,
+          1.9717810374440203
+        ],
+        "process_p99_interval_percent": [
+          1.3077100748968395,
+          1.9654067529055963
+        ],
+        "family_comparisons": 14
+      }
+    },
+    {
+      "session": "confirm-cpu4",
+      "cpu": 4,
+      "power": "boost",
+      "layout": "randomized",
+      "gain_percent": 1.6916966267660594,
+      "interval_percent": [
+        -4.292034918677912,
+        7.3321129493758015
+      ],
+      "paired_log_sd": 0.04334943434273564,
+      "paired_blocks": 8,
+      "isa": "evx",
+      "model": 2,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.15716403515625,
+            "sd": 0.04037214112877282,
+            "min": 1.1037139375,
+            "p95": 1.21587021875,
+            "p99": 1.21587021875,
+            "max": 1.21587021875
+          },
+          "observations_ms": {
+            "n": 512,
+            "mean": 1.15716403515625,
+            "sd": 0.14731535369905682,
+            "min": 0.450217,
+            "p95": 1.462091,
+            "p99": 1.549966,
+            "max": 1.603557
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.1007096203808147,
+            "sd": 0.043827913810998376,
+            "min": 1.000604704066065,
+            "p95": 1.1392505424191377,
+            "p99": 1.1392505424191377,
+            "max": 1.1392505424191377
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 227,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.13794740625,
+            "sd": 0.05008293335972188,
+            "min": 1.075619453125,
+            "p95": 1.202789015625,
+            "p99": 1.202789015625,
+            "max": 1.202789015625
+          },
+          "observations_ms": {
+            "n": 512,
+            "mean": 1.13794740625,
+            "sd": 0.14026583589976738,
+            "min": 0.452942,
+            "p95": 1.454437,
+            "p99": 1.549155,
+            "max": 1.670593
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.1377981554586365,
+            "sd": 0.06070029870563529,
+            "min": 1.0280023923626147,
+            "p95": 1.2197319595191949,
+            "p99": 1.2197319595191949,
+            "max": 1.2197319595191949
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 228,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 5.416821225295399,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "guard",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": false,
+        "process_p99_noninferiority": false,
+        "useful_mean_gain": false,
+        "deadline_fault_guard": true,
+        "passed": false,
+        "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+        "mean_interval_percent": [
+          -5.003624907849291,
+          7.960105942958251
+        ],
+        "process_p99_interval_percent": [
+          -5.2194373814793416,
+          7.861584271152411
+        ],
+        "family_comparisons": 14
+      }
+    },
+    {
+      "session": "confirm-cpu4",
+      "cpu": 4,
+      "power": "boost",
+      "layout": "randomized",
+      "gain_percent": 0.06254590878705946,
+      "interval_percent": [
+        -0.19942954528795465,
+        0.3238364174602104
+      ],
+      "paired_log_sd": 0.0019206971466926128,
+      "paired_blocks": 8,
+      "isa": "evx",
+      "model": 2,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.37164484252925,
+            "sd": 0.0005274613846920133,
+            "min": 0.370865574219,
+            "p95": 0.372302873047,
+            "p99": 0.372302873047,
+            "max": 0.372302873047
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.37164484252929686,
+            "sd": 0.001483153093501222,
+            "min": 0.368964,
+            "p95": 0.373963,
+            "p99": 0.374916,
+            "max": 0.39351
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.6569048938530295,
+            "sd": 0.00023587266086223815,
+            "min": 1.6566379016875734,
+            "p95": 1.6572515672956225,
+            "p99": 1.6572515672956225,
+            "max": 1.6572515672956225
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.371412294677625,
+            "sd": 0.00044001837207655633,
+            "min": 0.370855916016,
+            "p95": 0.371896398437,
+            "p99": 0.371896398437,
+            "max": 0.371896398437
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.3714122946777344,
+            "sd": 0.0015189171708002663,
+            "min": 0.368513,
+            "p95": 0.373723,
+            "p99": 0.374515,
+            "max": 0.400844
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.6568261326732783,
+            "sd": 0.0001578999722407191,
+            "min": 1.6565374248842926,
+            "p95": 1.6570169754888018,
+            "p99": 1.6570169754888018,
+            "max": 1.6570169754888018
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.4102483702646209,
+      "aa_qualified": true,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": true,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "guard",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": true,
+        "process_p99_noninferiority": true,
+        "useful_mean_gain": false,
+        "deadline_fault_guard": true,
+        "passed": true,
+        "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+        "mean_interval_percent": [
+          -0.22962262450407778,
+          0.35386277318419923
+        ],
+        "process_p99_interval_percent": [
+          -0.35183798712401515,
+          0.48915751873263025
+        ],
+        "family_comparisons": 14
+      }
+    },
+    {
+      "session": "confirm-cpu4",
+      "cpu": 4,
+      "power": "boost",
+      "layout": "randomized",
+      "gain_percent": -2.015781824451257,
+      "interval_percent": [
+        -9.97286582934025,
+        5.36556756278107
+      ],
+      "paired_log_sd": 0.05510241052995283,
+      "paired_blocks": 8,
+      "isa": "evx",
+      "model": 8,
+      "mode": "audio10",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.721762345703125,
+            "sd": 0.0697342514272628,
+            "min": 1.621108546875,
+            "p95": 1.82969753125,
+            "p99": 1.82969753125,
+            "max": 1.82969753125
+          },
+          "observations_ms": {
+            "n": 512,
+            "mean": 1.721762345703125,
+            "sd": 0.16210956573515678,
+            "min": 1.022544,
+            "p95": 2.04632,
+            "p99": 2.249843,
+            "max": 2.34936
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.314582057319787,
+            "sd": 0.04360241326924149,
+            "min": 1.2406963510275522,
+            "p95": 1.3672105391823648,
+            "p99": 1.3672105391823648,
+            "max": 1.3672105391823648
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 226,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 1.757462216796875,
+            "sd": 0.09450673299196417,
+            "min": 1.616060515625,
+            "p95": 1.8628695,
+            "p99": 1.8628695,
+            "max": 1.8628695
+          },
+          "observations_ms": {
+            "n": 512,
+            "mean": 1.757462216796875,
+            "sd": 0.19424104829981845,
+            "min": 1.014589,
+            "p95": 2.112555,
+            "p99": 2.345202,
+            "max": 2.400046
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.305765799000062,
+            "sd": 0.05259680133992988,
+            "min": 1.2427987951725297,
+            "p95": 1.378414757201595,
+            "p99": 1.378414757201595,
+            "max": 1.378414757201595
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 228,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 9.665853501768652,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "audio",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": false,
+        "process_p99_noninferiority": false,
+        "useful_mean_gain": false,
+        "deadline_fault_guard": true,
+        "passed": false,
+        "interpretation": "mean and per-process p99 noninferiority; not population p99 or WCET",
+        "mean_interval_percent": [
+          -10.927533556042857,
+          6.180013134465845
+        ],
+        "process_p99_interval_percent": [
+          -16.159688716316943,
+          8.759117182360965
+        ],
+        "family_comparisons": 14
+      }
+    },
+    {
+      "session": "confirm-cpu4",
+      "cpu": 4,
+      "power": "boost",
+      "layout": "randomized",
+      "gain_percent": 1.1284897657921622,
+      "interval_percent": [
+        0.699786253465684,
+        1.5553424593283682
+      ],
+      "paired_log_sd": 0.0031742505684799784,
+      "paired_blocks": 8,
+      "isa": "evx",
+      "model": 8,
+      "mode": "continuous",
+      "arms": {
+        "A": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.896645499755875,
+            "sd": 0.0026023365860378036,
+            "min": 0.892780322266,
+            "p95": 0.899586585937,
+            "p99": 0.899586585937,
+            "max": 0.899586585937
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.8966454997558594,
+            "sd": 0.0029763259253104573,
+            "min": 0.889364,
+            "p95": 0.900434,
+            "p99": 0.902508,
+            "max": 0.923127
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.6569139047037502,
+            "sd": 0.000187747024787168,
+            "min": 1.6566630303871888,
+            "p95": 1.6571978142843282,
+            "p99": 1.6571978142843282,
+            "max": 1.6571978142843282
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        },
+        "B": {
+          "run_means_ms": {
+            "n": 8,
+            "mean": 0.886526000976625,
+            "sd": 0.0021693568279603946,
+            "min": 0.882721296875,
+            "p95": 0.889779650391,
+            "p99": 0.889779650391,
+            "max": 0.889779650391
+          },
+          "observations_ms": {
+            "n": 4096,
+            "mean": 0.8865260009765625,
+            "sd": 0.0027096362296793177,
+            "min": 0.880196,
+            "p95": 0.890486,
+            "p99": 0.893321,
+            "max": 0.920301
+          },
+          "observation_unit": "call",
+          "hardware_frequency_ratios": {
+            "n": 8,
+            "mean": 1.6567421553436508,
+            "sd": 0.0001646100426719478,
+            "min": 1.6564806651149442,
+            "p95": 1.6569966841512551,
+            "p99": 1.6569966841512551,
+            "max": 1.6569966841512551
+          },
+          "late": 0,
+          "over_10ms": 0,
+          "minor_faults": 0,
+          "major_faults": 0
+        }
+      },
+      "aa_noise_envelope_percent": 0.8184584673893824,
+      "aa_qualified": false,
+      "noninferiority_margin_percent": 0.5,
+      "passes_noninferiority": false,
+      "passes_acceptance": false,
+      "workload_acceptance": {
+        "version": 2,
+        "role": "throughput",
+        "aa_practical_drift_detected": false,
+        "aa_precision_is_diagnostic": true,
+        "mean_noninferiority": true,
+        "process_p99_noninferiority": true,
+        "useful_mean_gain": true,
+        "deadline_fault_guard": true,
+        "passed": true,
+        "interpretation": "throughput superiority",
+        "mean_interval_percent": [
+          0.6503304391472953,
+          1.6043477627731506
+        ],
+        "process_p99_interval_percent": [
+          0.33558881817022934,
+          1.6614676450883548
+        ],
+        "family_comparisons": 14
+      }
+    }
+  ],
+  "profiling": [
+    {
+      "session": "confirm-cpu3",
+      "jobs": 80,
+      "collected": 72,
+      "empty": 8,
+      "unavailable": 0,
+      "counter_summary": [
+        {
+          "collector": "affinity-calls",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "affinity-calls",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "affinity-calls",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "affinity-calls",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "L1-dcache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 174099.3984375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "L1-icache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 608.0703125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "dTLB-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9.90625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "L1-dcache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 173515.4140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "L1-icache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 618.9375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "dTLB-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9.5625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "L1-dcache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 288081.8984375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "L1-icache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 914.9140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "dTLB-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 12.8515625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "L1-dcache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 291376.265625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "L1-icache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 924.6953125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "dTLB-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 12.65625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_read_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1393.75,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_write_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 192.46875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_read_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 906.125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_write_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 89.0859375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_read_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3223.875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_write_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 287.4296875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_read_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2699.34375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_write_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 159.859375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.backend_stalls:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4874110.046875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.no_ops_from_frontend:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 458448.3359375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.smt_contention:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.backend_stalls:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4886668.5625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.no_ops_from_frontend:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 465200.625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.smt_contention:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.backend_stalls:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 12892240.9140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.no_ops_from_frontend:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 568132.0859375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.smt_contention:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.backend_stalls:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 12911736.4375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.no_ops_from_frontend:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 662624.6171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.smt_contention:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "energy",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "power/energy-pkg/",
+          "unit": "Joules",
+          "n": 1,
+          "mean_per_call": 0.0065674765625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "energy",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "power/energy-pkg/",
+          "unit": "Joules",
+          "n": 1,
+          "mean_per_call": 0.007140875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "energy",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "power/energy-pkg/",
+          "unit": "Joules",
+          "n": 1,
+          "mean_per_call": 0.01459371875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "energy",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "power/energy-pkg/",
+          "unit": "Joules",
+          "n": 1,
+          "mean_per_call": 0.014457109375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.div_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 117153.4140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.mac_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3740157.171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.packed_double_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.div_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 117153.4140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.mac_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3740157.171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.packed_double_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.div_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 434404.6328125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.mac_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9745926.734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.packed_double_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.div_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 434404.6328125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.mac_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9745926.734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.packed_double_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2970.7578125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1343.765625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3882.1953125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2568.5078125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 5925.546875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3151.921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 6676.5234375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4190.140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l3_lookup_state.all_coherent_accesses_to_l3",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 69908.2421875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l3_lookup_state.l3_miss",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 57.21875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l3_lookup_state.all_coherent_accesses_to_l3",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 70585.5390625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l3_lookup_state.l3_miss",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 43.5625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l3_lookup_state.all_coherent_accesses_to_l3",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 96761.671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l3_lookup_state.l3_miss",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 214.1015625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l3_lookup_state.all_coherent_accesses_to_l3",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 94994.40625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l3_lookup_state.l3_miss",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 115.34375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l2_cache_req_stat.ic_dc_miss_in_l2:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 17697.46875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ls_dispatch.ld_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1407965.875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ls_dispatch.store_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 292302.984375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l2_cache_req_stat.ic_dc_miss_in_l2:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 17926.5234375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ls_dispatch.ld_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1409079.0234375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ls_dispatch.store_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 292514.6796875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l2_cache_req_stat.ic_dc_miss_in_l2:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 27324.8046875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ls_dispatch.ld_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3448015.8671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ls_dispatch.store_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 622594.6328125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l2_cache_req_stat.ic_dc_miss_in_l2:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 28798.4921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ls_dispatch.ld_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3088817.7734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ls_dispatch.store_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 553619.453125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 330.8125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 276930.671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1217369.7578125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4527809.421875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 475298.125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 335.6484375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 276900.2421875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1216248.09375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4528645.109375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 474368.125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 591.328125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 445068.6171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2922954.625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 10105660.8984375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1154834.0625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 589.96875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 432147.1484375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2892389.3125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9645822.546875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1139401.40625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1023.1640625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 69.7421875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 943.359375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 79.28125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2939.8359375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 186.5703125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3391.7421875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 641.390625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1231.390625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 87.1015625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1731.0390625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 365.0546875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3319.6328125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 281.8125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4250.515625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 771.296875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 825.0234375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 76.234375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1756.609375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 286.96875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3405.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 342.7265625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2359.671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 245.53125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1530.6953125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 344.4609375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1001.3359375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 80.8125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3007.8828125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 240.484375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2596.140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 196.296875,
+          "sample_sd_per_call": null
+        }
+      ],
+      "sampling": [
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 31,
+          "collector": "cycles",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 58,
+          "collector": "cycles",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 14,
+          "collector": "cycles",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 58,
+          "collector": "cycles",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 33,
+          "branch_stack_lines": 29,
+          "collector": "lbr",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 83,
+          "branch_stack_lines": 78,
+          "collector": "lbr",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 41,
+          "branch_stack_lines": 36,
+          "collector": "lbr",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 77,
+          "branch_stack_lines": 73,
+          "collector": "lbr",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 2116,
+          "memory_summary": {
+            "observed_load_samples": 665,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "L1 hit": 624,
+              "L2 hit": 28,
+              "L3 hit": 13
+            },
+            "reported_periods": {
+              "100000": 665
+            },
+            "nonzero_reported_load_weights": {
+              "n": 41,
+              "mean": 48.24390243902439,
+              "sample_sd": 43.527451388638,
+              "min": 10,
+              "max": 229
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-op",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 4991,
+          "memory_summary": {
+            "observed_load_samples": 1604,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "L1 hit": 1526,
+              "L2 hit": 59,
+              "L3 hit": 19
+            },
+            "reported_periods": {
+              "100000": 1604
+            },
+            "nonzero_reported_load_weights": {
+              "n": 78,
+              "mean": 34.34615384615385,
+              "sample_sd": 22.41221079695604,
+              "min": 7,
+              "max": 106
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-op",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 2151,
+          "memory_summary": {
+            "observed_load_samples": 665,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "L1 hit": 595,
+              "L3 hit": 19,
+              "L2 hit": 51
+            },
+            "reported_periods": {
+              "100000": 665
+            },
+            "nonzero_reported_load_weights": {
+              "n": 70,
+              "mean": 50,
+              "sample_sd": 34.44844919838791,
+              "min": 9,
+              "max": 170
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-op",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 5041,
+          "memory_summary": {
+            "observed_load_samples": 1808,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "L1 hit": 1743,
+              "L2 hit": 51,
+              "L3 hit": 14
+            },
+            "reported_periods": {
+              "100000": 1808
+            },
+            "nonzero_reported_load_weights": {
+              "n": 65,
+              "mean": 40.90769230769231,
+              "sample_sd": 25.47101482379228,
+              "min": 7,
+              "max": 121
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-op",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 1422,
+          "collector": "ibs-fetch",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 711,
+          "collector": "ibs-fetch",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 720,
+          "collector": "ibs-fetch",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 1361,
+          "collector": "ibs-fetch",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-l3miss",
+          "status": "empty"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-l3miss",
+          "status": "empty"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-l3miss",
+          "status": "empty"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-l3miss",
+          "status": "empty"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-ldlat",
+          "status": "empty"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-ldlat",
+          "status": "empty"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-ldlat",
+          "status": "empty"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-ldlat",
+          "status": "empty"
+        }
+      ]
+    },
+    {
+      "session": "confirm-cpu4",
+      "jobs": 80,
+      "collected": 73,
+      "empty": 7,
+      "unavailable": 0,
+      "counter_summary": [
+        {
+          "collector": "affinity-calls",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "affinity-calls",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "affinity-calls",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "affinity-calls",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "syscalls:sys_enter_sched_getaffinity",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "L1-dcache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 173698.2109375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "L1-icache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 626.3515625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "dTLB-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9.7890625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "L1-dcache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 174237.9453125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "L1-icache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 622.8515625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "dTLB-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9.796875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "L1-dcache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 290678.6171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "L1-icache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 965.2734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "dTLB-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 17.1875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "L1-dcache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 294314.46875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "L1-icache-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 920.1875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "cache-tlb",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "dTLB-load-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 25.9921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_read_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1434.8984375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_write_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 125.0703125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_read_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1442.7578125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_write_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 140.515625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_read_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4461.984375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_write_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 319.4921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_read_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3602.296875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "df0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_df/local_or_remote_socket_write_data_beats_dram_0/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 231.8359375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.backend_stalls:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4924320.15625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.no_ops_from_frontend:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 465983.7265625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.smt_contention:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.backend_stalls:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4943850.53125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.no_ops_from_frontend:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 443221.0546875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.smt_contention:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.backend_stalls:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 13031892.703125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.no_ops_from_frontend:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 587158.9453125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.smt_contention:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.backend_stalls:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 13096785.3203125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.no_ops_from_frontend:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 726267.8671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "dispatch",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "de_no_dispatch_per_slot.smt_contention:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "energy",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "power/energy-pkg/",
+          "unit": "Joules",
+          "n": 1,
+          "mean_per_call": 0.0038741796875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "energy",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "power/energy-pkg/",
+          "unit": "Joules",
+          "n": 1,
+          "mean_per_call": 0.004174234375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "energy",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "power/energy-pkg/",
+          "unit": "Joules",
+          "n": 1,
+          "mean_per_call": 0.0100092890625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "energy",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "power/energy-pkg/",
+          "unit": "Joules",
+          "n": 1,
+          "mean_per_call": 0.0122325390625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.div_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 117153.4140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.mac_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3740157.171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.packed_double_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.div_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 117153.4140625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.mac_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3740157.171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.packed_double_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.div_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 434404.6328125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.mac_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9745926.734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.packed_double_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.div_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 434404.6328125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.mac_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9745926.734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "fp-mix",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "fp_ret_sse_avx_ops.packed_double_flops:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 0.0,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3242.671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1886.203125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4717.6953125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3215.6875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 8235.4609375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4547.046875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "cycles:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 11907.0546875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "kernel-cost",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "instructions:k",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 5621.7265625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l3_lookup_state.all_coherent_accesses_to_l3",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 70655.671875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l3_lookup_state.l3_miss",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 696.875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l3_lookup_state.all_coherent_accesses_to_l3",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 72072.171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l3_lookup_state.l3_miss",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 102.3203125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l3_lookup_state.all_coherent_accesses_to_l3",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 93744.390625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l3_lookup_state.l3_miss",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 480.2890625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l3_lookup_state.all_coherent_accesses_to_l3",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 94646.0703125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "l3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l3_lookup_state.l3_miss",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 658.3046875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l2_cache_req_stat.ic_dc_miss_in_l2:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 18210.7421875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ls_dispatch.ld_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1409077.0234375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ls_dispatch.store_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 292382.1640625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l2_cache_req_stat.ic_dc_miss_in_l2:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 18061.34375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ls_dispatch.ld_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1410001.75,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ls_dispatch.store_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 292626.234375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "l2_cache_req_stat.ic_dc_miss_in_l2:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 27318.0703125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ls_dispatch.ld_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3449726.5390625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ls_dispatch.store_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 622639.375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "l2_cache_req_stat.ic_dc_miss_in_l2:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 28672.40625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ls_dispatch.ld_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3094938.46875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "loads-stores",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ls_dispatch.store_dispatch:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 554216.03125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 339.59375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 276930.71875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1228154.3828125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4527809.46875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 741075.625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 324.7265625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 276900.3046875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1224236.6796875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 4528645.171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 745982.65625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 629.6171875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 445068.7890625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2978845.09375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 10105661.0703125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1797341.09375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "branch-misses:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 580.265625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "branches:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 432147.546875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2937845.5859375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "instructions:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 9645822.9453125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "primary",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "ref-cycles:u",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1772699.375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1283.5546875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 138.4375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1131.046875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 109.90625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3733.96875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 277.5,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3225.1796875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc0",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_0/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 185.859375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 973.1640625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 184.7578125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1074.9921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 156.9921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2984.859375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 301.1953125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3477.859375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc1",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_1/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 342.3359375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 1302.2734375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 77.421875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 905.0078125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 74.1875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3059.6953125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 216.4921875,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 3050.1953125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc2",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_2/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 211.3359375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 846.890625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 196.1328125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 985.9375,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 2,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 171.7578125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2932.75,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "baseline",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 211.1015625,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.rd/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 2817.7578125,
+          "sample_sd_per_call": null
+        },
+        {
+          "collector": "umc3",
+          "isa": "evx",
+          "model": 8,
+          "arm": "candidate",
+          "mode": "continuous",
+          "event": "amd_umc_3/umc_cas_cmd.wr/",
+          "unit": "",
+          "n": 1,
+          "mean_per_call": 238.828125,
+          "sample_sd_per_call": null
+        }
+      ],
+      "sampling": [
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 37,
+          "collector": "cycles",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 101,
+          "collector": "cycles",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 36,
+          "collector": "cycles",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 106,
+          "collector": "cycles",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 118,
+          "branch_stack_lines": 113,
+          "collector": "lbr",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 122,
+          "branch_stack_lines": 117,
+          "collector": "lbr",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 52,
+          "branch_stack_lines": 47,
+          "collector": "lbr",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 51,
+          "branch_stack_lines": 46,
+          "collector": "lbr",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 8180,
+          "memory_summary": {
+            "observed_load_samples": 2832,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "L1 hit": 2742,
+              "L3 hit": 29,
+              "L2 hit": 61
+            },
+            "reported_periods": {
+              "100000": 2832
+            },
+            "nonzero_reported_load_weights": {
+              "n": 90,
+              "mean": 46.72222222222222,
+              "sample_sd": 36.53535390404591,
+              "min": 7,
+              "max": 174
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-op",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 8048,
+          "memory_summary": {
+            "observed_load_samples": 2498,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "L1 hit": 2382,
+              "L2 hit": 84,
+              "L3 hit": 32
+            },
+            "reported_periods": {
+              "100000": 2498
+            },
+            "nonzero_reported_load_weights": {
+              "n": 116,
+              "mean": 43.81896551724138,
+              "sample_sd": 38.884354546343666,
+              "min": 8,
+              "max": 279
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-op",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 3379,
+          "memory_summary": {
+            "observed_load_samples": 1048,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "L1 hit": 977,
+              "RAM hit": 1,
+              "L2 hit": 55,
+              "L3 hit": 15
+            },
+            "reported_periods": {
+              "100000": 1048
+            },
+            "nonzero_reported_load_weights": {
+              "n": 71,
+              "mean": 52.29577464788732,
+              "sample_sd": 45.085124048435055,
+              "min": 9,
+              "max": 339
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-op",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 3376,
+          "memory_summary": {
+            "observed_load_samples": 1083,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "L1 hit": 1008,
+              "L3 hit": 22,
+              "L2 hit": 53
+            },
+            "reported_periods": {
+              "100000": 1083
+            },
+            "nonzero_reported_load_weights": {
+              "n": 75,
+              "mean": 52.693333333333335,
+              "sample_sd": 36.027381978881735,
+              "min": 6,
+              "max": 166
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-op",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 720,
+          "collector": "ibs-fetch",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 719,
+          "collector": "ibs-fetch",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 1369,
+          "collector": "ibs-fetch",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 1419,
+          "collector": "ibs-fetch",
+          "status": "collected"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-l3miss",
+          "status": "empty"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-l3miss",
+          "status": "empty"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 2,
+          "memory_summary": {
+            "observed_load_samples": 2,
+            "unparsed_load_samples": 0,
+            "sources": {
+              "RAM hit": 2
+            },
+            "reported_periods": {
+              "100000": 2
+            },
+            "nonzero_reported_load_weights": {
+              "n": 2,
+              "mean": 409.5,
+              "sample_sd": 112.42997820866105,
+              "min": 330,
+              "max": 489
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-l3miss",
+          "status": "collected"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-l3miss",
+          "status": "empty"
+        },
+        {
+          "model": 2,
+          "arm": "baseline",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-ldlat",
+          "status": "empty"
+        },
+        {
+          "model": 8,
+          "arm": "baseline",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-ldlat",
+          "status": "empty"
+        },
+        {
+          "model": 2,
+          "arm": "candidate",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-ldlat",
+          "status": "empty"
+        },
+        {
+          "model": 8,
+          "arm": "candidate",
+          "sample_lines": 0,
+          "memory_summary": {
+            "observed_load_samples": 0,
+            "unparsed_load_samples": 0,
+            "sources": {},
+            "reported_periods": {},
+            "nonzero_reported_load_weights": {
+              "n": 0,
+              "mean": null,
+              "sample_sd": null,
+              "min": null,
+              "max": null
+            },
+            "interpretation": "Descriptive sampled load weights only. Zero weight is not zero load latency; filtering can skew periods. Not an all-load latency estimate or a speed confidence interval."
+          },
+          "collector": "ibs-ldlat",
+          "status": "empty"
+        }
+      ]
+    }
+  ],
+  "no_optional_extension": true,
+  "no_removed_observations": true,
+  "publication_held": true,
+  "scope": "one HX470; short fixed steady screen; randomized Boost fast/compact confirmation; host callback excludes device/service concurrency",
+  "libraries": {
+    "old": {
+      "sha256": "fcc69ff8cb3e3a818daa2114f72eb1291f7ab324aa132a4c8c2cd76a6026c7b7"
+    },
+    "k64": {
+      "sha256": "b3fe7d953a12486702a0f5f28a5689bb96c291e183c9fd3aedf58e5a8d7aabd8"
+    },
+    "pad": {
+      "sha256": "d59af09f6387c0d8ac1c22c0a8ffe42bae67ee7a9e4e80d9146c056291782ba1"
+    },
+    "evx": {
+      "sha256": "19e6122ad46c44ca4b88c5344b4a14d09412accfe8fd75e5f163854de05eecab"
+    },
+    "qnt": {
+      "sha256": "80229d8141729ea569fc22f0a800ab4de23ab3246f35cea86040b041d724c4ab"
+    }
+  },
+  "restoration_audit": {
+    "passed": true,
+    "journal_paths_verified": 68,
+    "kernel_tasks_verified": 0,
+    "power_restored": true,
+    "online": "0-23",
+    "boost": "1",
+    "irqbalance": "active",
+    "temporary_cgroup_absent": true,
+    "holder_and_watchdog_inactive": true,
+    "global_aslr_current": "2"
+  },
+  "runtime_verification": {
+    "runtime_source_unchanged": true,
+    "new_runtime_flags": false,
+    "default_selection_unchanged": true,
+    "publication": false
+  },
+  "correctness": {
+    "fresh_incremental_quantize4_release_ctests": 47,
+    "fresh_spectral_state_alias_jobs": 8,
+    "fresh_pcm_jobs": 8,
+    "stream_receipt_sha256": "a641a1154cedc42ce06e41b4c4e62a8a10a9e0886e92904e99118f95796af1ac",
+    "pcm_receipt_sha256": "9d5db95d8561b3877513b2217585fbf696b90114e5f63cd81cd8657f2f2b2ffb",
+    "reused_full_numerical_receipts_for_byte_identical_candidates": true,
+    "lab_behavioral_tests": 43,
+    "ctest_lab_groups": 3
+  },
+  "profile_audit": {
+    "passed": true,
+    "scopes": [
+      {
+        "cpu": 3,
+        "jobs": 80,
+        "collected": 72,
+        "empty": 8,
+        "unavailable": 0,
+        "wide_symbol_confirmed": true,
+        "affinity_syscall_count_verified": true
+      },
+      {
+        "cpu": 4,
+        "jobs": 80,
+        "collected": 73,
+        "empty": 7,
+        "unavailable": 0,
+        "wide_symbol_confirmed": true,
+        "affinity_syscall_count_verified": true
+      }
+    ]
+  }
+}

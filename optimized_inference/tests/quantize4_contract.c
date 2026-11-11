@@ -5,11 +5,7 @@
 #include <string.h>
 #include <fenv.h>
 #include <unistd.h>
-#ifdef DPDF_TEST_AVX_VNNI
-#include "../src/common/int8_vnni.c"
-#else
 #include "../src/common/int8.c"
-#endif
 #include "quantize_reference.h"
 
 static uint32_t seed=7711;
@@ -36,10 +32,6 @@ static void fill(float *x,int mask,int pattern) {
     }
 }
 int main(void) {
-#ifdef DPDF_TEST_AVX_VNNI
-    __builtin_cpu_init();
-    if (!__builtin_cpu_supports("avxvnni")) return 77;
-#endif
     long page=sysconf(_SC_PAGESIZE);
     if (page<2048) return 2;
     unsigned saved=_mm_getcsr();
@@ -77,6 +69,15 @@ int main(void) {
             _mm_setcsr(control);
             for (int r=0;r<4;++r) quantize(x+r*64,single+r*64,64,ss+r,sz+r);
             if (memcmp(single,reference,256)||memcmp(ss,ref,sizeof(ref))||memcmp(sz,rz,sizeof(rz))) goto fail;
+            _mm_setcsr(control);memset(b+page,0x55,(size_t)page);
+            for (int r=0;r<4;++r) quantize64(x+r*64,actual+r*64,s.values+r,z.values+r);
+            actual_csr=_mm_getcsr();
+            if ((actual_csr&~63u)!=control || memcmp(actual,reference,256) ||
+                memcmp(s.values,ref,sizeof(ref)) || memcmp(z.values,rz,sizeof(rz)) ||
+                memcmp(x,backup,sizeof(backup)) || s.head!=0x1937 || s.tail!=0x7291 ||
+                z.head!=0x5173 || z.tail!=0x9371 || (mask==15 && (actual_csr&5))) goto fail;
+            for (unsigned char *p=b+page;p<b+2*page;++p)
+                if ((p<(unsigned char *)actual || p>=(unsigned char *)actual+256) && *p!=0x55) goto fail;
             cases++;continue;
 fail:
             _mm_setcsr(saved);
@@ -84,6 +85,6 @@ fail:
             return 1;
         }
     _mm_setcsr(saved);munmap(a,page*3);munmap(b,page*3);
-    printf("{\"cases\":%d,\"empty_masks\":16,\"rounding_modes\":4,\"FTZ_DAZ_combinations\":4,\"guarded_both_ends\":true,\"bitwise\":true,\"sticky_flag_differences_diagnostic_only\":%d}\n",cases,flag_differences);
+    printf("{\"cases\":%d,\"empty_masks\":16,\"rounding_modes\":4,\"FTZ_DAZ_combinations\":4,\"guarded_both_ends\":true,\"quantize64_direct\":true,\"bitwise\":true,\"sticky_flag_differences_diagnostic_only\":%d}\n",cases,flag_differences);
     return 0;
 }

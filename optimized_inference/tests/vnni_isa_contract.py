@@ -7,6 +7,30 @@ import sys
 from pathlib import Path
 
 
+def inspect_disassembly(output, path):
+    """Inspect the opcode after optional prefixes inserted by GNU branch padding."""
+    vnni = 0
+    prefixes = {0xf0, 0xf2, 0xf3, 0x2e, 0x36, 0x3e, 0x26, 0x64, 0x65, 0x66, 0x67}
+    for line in output.splitlines():
+        match = re.match(r'^\s*[0-9a-f]+:\s+((?:[0-9a-f]{2}\s+)+)(.*)$', line)
+        if not match:
+            continue
+        encoding = [int(value, 16) for value in match[1].split()]
+        index = 0
+        while index < len(encoding) and (encoding[index] in prefixes or 0x40 <= encoding[index] <= 0x4f):
+            index += 1
+        if index == len(encoding):
+            continue
+        # Prefix padding must not conceal an EVEX instruction from this gate.
+        if encoding[index] == 0x62:
+            raise SystemExit(f'Unexpected EVEX instruction in {path}: {line.strip()}')
+        if re.search(r'\bvpdpbusd\b', match[2]):
+            if encoding[index] != 0xc4:
+                raise SystemExit(f'Expected VEX VPDPBUSD in {path}: {line.strip()}')
+            vnni += 1
+    return vnni
+
+
 def main():
     if len(sys.argv) < 3:
         raise SystemExit('Usage: vnni_isa_contract.py objdump object...')
@@ -14,15 +38,7 @@ def main():
     for name in sys.argv[2:]:
         path = Path(name)
         output = subprocess.check_output([sys.argv[1], '-d', '-w', '--', str(path)], text=True)
-        for line in output.splitlines():
-            # In 64-bit executable sections, opcode prefix 62 denotes EVEX.
-            # Native tests on an AVX-512 CPU would otherwise hide this error.
-            if re.match(r'^\s*[0-9a-f]+:\s+62\s', line):
-                raise SystemExit(f'Unexpected EVEX instruction in {path}: {line.strip()}')
-            if re.match(r'^\s*[0-9a-f]+:.*\bvpdpbusd\b', line):
-                if not re.match(r'^\s*[0-9a-f]+:\s+c4\s', line):
-                    raise SystemExit(f'Expected VEX VPDPBUSD in {path}: {line.strip()}')
-                vnni += 1
+        vnni += inspect_disassembly(output, path)
     if not vnni:
         raise SystemExit('No VEX VPDPBUSD instructions were inspected')
     print(json.dumps({'objects': len(sys.argv) - 2, 'vex_dot_sites': vnni,

@@ -233,8 +233,20 @@ if(BUILD_TESTING)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    add_test(NAME vnni_isa_parser COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/vnni_isa_parser_test.py")
     add_test(NAME benchmark_lab COMMAND "${Python3_EXECUTABLE}"
       "${CMAKE_CURRENT_SOURCE_DIR}/tests/bench_lab_test.py")
+    add_test(NAME benchmark_pmu COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/pmu_test.py")
+    add_test(NAME benchmark_telemetry COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/telemetry_test.py")
+    add_test(NAME benchmark_acceptance COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/acceptance_test.py")
+    add_library(benchmark_audio_clock SHARED tools/bench_lab/audio_clock.c)
+    target_compile_options(benchmark_audio_clock PRIVATE -Wall -Wextra -Werror)
+    add_test(NAME benchmark_audio COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/audio_lab_test.py")
     add_test(NAME benchmark_statistics COMMAND "${Python3_EXECUTABLE}"
       "${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark_statistics_test.py")
     if(BUILD_SHARED_LIBS)
@@ -305,6 +317,14 @@ if(BUILD_TESTING)
   get_property(tests DIRECTORY PROPERTY TESTS)
   set_tests_properties(${tests} PROPERTIES TIMEOUT 120
     ENVIRONMENT "ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:handle_segv=0;UBSAN_OPTIONS=halt_on_error=1")
+  if(Python3_Interpreter_FOUND)
+    set_property(TEST benchmark_audio APPEND PROPERTY ENVIRONMENT
+      "DPDF_AUDIO_CLOCK=$<TARGET_FILE:benchmark_audio_clock>"
+      "DPDF_AUDIO_TEST_LIBRARY=$<TARGET_FILE:dpdfnet>")
+    if(DPDF_SANITIZE)
+      set_property(TEST benchmark_audio APPEND PROPERTY ENVIRONMENT "DPDF_AUDIO_SKIP_NUMERICS=1")
+    endif()
+  endif()
 endif()
 if(DPDF_BUILD_KERNEL_BENCHMARKS)
   foreach(size IN ITEMS 2 8)

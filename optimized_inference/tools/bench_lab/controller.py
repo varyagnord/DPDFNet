@@ -127,6 +127,25 @@ def set_limits(policy, low, high):
         write(policy / 'scaling_min_freq', low)
     write(policy / 'scaling_min_freq', low)
     write(policy / 'scaling_max_freq', high)
+    # amd-pstate can publish an intermediate QoS limit after the sysfs write.
+    # Freeze requested bounds only after readback settles; a transient snapshot
+    # must neither become the readiness contract nor weaken that contract.
+    deadline = time.monotonic() + 2
+    stable = 0
+    actual = None
+    while time.monotonic() < deadline:
+        actual = (int(read(policy / 'scaling_min_freq')),
+                  int(read(policy / 'scaling_max_freq')))
+        stable = stable + 1 if actual == (low, high) else 0
+        if stable == 3:
+            return
+        time.sleep(.01)
+    raise RuntimeError(f'Frequency bounds did not settle: requested {(low, high)}, observed {actual}')
+
+
+def idle_restricted(power_profile, idle_policy):
+    require(idle_policy in ['auto','original','shallow'], 'Unknown idle policy')
+    return idle_policy=='shallow' or (idle_policy=='auto' and power_profile=='steady')
 
 
 def topology(cpu):
@@ -195,7 +214,10 @@ def verify(state):
     require(read(CPU / 'online') == state['online_during'], 'CPU online state changed')
     p = CPU / f"cpu{state['cpu']}/cpufreq"
     for name, expected in state['worker_power'].items():
-        require(read(p / name) == expected, 'Frequency policy changed: ' + name)
+        actual = read(p / name)
+        require(actual == expected, f'Frequency policy changed: {name}; expected {expected}, observed {actual}')
+    for path,expected in state.get('worker_idle',{}).items():
+        require(read(path)==expected, 'Worker idle policy changed: '+path)
     for entry in state['journal']:
         if 'applied' in entry:
             require(read(entry['path']) == entry['applied'], 'Setting changed: ' + entry['path'])
@@ -349,6 +371,35 @@ def restore(state):
     return result
 
 
+def restored_irq_change(entry, actual, state, irqbalance):
+    return (entry['path'].startswith('/proc/irq/') and entry['path'].endswith('/smp_affinity_list')
+            and irqbalance=='active' and actual!=entry['requested']
+            and bool(cpus(actual)) and cpus(actual)<=cpus(state['online_before']))
+
+
+def audit_restored(state):
+    """Read-only audit after the immediate exact receipt; irqbalance is dynamic."""
+    require(state['phase']=='restored' and state['restoration']['restored'], 'No successful restoration receipt')
+    irqbalance=subprocess.run(['systemctl','is-active','irqbalance'],capture_output=True,text=True).stdout.strip()
+    require(irqbalance==state['irqbalance_before'], 'irqbalance service changed')
+    dynamic=[]
+    for entry in state['journal']:
+        actual=read(entry['path'])
+        if actual!=entry['before']:
+            require(restored_irq_change(entry,actual,state,irqbalance),'Post-restoration setting mismatch: '+entry['path'])
+            dynamic.append(dict(path=entry['path'],before=entry['before'],current=actual,
+                                interpretation='Later IRQ reassignment with irqbalance active; not the lab mask. Attribution not asserted.'))
+    require(power_snapshot()==state['power_before'], 'Power settings differ after restoration')
+    require(read(CPU/'online')==state['online_before'] and read(CPU/'cpufreq/boost')==state['boost_before'], 'CPU/boost state differs')
+    require(not CG.exists() and read('/sys/fs/cgroup/cgroup.subtree_control')==state['root_controllers_before'], 'Temporary cgroup remains')
+    for unit in [HOLDER,state['timer']+'.timer']:
+        status=subprocess.run(['systemctl','is-active',unit],capture_output=True,text=True).stdout.strip()
+        require(status in ['inactive','unknown'], 'Temporary laboratory unit remains active: '+unit)
+    return dict(passed=True,immediate_exact_receipt=state['restoration'],current_static_settings_match=True,
+                dynamic_irq_changes=dynamic,irqbalance=irqbalance,temporary_cgroup_absent=True,
+                holder_watchdog_inactive=True,online=read(CPU/'online'))
+
+
 def prepare(args):
     if (RUN / 'state.json').exists():
         previous = load()
@@ -378,7 +429,7 @@ def prepare(args):
                  root_controllers_before=read('/sys/fs/cgroup/cgroup.subtree_control'),
                  irqbalance_before=subprocess.run(['systemctl', 'is-active', 'irqbalance'],capture_output=True,text=True).stdout.strip(),
                  reference_khz=nominal, frequency_khz=frequency if args.power_profile=='steady' else None,
-                 power_profile=args.power_profile, layout_profile=args.layout, boost_during='0' if args.power_profile=='steady' else '1', probe=str(probe),
+                 power_profile=args.power_profile, idle_policy=getattr(args,'idle_policy','auto'), layout_profile=args.layout, boost_during='0' if args.power_profile=='steady' else '1', probe=str(probe),
                  probe_sha256=hashlib.sha256(probe.read_bytes()).hexdigest(), journal=[], kernel_moves=[],
                  unmovable_kernel=[], expires_at=time.time()+args.ttl, expires_monotonic=time.monotonic()+args.ttl, created_ns=time.time_ns())
     state['timer'] = TIMER + '-' + state['id'][:12]
@@ -445,8 +496,9 @@ def prepare(args):
         state['worker_power'] = {n: read(p / n) for n in ['scaling_governor','energy_performance_preference','scaling_min_freq','scaling_max_freq'] if (p / n).exists()}
         # Restrict deep idle on the worker only; this is a laboratory power policy.
         for entry in (CPU / f'cpu{args.cpu}/cpuidle').glob('state*'):
-            if args.power_profile == 'steady' and int(read(entry / 'latency')) > 1:
+            if idle_restricted(args.power_profile,getattr(args,'idle_policy','auto')) and int(read(entry / 'latency')) > 1:
                 change(state, entry / 'disable', 1)
+        state['worker_idle']={str(entry/'disable'):read(entry/'disable') for entry in (CPU/f'cpu{args.cpu}/cpuidle').glob('state*')}
         for cpu in sorted(siblings-{args.cpu}):
             state['parked'].append(cpu)
             save(state)
@@ -472,10 +524,12 @@ def main():
     p.add_argument('--frequency-khz', default='auto')
     p.add_argument('--power-profile', choices=['steady','boost'], default='steady')
     p.add_argument('--layout', choices=['randomized','fixed'], default='randomized')
+    p.add_argument('--idle-policy', choices=['auto','original','shallow'], default='auto')
     p.add_argument('--ttl', type=int, default=1800)
     p.add_argument('--probe', required=True)
     sub.add_parser('ready')
     sub.add_parser('status')
+    sub.add_parser('audit')
     p = sub.add_parser('restore')
     p.add_argument('--session')
     p = sub.add_parser('exec')
@@ -502,6 +556,8 @@ def main():
             return
         else:
             state = load()
+            if args.mode=='audit':
+                print(json.dumps(audit_restored(state),indent=2));return
             if args.mode == 'ready':
                 try:
                     calibrate(state)

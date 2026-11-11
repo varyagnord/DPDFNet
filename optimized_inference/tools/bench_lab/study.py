@@ -16,6 +16,11 @@ import time
 
 TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pmu
+import acceptance
+import audio_protocol
+import telemetry
 from compare_benchmarks import student_t_quantile
 CONTROLLER = Path(__file__).resolve().with_name('controller.py')
 ROOT = TOOLS.parents[1]
@@ -94,6 +99,13 @@ def config(path):
     family=len(m['models'])*len(specs)*len(m['variants'])
     if m.get('family_comparisons',family)<family:raise ValueError('Multiplicity family cannot be smaller than the planned contrasts')
     if m.get('power_profile','steady') not in ['steady','boost']:raise ValueError('Unknown power profile')
+    if m.get('idle_policy','auto') not in ['auto','original','shallow']:raise ValueError('Unknown idle policy')
+    if 'record_process_environment' in m and type(m['record_process_environment']) is not bool:raise ValueError('record_process_environment must be boolean')
+    if 'profile_collectors' in m:pmu.validate_manifest(m)
+    if 'acceptance_policy' in m:
+        acceptance.validate(m['acceptance_policy'], specs, m['models'], len(m['variants']))
+        if m['acceptance_policy']['family_comparisons'] < family:
+            raise ValueError('V2 family cannot omit registered mean contrasts')
     binary_manifest(m)  # Verify all files before any privileged preparation.
     return m
 
@@ -102,6 +114,8 @@ def binary_manifest(m):
     paths=[m['worker'],*m['inputs'],*m['weights'].values()]
     paths += [p for arms in m['variants'].values() for p in arms.values()]
     paths += m.get('extra_files',[])
+    if any('audio_worker_v2' in str(c.get('worker','')) for c in condition_specs(m)):paths.append(audio_protocol.__file__)
+    if 'acceptance_policy' in m:paths.append(acceptance.__file__)
     for c in condition_specs(m):
         if c.get('worker'):paths.append(c['worker'])
         paths += c.get('inputs',[])
@@ -136,16 +150,31 @@ def worker_args(m,j,raw):
 
 def measurement(m,j,out):
     raw=out/'samples'/f"{j['index']:04d}.f64"
+    environment=telemetry.snapshot() if m.get('record_process_environment',False) else None
     start=time.time_ns()
-    result=control('exec','--',*worker_args(m,j,raw))
-    end=time.time_ns()
+    try:
+        result=control('exec','--',*worker_args(m,j,raw))
+    finally:
+        end=time.time_ns()
+        if environment is not None:
+            after=telemetry.snapshot()
+            environment_path=Path(str(raw)+'.environment.json')
+            emit(environment_path,dict(before=environment,after=after,cpu_busy_percent=telemetry.cpu_busy(environment,after),
+                 scope='Whole worker lifetime including launch/warmup/teardown. Boundary snapshots only; no sampler in timed callbacks. GPU/temperature values are endpoints, not interval maxima.'))
     data=array.array('d');data.frombytes(raw.read_bytes())
     if len(data)!=result['observations'] or abs(stats.mean(data)-result['mean_ms'])>1e-9:raise RuntimeError('Raw observation mismatch')
     if abs(stats.stdev(data)-result['sample_sd_ms'])>1e-9:raise RuntimeError('SD mismatch')
     if result['uid']==0 or result['no_new_privs']!=1:raise RuntimeError('Privileged worker')
     if m.get('layout_profile','randomized')=='fixed' and not result.get('layout_randomization_disabled'):raise RuntimeError('ASLR policy not applied')
     if not result['hardware_feedback_available']:raise RuntimeError('Hardware frequency feedback unavailable')
-    return dict(j,result=result,samples=str(raw.relative_to(out)),samples_sha256=sha(raw),started_ns=start,finished_ns=end)
+    if result['calls']!=condition(m,j)['calls'] or result['model']!=j['model']:
+        raise RuntimeError('Worker model/call-count mismatch')
+    if not isinstance(result.get('checksum'),str) or len(result['checksum'])!=16:
+        raise RuntimeError('Missing deterministic worker checksum')
+    audio_protocol.validate_receipt(result,raw)
+    row=dict(j,result=result,samples=str(raw.relative_to(out)),samples_sha256=sha(raw),started_ns=start,finished_ns=end)
+    if environment is not None:row.update(environment=str(environment_path.relative_to(out)),environment_sha256=sha(environment_path))
+    return row
 
 
 def summarize(m,rows,kind,out):
@@ -156,6 +185,8 @@ def summarize(m,rows,kind,out):
         logs=[]
         for block in sorted(set(r['block'] for r in cell)):
             p={r['label']:r for r in cell if r['block']==block}
+            if p['A']['result']['checksum']!=p['B']['result']['checksum']:
+                raise RuntimeError('Baseline/candidate numerical checksum mismatch')
             logs.append(math.log(p['B']['result']['mean_ms']/p['A']['result']['mean_ms']))
         summary=effect(logs,.05/family)
         arms={}
@@ -213,6 +244,8 @@ def timing(m,kind,path,aa=None):
             c['noninferiority_margin_percent']=m.get('noninferiority_margin_percent',.5)
             c['passes_noninferiority']=c['aa_qualified'] and c['interval_percent'][0]>-c['noninferiority_margin_percent']
             c['passes_acceptance']=c['aa_qualified'] and c['interval_percent'][0]>max(a['noise_envelope_percent'],m.get('minimum_useful_gain_percent',.3)) and all(not arm['late'] and not arm['over_10ms'] and not arm['major_faults'] for arm in c['arms'].values())
+    if kind=='compare' and 'acceptance_policy' in m:
+        acceptance.evaluate(m['acceptance_policy'],rows,aa,result['conditions'])
     emit(out/'result.json',result)
     return result
 
@@ -226,6 +259,7 @@ def recover_aa(m,out):
         if any(row[k]!=v for k,v in job.items()):raise ValueError('A/A schedule differs')
         raw=out/row['samples'];a=array.array('d');a.frombytes(raw.read_bytes())
         if sha(raw)!=row['samples_sha256'] or len(a)!=row['result']['observations']:raise ValueError('A/A raw data differ')
+        audio_protocol.validate_receipt(row['result'],raw)
         if abs(stats.mean(a)-row['result']['mean_ms'])>1e-9 or abs(stats.stdev(a)-row['result']['sample_sd_ms'])>1e-9:raise ValueError('A/A metrics differ')
     result=summarize(m,rows,'aa',out);result.update(hashes=plan['hashes'],manifest=m,recovered_from_complete_raw_journal=True)
     emit(out/'result.json',result)
@@ -244,6 +278,10 @@ def diagnostics(m,out):
 
 
 def profiles(m,path):
+    if 'profile_collectors' in m:
+        hashes=binary_manifest(m)
+        hashes.update({str(p.resolve()):sha(p) for p in [CONTROLLER,Path(pmu.__file__),Path(__file__),Path(pmu.PERF)]})
+        return pmu.collect(m,path,CONTROLLER,worker_args,control('ready'),hashes)
     out=Path(path).resolve();out.mkdir();(out/'samples').mkdir()
     groups={'primary':'{cycles:u,instructions:u,branches:u,branch-misses:u,ref-cycles:u}',
             'frontend':'{cycles:u,instructions:u,L1-icache-load-misses:u,L1-dcache-load-misses:u,dTLB-load-misses:u}'}
@@ -294,7 +332,7 @@ def profiles(m,path):
 
 
 def report(out,aa,comparison):
-    lines=['# Isolated quantize4 comparison','','All raw observations are retained. Batch samples are amortized group means, not individual-call latency. Process/block pairs are statistical replicates. Power/idle policy is recorded in prepare.json; fixed and dynamic frequency profiles must be interpreted separately.','',
+    lines=['# Isolated library comparison','','All raw observations are retained. Batch samples are amortized group means, not individual-call latency. Process/block pairs are statistical replicates. Power/idle policy is recorded in prepare.json; fixed and dynamic frequency profiles must be interpreted separately.','',
            '| ISA | Model | Mode | Gain | Adjusted interval | Baseline mean ± run SD, µs | Candidate mean ± run SD, µs |','| --- | --- | --- | ---: | ---: | ---: | ---: |']
     for c in comparison['conditions']:
         a=c['arms']['A']['run_means_ms'];b=c['arms']['B']['run_means_ms'];lo,hi=c['interval_percent']
@@ -302,13 +340,22 @@ def report(out,aa,comparison):
     lines+=['','## A/A sensitivity','','| Model | Mode | A/A gain | Adjusted interval | Noise envelope | Qualified at planned limit |','| --- | --- | ---: | ---: | ---: | --- |']
     for c in aa['conditions']:
         lo,hi=c['interval_percent'];lines.append(f"| {c['isa']} / {c['model']} | {c['mode']} | {c['gain_percent']:+.3f}% | [{lo:+.3f},{hi:+.3f}]% | {c['noise_envelope_percent']:.3f}% | {c['sensitivity_qualified']} |")
-    lines+=['','No optional sample extension or discarded slow call. A comparison whose matching A/A condition is unqualified remains diagnostic. No default promotion follows from this report automatically. See JSON for sample SD, tails, frequency ratios, faults, deadline misses and binary/input hashes.','']
+    if any('workload_acceptance' in c for c in comparison['conditions']):
+        lines+=['','## Preregistered workload acceptance v2','','A/A precision above is the retained legacy diagnostic. V2 uses the separate endpoint family below; it does not retroactively alter any v1 verdict.','',
+                '| Candidate / model | Mode / role | Mean gain interval | Process-p99 gain interval | Practical A/A drift | V2 pass |','|---|---|---|---|---|---|']
+        for c in comparison['conditions']:
+            v=c['workload_acceptance'];mean=v['mean_interval_percent'];tail=v['process_p99_interval_percent']
+            lines.append(f"| {c['isa']} / {c['model']} | {c['mode']} / {v['role']} | [{mean[0]:+.3f}, {mean[1]:+.3f}]% | [{tail[0]:+.3f}, {tail[1]:+.3f}]% | {v['aa_practical_drift_detected']} | {v['passed']} |")
+        lines+=['','Audio/guard passes mean and per-process-p99 noninferiority, not acceleration or population-p99/WCET safety. Screening passes are exploratory only.']
+    else:
+        lines+=['','A comparison whose matching A/A condition is unqualified remains diagnostic under v1.']
+    lines+=['','No optional sample extension or discarded slow call. No default promotion follows automatically. See JSON for sample SD, tails, frequency ratios, faults, deadline misses and binary/input hashes.','']
     (out/'RESULTS.md').write_text('\n'.join(lines))
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('mode',choices=['aa','compare','profile','session','resume'])
+    p.add_argument('mode',choices=['aa','compare','profile','profile-session','aa-session','session','resume'])
     p.add_argument('manifest');p.add_argument('output');p.add_argument('--aa');a=p.parse_args();m=config(a.manifest)
     if a.mode in ['aa','compare']:
         timing(m,a.mode,a.output,json.loads(Path(a.aa).read_text()) if a.aa else None);return
@@ -322,11 +369,21 @@ def main():
             if (out/name).exists():(out/name).replace(archive/name)
     else:out.mkdir(parents=True,exist_ok=False)
     owned=False;session=None
+    emit(out/'environment-before.json',telemetry.snapshot())
     try:
         ready=control('prepare','--cpu',str(m.get('cpu',3)),'--frequency-khz',str(m.get('frequency_khz','auto')),
-                      '--ttl',str(m.get('ttl_seconds',1800)),'--power-profile',m.get('power_profile','steady'),'--layout',m.get('layout_profile','randomized'),'--probe',str(Path(m['worker']).resolve()))
+                      '--ttl',str(m.get('ttl_seconds',1800)),'--power-profile',m.get('power_profile','steady'),'--layout',m.get('layout_profile','randomized'),'--idle-policy',m.get('idle_policy','auto'),'--probe',str(Path(m['worker']).resolve()))
         owned=True;session=ready['session_id'];emit(out/'prepare.json',ready)
+        if a.mode=='profile-session':
+            profiles(m,out/'profiles')
+            emit(out/'ready-final.json',control('ready'))
+            return
         if a.mode!='resume':aa=timing(m,'aa',out/'aa')
+        if a.mode=='aa-session':
+            if m.get('hardware_profiles',False):profiles(m,out/'profiles')
+            emit(out/'ready-final.json',control('ready'))
+            emit(out/'result.json',dict(kind='baseline-only-aa',aa=aa,not_candidate_acceptance=True))
+            return
         comparison=timing(m,'compare',out/'compare',aa)
         if m.get('continuous_diagnostics',True):diagnostics(m,out/'continuous-diagnostics')
         if m.get('hardware_profiles',True):profiles(m,out/'profiles')
@@ -334,6 +391,7 @@ def main():
         report(out,aa,comparison)
     finally:
         if owned:emit(out/'restore.json',control('restore','--session',session))
+        emit(out/'environment-after.json',telemetry.snapshot())
 
 
 if __name__=='__main__':

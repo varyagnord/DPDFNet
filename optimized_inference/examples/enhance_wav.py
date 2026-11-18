@@ -42,14 +42,28 @@ def main():
     parser.add_argument("input", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--model", type=int, choices=(2, 8), default=8)
-    parser.add_argument("--library", type=Path, default=root / "build/libdpdfnet.so")
+    parser.add_argument("--library", type=Path, help="CPU library (default: build/libdpdfnet.so)")
+    parser.add_argument("--backend", choices=("cpu", "xdna2"), default="cpu")
+    parser.add_argument("--xdna-root", type=Path, help="Qualified local XDNA2 preview artifact directory")
+    parser.add_argument("--profile", help="Explicit XDNA2 numerical profile")
     args = parser.parse_args()
+    if args.backend == "xdna2" and args.xdna_root is None:
+        parser.error("--backend xdna2 requires --xdna-root")
+    if args.backend == "xdna2" and args.library is not None:
+        parser.error("--library selects a CPU library")
+    if args.backend == "cpu" and (args.xdna_root is not None or args.profile is not None):
+        parser.error("--xdna-root and --profile require --backend xdna2")
     audio, rate = sf.read(args.input, dtype="float32", always_2d=True)
     if rate != 48000 or audio.shape[1] != 1 or not np.isfinite(audio).all():
         raise ValueError("Input must be finite 48 kHz mono audio; no implicit resampling")
-    weights = root / "models" / ("dpdfnet%d_48khz_hr" % args.model) / "weights.f32"
-    with Model(args.library, weights, args.model) as model:
-        output = enhance(model, audio[:, 0])
+    if args.backend == "xdna2":
+        from xdna2_preview import enhance as enhance_xdna2
+
+        output = enhance_xdna2(audio[:, 0], args.xdna_root, args.model, args.profile)
+    else:
+        weights = root / "models" / ("dpdfnet%d_48khz_hr" % args.model) / "weights.f32"
+        with Model(args.library or root / "build/libdpdfnet.so", weights, args.model) as model:
+            output = enhance(model, audio[:, 0])
     sf.write(args.output, output, rate, subtype="FLOAT")
 
 

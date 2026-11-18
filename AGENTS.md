@@ -3,6 +3,21 @@
 Reply to the user in Russian. Keep technical documentation in English.
 The optimized Linux x86-64 runtime is in `optimized_inference/`.
 
+## Optional XDNA2 preview
+
+- Keep the CPU ABI, dependencies and default behavior intact. For this
+  dedicated branch, use the explicit WAV preview documented in
+  `optimized_inference/docs/XDNA2_PREVIEW.md`.
+- Use the primary checkout's pinned free-threaded, PGO/LTO CPython toolchain
+  for new offline QA scripts. Parallelize independent preparation and
+  verification using its available logical CPUs and a serial verification
+  path. Run bulk QA outside isolated captures and keep frames in each
+  recurrent stream ordered. Preserve the registered SDK and worker interpreter
+  identities during device sessions.
+- Compare each NPU image to its own numerical profile and separate functional,
+  quality, performance and application integration evidence. Keep the original
+  exact reference track frozen.
+
 ## Hardware acceptance scope
 
 - The complete available hardware inventory is this local PC and the remote

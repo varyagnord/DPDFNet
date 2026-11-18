@@ -1,0 +1,56 @@
+{
+  "format": 1,
+  "qualification_scope": "same-host standalone WAV preview",
+  "selected_stages": {
+    "model2": "R339",
+    "model8_bf16": "R328",
+    "model8_bfp16_and_xint8": "R331"
+  },
+  "CPU_CTest": {
+    "passed_entries": 48,
+    "failed_entries": 0,
+    "receipt_sha256": "abbccbb714ea8f9f43d4f4b08faa4e468167b0724a317c187932d1236296255d"
+  },
+  "native_rebuilds": {
+    "exact_release_libraries": 6,
+    "receipt_sha256": "3a90dece0629b083ba112a1f1618d74c812240a1db3c17d5af6d4275396158fa"
+  },
+  "CPU_default_waveform_matches_explicit_CPU": true,
+  "CPU_exports": [
+    "dpdfnet_cpu_supported",
+    "dpdfnet_create",
+    "dpdfnet_destroy",
+    "dpdfnet_get_model_info",
+    "dpdfnet_init_state",
+    "dpdfnet_owned_bytes",
+    "dpdfnet_process"
+  ],
+  "CPU_shared_library_sha256": "fcc69ff8cb3e3a818daa2114f72eb1291f7ab324aa132a4c8c2cd76a6026c7b7",
+  "preview": {
+    "hardware_runs": 6,
+    "commands_completed": 8602,
+    "frames": 3036,
+    "catalog_sha256": "75823fe72d4d7c9c81d1b860c312ff968a885849e429c1c5913105ed37cb5546",
+    "receipt_sha256": "8206bbe2f8f8be22473e6ceed382600507f001bad8cc7cd2f07f6af49d12bfd9"
+  },
+  "latest_direct_intra": {
+    "layout_receipt_sha256": "7abef3d82fb98ea365a262a3edc02f3a0a221be68bb2d6a9a19a8752c5497c4e",
+    "requested_DDR_bytes_removed_per_frame": 405504,
+    "exact_PCM_frames": 960,
+    "paired_owners": 96,
+    "paired_commands": 145728,
+    "practical_gain_cells": 0,
+    "noninferior_cells": 0,
+    "observed_deadline_misses": 0,
+    "timing_receipt_sha256": "27e571f679cf4ce7a9b488596c883439c4a26ea6c37faaa467bd997f0267fdad",
+    "selected_for_preview": false
+  },
+  "installed_EasyEffects": {
+    "flatpak_accelerator_access": false,
+    "LADSPA_descriptor_present": true
+  },
+  "vendor_runtime_in_CPU_library": false,
+  "production_selection": false,
+  "frozen_FP32_reference_verified": true,
+  "complete_NPU_graph_offload": false
+}

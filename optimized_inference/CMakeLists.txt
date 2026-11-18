@@ -228,6 +228,10 @@ if(BUILD_TESTING)
       "${CMAKE_CURRENT_SOURCE_DIR}/tests/audio_lab_test.py")
     add_test(NAME benchmark_statistics COMMAND "${Python3_EXECUTABLE}"
       "${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark_statistics_test.py")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND Python3_VERSION VERSION_GREATER_EQUAL "3.11")
+      add_test(NAME xdna2_preview_admission COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/xdna2_preview_test.py")
+    endif()
     if(BUILD_SHARED_LIBS)
       add_test(NAME stream_comparator COMMAND "${Python3_EXECUTABLE}"
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/stream_comparator_test.py"

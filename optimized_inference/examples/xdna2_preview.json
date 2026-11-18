@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "owner": {
+    "path": "owned_exec",
+    "bytes": 12880,
+    "sha256": "9994b95db98e2d97b6d462464172323b088b8ea98cde0599546e5e6e720d74a0"
+  },
+  "models": {
+    "2": {
+      "default": "df-bfp16-k128",
+      "profiles": {
+        "erb-xint8": {
+          "library": {
+            "path": "r339_five_argument_native_v1/m2-erb-xint8/release/libpaired-release.so",
+            "bytes": 427608,
+            "sha256": "b640a8fd4f92ea272d1a6d848a842e1ac81f27f4a1eb12730c1426f7e61c5f91"
+          },
+          "manifest": {
+            "path": "R339_M2_ERB_XINT8_PCM_V1.json",
+            "bytes": 2476,
+            "sha256": "8e2029b6b6ee67dc26d04a1f88e6c4199a9ab5658f5fe31ad035575a6eab0355"
+          },
+          "model": {
+            "path": "r103_original_models_v1/dpdfnet2_48khz_hr.onnx",
+            "bytes": 10493337,
+            "sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b"
+          },
+          "commands_per_frame": 3,
+          "verified_stage": "R339"
+        },
+        "df-bfp16-k64": {
+          "library": {
+            "path": "r339_five_argument_native_v1/m2-df-bfp16-k64/release/libpaired-release.so",
+            "bytes": 427584,
+            "sha256": "8b00bb837b877d4a5aa63b29b5e05b61057e235dabcc6b017744c1f95295605d"
+          },
+          "manifest": {
+            "path": "R339_M2_DF_BFP16_K64_PCM_V1.json",
+            "bytes": 2482,
+            "sha256": "cf110d4f3fb2fe9c428965810972846d23bd4169f3df9530d7746da5989aa3af"
+          },
+          "model": {
+            "path": "r103_original_models_v1/dpdfnet2_48khz_hr.onnx",
+            "bytes": 10493337,
+            "sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b"
+          },
+          "commands_per_frame": 3,
+          "verified_stage": "R339"
+        },
+        "df-bfp16-k128": {
+          "library": {
+            "path": "r339_five_argument_native_v1/m2-df-bfp16-k128/release/libpaired-release.so",
+            "bytes": 427736,
+            "sha256": "7c18e3868338f62b651d75cfe3df516872c104262092f1ffda45c72a503a2f86"
+          },
+          "manifest": {
+            "path": "R339_M2_DF_BFP16_K128_PCM_V1.json",
+            "bytes": 2484,
+            "sha256": "ee66c1382f902d5a12367abf103088cac55feed02c523576ca837996e3c71183"
+          },
+          "model": {
+            "path": "r103_original_models_v1/dpdfnet2_48khz_hr.onnx",
+            "bytes": 10493337,
+            "sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b"
+          },
+          "commands_per_frame": 3,
+          "verified_stage": "R339"
+        }
+      }
+    },
+    "8": {
+      "default": "bf16",
+      "profiles": {
+        "bfp16": {
+          "library": {
+            "path": "r331_resident_precision_native_v1/m8-bfp16/release/libpaired-release.so",
+            "bytes": 427176,
+            "sha256": "7ac3db2afe764e84475a6d80f1cd5dd2a510394e9884d0689c66e4f3603eca46"
+          },
+          "manifest": {
+            "path": "R331_M8_BFP16_PCM_V1.json",
+            "bytes": 2474,
+            "sha256": "6c7341beb1da19e19f005c9e9188f8b56ae0f203bead277c8e16c8482bb23696"
+          },
+          "model": {
+            "path": "r103_original_models_v1/dpdfnet8_48khz_hr.onnx",
+            "bytes": 14857107,
+            "sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631"
+          },
+          "commands_per_frame": 3,
+          "verified_stage": "R331"
+        },
+        "xint8": {
+          "library": {
+            "path": "r331_resident_precision_native_v1/m8-xint8/release/libpaired-release.so",
+            "bytes": 427176,
+            "sha256": "d8c18e210f8a54dd00fd07bfa2ee23ef1c715528f0b76428d481580a6c0ae928"
+          },
+          "manifest": {
+            "path": "R331_M8_XINT8_PCM_V1.json",
+            "bytes": 2474,
+            "sha256": "af30c46fda668f0fce59463bda898504eba727a5e7e55163d83431c01fb7196f"
+          },
+          "model": {
+            "path": "r103_original_models_v1/dpdfnet8_48khz_hr.onnx",
+            "bytes": 14857107,
+            "sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631"
+          },
+          "commands_per_frame": 3,
+          "verified_stage": "R331"
+        },
+        "bf16": {
+          "library": {
+            "path": "r328_no_weight_BO_native_v1/libcompact-release.so",
+            "bytes": 422408,
+            "sha256": "171b1d9dcfb2b0b5a641f3e5f8424633c734b02a21d382c535aa04d9f7d1136f"
+          },
+          "manifest": {
+            "path": "R328_BARE_PCM_V1.json",
+            "bytes": 2704,
+            "sha256": "4960b83ef1f1de49fab5c0b3e74a514e157e3240c63419de06e5121bb76f57d8"
+          },
+          "model": {
+            "path": "r103_original_models_v1/dpdfnet8_48khz_hr.onnx",
+            "bytes": 14857107,
+            "sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631"
+          },
+          "commands_per_frame": 2,
+          "verified_stage": "R328"
+        }
+      }
+    }
+  }
+}

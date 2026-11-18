@@ -55,6 +55,9 @@ python3 examples/enhance_wav.py noisy.wav enhanced.wav --model 2
 build/dpdfnet_benchmark 8 models/dpdfnet8_48khz_hr/weights.f32 1000 paced
 ```
 
+The [local XDNA2 preview](docs/XDNA2_PREVIEW.md) adds an explicit WAV backend
+on the qualified Ryzen host.
+
 ## Results
 
 The current defaults were selected separately on an i7-7700T. Independent

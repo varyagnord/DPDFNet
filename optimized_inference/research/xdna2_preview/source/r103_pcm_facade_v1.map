@@ -1,0 +1,4 @@
+R103_PCM_1 {
+ global: audio_native_*; r103_*_v1;
+ local: *;
+};

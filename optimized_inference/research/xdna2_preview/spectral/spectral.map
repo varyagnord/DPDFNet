@@ -1,0 +1,4 @@
+{
+    global: dpdfnet_xdna2_spectral_*;
+    local: *;
+};

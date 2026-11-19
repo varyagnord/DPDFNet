@@ -98,3 +98,11 @@ bench-audio-noise config output: bench-tools bench-audio-tools
 # Re-render a completed diagnostic cohort without new measurements or tuning.
 bench-audio-noise-report output:
     /usr/bin/python3 optimized_inference/tools/bench_lab/audio_noise_report.py "$1"
+
+# Verify local catalog hashes, accessible device and the optional host ABI.
+ee-npu-doctor python catalog *options:
+    "$1" -B optimized_inference/research/xdna2_preview/spectral/doctor.py "${@:2}"
+
+# Exercise a private EasyEffects/PipeWire graph. The harness reaps its processes.
+ee-npu-smoke python +options:
+    "$1" -B optimized_inference/research/xdna2_preview/spectral/easyeffects_smoke.py "${@:2}"

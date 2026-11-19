@@ -45,6 +45,7 @@ the resulting WAV and a concise command receipt.
 Both models run end-to-end from PCM with actual neural work on XDNA2.
 The accelerator covers blocks of the recurrent and projection graph.
 Host DSP and remaining ONNX graph operators still run on the CPU.
+The [EasyEffects integration candidate](XDNA2_EASYEFFECTS.md) uses a separate spectral adapter.
 The untouched models, seven exported CPU symbols, and ordinary CPU
 package remain independently usable.
 

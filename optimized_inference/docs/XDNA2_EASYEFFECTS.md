@@ -1,5 +1,10 @@
 # EasyEffects integration candidate
 
+The later [local full PCM checkpoint](XDNA2_LOCAL_PCM_CHECKPOINT.md)
+defines the user-scoped deployment which uses the NPU for the entire mono
+PCM graph. This document also records the earlier spectral implementation
+and its separate qualification.
+
 The existing Deep Noise Remover effect selects DPDFNet through HushMic.
 This candidate adds a per-user machine preference to the existing effect.
 The preference lives in the HushMic XDNA2 host service and is outside

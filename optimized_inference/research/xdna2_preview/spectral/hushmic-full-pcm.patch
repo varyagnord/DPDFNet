@@ -1,0 +1,3506 @@
+From 28cbdea7c347c180772c2bc1d8d77278f927f57f Mon Sep 17 00:00:00 2001
+From: Varyag Nord <varyagnord@example.com>
+Date: Thu, 19 Nov 2026 03:16:22 +0300
+Subject: [PATCH 1/2] =?UTF-8?q?=E2=9C=A8=20Add=20optional=20XDNA2=20infere?=
+ =?UTF-8?q?nce=20with=20graceful=20session=20recovery?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Keep the LADSPA audio and control ABI while delegating spectral inference to an optional per-user broker.
+- Fall back to CPU at the audio deadline and retain the exclusive lease until the XRT worker finishes cleanup.
+- Close idle sessions and open a fresh one when audio resumes.
+
+Verified with Rust tests, a CPU-only build check, private-bus lifecycle tests for both models, and production XRT counters.
+---
+ Cargo.lock                                    |  13 +
+ Cargo.toml                                    |   2 +-
+ crates/dpdfnet-ladspa/Cargo.toml              |   2 +
+ crates/dpdfnet-ladspa/src/adaptive.rs         |   9 +
+ crates/dpdfnet-ladspa/src/lib.rs              |  16 +-
+ crates/dpdfnet-ladspa/src/worker.rs           |   3 +
+ crates/dpdfnet-ladspa/src/xdna2.rs            | 410 ++++++++++++++++++
+ crates/dpdfnet-xdna2/Cargo.toml               |  30 ++
+ .../examples/session_contract.rs              |  41 ++
+ .../src/bin/dpdfnet-xdna2-service.rs          | 359 +++++++++++++++
+ crates/dpdfnet-xdna2/src/lib.rs               | 310 +++++++++++++
+ crates/hushmic-denoiser/src/denoiser.rs       |  29 +-
+ packaging/xdna2/README.md                     |  29 ++
+ packaging/xdna2/dpdfnet-xdna2.service         |   8 +
+ .../io.github.fovty.HushMic.XDNA2.service     |   4 +
+ 15 files changed, 1262 insertions(+), 3 deletions(-)
+ create mode 100644 crates/dpdfnet-ladspa/src/xdna2.rs
+ create mode 100644 crates/dpdfnet-xdna2/Cargo.toml
+ create mode 100644 crates/dpdfnet-xdna2/examples/session_contract.rs
+ create mode 100644 crates/dpdfnet-xdna2/src/bin/dpdfnet-xdna2-service.rs
+ create mode 100644 crates/dpdfnet-xdna2/src/lib.rs
+ create mode 100644 packaging/xdna2/README.md
+ create mode 100644 packaging/xdna2/dpdfnet-xdna2.service
+ create mode 100644 packaging/xdna2/io.github.fovty.HushMic.XDNA2.service
+
+diff --git a/Cargo.lock b/Cargo.lock
+index 005fb66acc921f822c90b566da1a703f645718d2..bf85e01f294c9227e0269df590ecaf127645150f 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -829,12 +829,25 @@ name = "dpdfnet-ladspa"
+ version = "0.11.0"
+ dependencies = [
+  "claxon",
++ "dpdfnet-xdna2",
+  "hushmic-denoiser",
+  "ladspa",
+  "libc",
+  "rtrb",
+ ]
+ 
++[[package]]
++name = "dpdfnet-xdna2"
++version = "0.11.0"
++dependencies = [
++ "libc",
++ "libloading 0.9.0",
++ "serde",
++ "serde_json",
++ "sha2",
++ "zbus",
++]
++
+ [[package]]
+ name = "dpi"
+ version = "0.1.2"
+diff --git a/Cargo.toml b/Cargo.toml
+index ac1186039dbbb661c8284f35603487183b7e7d33..0be7e027dd2c1abc0e062842ab6c698b6b9db78d 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -1,6 +1,6 @@
+ [workspace]
+ resolver = "2"
+-members = ["crates/dpdfnet-ladspa", "crates/hushmic", "crates/hushmic-denoiser"]
++members = ["crates/dpdfnet-ladspa", "crates/hushmic", "crates/hushmic-denoiser", "crates/dpdfnet-xdna2"]
+ 
+ [workspace.package]
+ edition = "2021"
+diff --git a/crates/dpdfnet-ladspa/Cargo.toml b/crates/dpdfnet-ladspa/Cargo.toml
+index 1ddb25127b1250353d7d7bdc39fe6e5139fbc9c4..c8675d9c7e6c683c1473d9cdd80b55f1a807ff77 100644
+--- a/crates/dpdfnet-ladspa/Cargo.toml
++++ b/crates/dpdfnet-ladspa/Cargo.toml
+@@ -13,12 +13,14 @@ crate-type = ["cdylib", "rlib"]   # cdylib for the LADSPA .so; rlib for the test
+ # engine runs is still decided per model at load time, with ONNX as the
+ # fallback. `--no-default-features` builds an ONNX-only plugin.
+ default = ["native"]
++xdna2 = ["dep:dpdfnet-xdna2"]
+ native = ["hushmic-denoiser/native"]
+ 
+ [dependencies]
+ ladspa = "0.3.4"
+ hushmic-denoiser = { path = "../hushmic-denoiser", version = "0.11.0" }
+ rtrb = "0.4.0"
++dpdfnet-xdna2 = { path = "../dpdfnet-xdna2", optional = true }
+ libc = "0.2"
+ 
+ [dev-dependencies]
+diff --git a/crates/dpdfnet-ladspa/src/adaptive.rs b/crates/dpdfnet-ladspa/src/adaptive.rs
+index a0075b65f93f80aa9a2943a98caab2b7d26c5cf3..28d6ed62a686fa8e04c3480300cfc1873b4485a1 100644
+--- a/crates/dpdfnet-ladspa/src/adaptive.rs
++++ b/crates/dpdfnet-ladspa/src/adaptive.rs
+@@ -358,6 +358,15 @@ impl<E: HopEngine, P: Policy> HopEngine for AdaptiveEngine<E, P> {
+         }
+     }
+ 
++    fn poll_control(&mut self) {
++        if let Some(engine) = self.quality.as_mut() {
++            engine.poll_control();
++        }
++        if let Some(engine) = self.light.as_mut() {
++            engine.poll_control();
++        }
++    }
++
+     fn set_lag_hops(&mut self, hops: u32) {
+         self.lag = hops;
+     }
+diff --git a/crates/dpdfnet-ladspa/src/lib.rs b/crates/dpdfnet-ladspa/src/lib.rs
+index 7383006da4156f3ab542e144930bcd5954f67053..5e5de46df7b0bcd2235884cb47ae5fb0454ff6b7 100644
+--- a/crates/dpdfnet-ladspa/src/lib.rs
++++ b/crates/dpdfnet-ladspa/src/lib.rs
+@@ -10,6 +10,13 @@ pub mod ladder;
+ pub mod log;
+ pub mod rt;
+ pub mod worker;
++#[cfg(feature = "xdna2")]
++mod xdna2;
++
++#[cfg(feature = "xdna2")]
++type SelectedEngine = xdna2::Engine;
++#[cfg(not(feature = "xdna2"))]
++type SelectedEngine = Denoiser;
+ 
+ pub use adaptive::{AdaptiveEngine, RawDelay};
+ pub use align::{
+@@ -262,7 +269,7 @@ fn runtime_note(ours: Option<&str>, requested: &str) -> Option<String> {
+ /// and both go through `load_denoiser`, so both tiers run on the selected
+ /// engine. The runtime is committed even when both models end up native:
+ /// any fallback to ONNX needs it.
+-fn init_engine() -> Option<AdaptiveEngine<Denoiser, Box<dyn Policy>>> {
++fn init_engine() -> Option<AdaptiveEngine<SelectedEngine, Box<dyn Policy>>> {
+     let dylib = std::env::var("ORT_DYLIB_PATH")
+         .ok()
+         .filter(|s| !s.is_empty()) // empty counts as unset, as in ort itself
+@@ -339,6 +346,11 @@ fn init_engine() -> Option<AdaptiveEngine<Denoiser, Box<dyn Policy>>> {
+             }
+         });
+     let (tiers, main_tier) = plan_tiers(&main_path, light.is_some());
++    #[cfg(feature = "xdna2")]
++    let (main, light) = (
++        xdna2::Engine::main(main),
++        light.map(xdna2::Engine::secondary),
++    );
+     let (quality, light) = match main_tier {
+         Tier::Light => (None, Some(main)),
+         _ => (Some(main), light),
+@@ -379,6 +391,8 @@ impl DpdfnetPlugin {
+         } else {
+             init_engine()
+         };
++        #[cfg(feature = "xdna2")]
++        xdna2::clear_pending();
+         DpdfnetPlugin {
+             worker: engine.and_then(WorkerHandle::spawn),
+             aligner: Aligner::new(),
+diff --git a/crates/dpdfnet-ladspa/src/worker.rs b/crates/dpdfnet-ladspa/src/worker.rs
+index 4be7228167544b641b81b7dde0eae8859b00d3bb..2d29c3752eb2ec24f345d0d83ef07cb075284f67 100644
+--- a/crates/dpdfnet-ladspa/src/worker.rs
++++ b/crates/dpdfnet-ladspa/src/worker.rs
+@@ -140,6 +140,8 @@ pub trait HopEngine: Send + 'static {
+     fn reset(&mut self);
+     fn set_mode(&mut self, mode: Mode);
+     fn set_attenuation_limit_db(&mut self, db: f32);
++    /// Apply queued backend changes while the worker is waiting for audio.
++    fn poll_control(&mut self) {}
+     /// Overdue hops after allowing for a fresh host callback burst,
+     /// smoothed over one callback. Default: ignored.
+     fn set_lag_hops(&mut self, _hops: u32) {}
+@@ -559,6 +561,7 @@ fn worker_loop(
+             mode_cache = mode;
+         }
+         if input.slots() < HOP {
++            engine.poll_control();
+             // Timeout guards a lost wakeup; the RT side unparks on every
+             // push, so this is normally a pure park.
+             // The lag window survives the park: with a cycle of several
+diff --git a/crates/dpdfnet-ladspa/src/xdna2.rs b/crates/dpdfnet-ladspa/src/xdna2.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..e511347fe3b01e85a9634f38a553ce131c572678
+--- /dev/null
++++ b/crates/dpdfnet-ladspa/src/xdna2.rs
+@@ -0,0 +1,410 @@
++//! Optional host extension. All D-Bus work happens off the inference and RT threads.
++use crate::worker::HopEngine;
++use dpdfnet_xdna2::{self as provider, Stream};
++use hushmic_denoiser::{Denoiser, Mode, HOP};
++use std::{
++    cell::RefCell,
++    collections::BTreeMap,
++    path::PathBuf,
++    sync::{
++        atomic::{AtomicBool, AtomicU32, AtomicU64, AtomicU8, Ordering},
++        Arc, Mutex, OnceLock, Weak,
++    },
++    thread,
++    time::{Duration, Instant},
++};
++
++const CPU: u32 = 0;
++const OPENING: u32 = 1;
++const NPU: u32 = 2;
++const STEREO: u32 = 3;
++const SERVICE: u32 = 4;
++const UNQUALIFIED: u32 = 5;
++const BUSY: u32 = 6;
++const LOST: u32 = 7;
++const WAITING_FOR_AUDIO: u32 = 8;
++const UNKNOWN_POLICY: u8 = u8::MAX;
++// Close an unused session before amdxdna's five-second runtime suspend.
++const SESSION_IDLE: Duration = Duration::from_secs(2);
++
++struct Link {
++    status: AtomicU32,
++    policy: AtomicU8,
++    generation: AtomicU64,
++    completed: AtomicU64,
++    ready: Mutex<Option<(u64, Stream)>>,
++    path: PathBuf,
++    mono: bool,
++    alive: AtomicBool,
++}
++
++impl Link {
++    fn current(&self, generation: u64) -> bool {
++        self.alive.load(Ordering::Acquire) && self.generation.load(Ordering::Acquire) == generation
++    }
++
++    fn request(self: &Arc<Self>, requested: Option<u8>) {
++        if !self.mono {
++            return;
++        }
++        let generation = {
++            let mut ready = self.ready.lock().unwrap();
++            let previous = self.policy.load(Ordering::Relaxed);
++            let status = self.status.load(Ordering::Relaxed);
++            if requested == Some(previous) && matches!(status, OPENING | WAITING_FOR_AUDIO | NPU) {
++                return;
++            }
++            let generation = self.generation.fetch_add(1, Ordering::AcqRel) + 1;
++            // A prepared socket can still own the device before the first
++            // hop. Release it before this request tries to claim a lease.
++            *ready = None;
++            self.policy
++                .store(requested.unwrap_or(UNKNOWN_POLICY), Ordering::Relaxed);
++            self.status.store(
++                if requested == Some(provider::CPU) {
++                    CPU
++                } else {
++                    OPENING
++                },
++                Ordering::Relaxed,
++            );
++            generation
++        };
++        if requested == Some(provider::CPU) {
++            return;
++        }
++        // The connector may outlive the LADSPA instance during a bus call.
++        if !crate::rt::keep_plugin_loaded() {
++            self.publish(generation, SERVICE);
++            return;
++        }
++        let link = Arc::clone(self);
++        if thread::Builder::new()
++            .name("dpdfnet-npu-connect".into())
++            .spawn(move || link.connect(generation))
++            .is_err()
++        {
++            self.publish(generation, SERVICE);
++        }
++    }
++
++    fn connect(&self, generation: u64) {
++        // The inference worker observes policy changes even when no
++        // audio is queued. An old active socket can close on that thread.
++        for _ in 0..50 {
++            if !self.current(generation) {
++                return;
++            }
++            if self.completed.load(Ordering::Acquire) >= generation {
++                break;
++            }
++            thread::sleep(Duration::from_millis(2));
++        }
++        if !self.current(generation) {
++            return;
++        }
++
++        let Ok((mode, ready, automatic)) = provider::policy() else {
++            self.publish(generation, SERVICE);
++            return;
++        };
++        {
++            let _guard = self.ready.lock().unwrap();
++            if !self.current(generation) {
++                return;
++            }
++            self.policy.store(mode, Ordering::Relaxed);
++        }
++        let (status, stream) = if mode == provider::CPU {
++            (CPU, None)
++        } else if !ready || (mode == provider::AUTO && !automatic) {
++            (UNQUALIFIED, None)
++        } else {
++            self.open(generation)
++        };
++        let mut pending = self.ready.lock().unwrap();
++        if self.current(generation) {
++            self.status.store(status, Ordering::Relaxed);
++            *pending = stream.map(|stream| (generation, stream));
++        }
++    }
++
++    fn open(&self, generation: u64) -> (u32, Option<Stream>) {
++        let Ok(hash) = provider::file_hash(&self.path) else {
++            return (UNQUALIFIED, None);
++        };
++        // The service drops its lease after the previous worker has exited.
++        // Try again briefly if closure and the new request overlap.
++        for attempt in 0..8 {
++            if !self.current(generation) {
++                break;
++            }
++            match Stream::open(&hash) {
++                Ok(stream) => return (WAITING_FOR_AUDIO, Some(stream)),
++                Err(error) if provider::session_busy(&error) => {
++                    if attempt < 7 {
++                        thread::sleep(Duration::from_millis(30));
++                    }
++                }
++                Err(_) => return (UNQUALIFIED, None),
++            }
++        }
++        (BUSY, None)
++    }
++
++    fn publish(&self, generation: u64, status: u32) {
++        if self.status.load(Ordering::Relaxed) == status {
++            return;
++        }
++        if let Ok(_guard) = self.ready.try_lock() {
++            if self.current(generation) {
++                self.status.store(status, Ordering::Relaxed);
++            }
++        }
++    }
++}
++
++static IDS: AtomicU64 = AtomicU64::new(1);
++static LINKS: OnceLock<Mutex<BTreeMap<u64, Weak<Link>>>> = OnceLock::new();
++thread_local! { static PENDING: RefCell<Option<Arc<Link>>> = const { RefCell::new(None) }; }
++
++fn links() -> &'static Mutex<BTreeMap<u64, Weak<Link>>> {
++    LINKS.get_or_init(Mutex::default)
++}
++
++#[no_mangle]
++pub extern "C" fn hushmic_dpdfnet_prepare_xdna2_v1(mono: bool) -> u64 {
++    let id = IDS.fetch_add(1, Ordering::Relaxed);
++    let link = Arc::new(Link {
++        status: AtomicU32::new(if mono { CPU } else { STEREO }),
++        policy: AtomicU8::new(UNKNOWN_POLICY),
++        generation: AtomicU64::new(0),
++        completed: AtomicU64::new(0),
++        ready: Mutex::new(None),
++        path: crate::model_path(),
++        mono,
++        alive: AtomicBool::new(true),
++    });
++    let mut links = links().lock().unwrap();
++    links.retain(|_, link| link.strong_count() != 0);
++    links.insert(id, Arc::downgrade(&link));
++    PENDING.with(|pending| *pending.borrow_mut() = Some(link));
++    id
++}
++
++#[no_mangle]
++pub extern "C" fn hushmic_dpdfnet_status_xdna2_v1(id: u64) -> u32 {
++    links()
++        .lock()
++        .unwrap()
++        .get(&id)
++        .and_then(Weak::upgrade)
++        .map_or(CPU, |link| link.status.load(Ordering::Relaxed))
++}
++
++#[no_mangle]
++pub extern "C" fn hushmic_dpdfnet_policy_xdna2_v1() -> i32 {
++    provider::policy().map_or(-1, |(mode, ready, automatic)| {
++        i32::from(mode) | (i32::from(ready) << 8) | (i32::from(automatic) << 9)
++    })
++}
++
++#[no_mangle]
++pub extern "C" fn hushmic_dpdfnet_set_policy_xdna2_v1(mode: u8) -> i32 {
++    if provider::set_policy(mode).is_err() {
++        return -1;
++    }
++    let current: Vec<_> = links()
++        .lock()
++        .unwrap()
++        .values()
++        .filter_map(Weak::upgrade)
++        .collect();
++    for link in current {
++        link.request(Some(mode));
++    }
++    0
++}
++
++pub fn clear_pending() {
++    PENDING.with(|pending| {
++        pending.borrow_mut().take();
++    });
++}
++
++pub struct Engine {
++    cpu: Denoiser,
++    link: Option<Arc<Link>>,
++    stream: Option<Stream>,
++    generation: u64,
++    idle_deadline: Option<Instant>,
++    resume_on_audio: bool,
++}
++
++impl Engine {
++    pub fn main(cpu: Denoiser) -> Self {
++        let link = PENDING.with(|pending| pending.borrow_mut().take());
++        if let Some(link) = &link {
++            link.request(None);
++        }
++        Self {
++            cpu,
++            link,
++            stream: None,
++            generation: 0,
++            idle_deadline: None,
++            resume_on_audio: false,
++        }
++    }
++
++    pub fn secondary(cpu: Denoiser) -> Self {
++        Self {
++            cpu,
++            link: None,
++            stream: None,
++            generation: 0,
++            idle_deadline: None,
++            resume_on_audio: false,
++        }
++    }
++
++    fn refresh(&mut self) {
++        let Some(link) = &self.link else {
++            return;
++        };
++        if let Ok(mut ready) = link.ready.try_lock() {
++            let generation = link.generation.load(Ordering::Acquire);
++            if self.generation != generation {
++                self.stream = None;
++                self.generation = generation;
++                self.idle_deadline = None;
++                self.resume_on_audio = false;
++                link.completed.store(generation, Ordering::Release);
++            }
++            if let Some((prepared, new_stream)) = ready.take() {
++                if prepared == generation {
++                    self.stream = Some(new_stream);
++                    self.idle_deadline = Some(Instant::now() + SESSION_IDLE);
++                }
++            }
++        }
++    }
++
++    fn retire_idle_session(&mut self, now: Instant) {
++        if self.idle_deadline.is_none_or(|deadline| now < deadline) {
++            return;
++        }
++        self.idle_deadline = None;
++        self.resume_on_audio = true;
++        if self.stream.take().is_some() {
++            if let Some(link) = &self.link {
++                link.publish(self.generation, WAITING_FOR_AUDIO);
++            }
++        }
++    }
++}
++
++impl Drop for Engine {
++    fn drop(&mut self) {
++        if let Some(link) = &self.link {
++            link.alive.store(false, Ordering::Release);
++        }
++    }
++}
++
++impl HopEngine for Engine {
++    fn process_hop(&mut self, input: &[f32; HOP], output: &mut [f32; HOP]) -> Result<(), String> {
++        self.refresh();
++        if self.idle_deadline.is_some() || self.resume_on_audio {
++            let now = Instant::now();
++            self.retire_idle_session(now);
++            if let Some(link) = self
++                .link
++                .as_ref()
++                .filter(|link| self.resume_on_audio && link.current(self.generation))
++            {
++                self.resume_on_audio = false;
++                link.request(None);
++            }
++            if self.idle_deadline.is_some() {
++                self.idle_deadline = Some(now + SESSION_IDLE);
++            }
++        }
++        let stream = &mut self.stream;
++        let link = &self.link;
++        let generation = self.generation;
++        self.cpu
++            .process_hop_with_spectral_provider(input, output, |spectrum, enhanced| {
++                if let Some(session) = stream {
++                    let success = session.step(spectrum, enhanced).is_ok();
++                    if !success {
++                        *stream = None;
++                    }
++                    if let Some(link) = link {
++                        link.publish(generation, if success { NPU } else { LOST });
++                    }
++                    success
++                } else {
++                    false
++                }
++            })
++            .map_err(|e| e.to_string())
++    }
++
++    fn poll_control(&mut self) {
++        self.refresh();
++        self.retire_idle_session(Instant::now());
++    }
++
++    fn reset(&mut self) {
++        self.refresh();
++        self.retire_idle_session(Instant::now());
++        self.cpu.reset();
++        if self
++            .stream
++            .as_mut()
++            .is_some_and(|stream| stream.reset().is_err())
++        {
++            self.stream = None;
++            if let Some(link) = &self.link {
++                link.publish(self.generation, LOST);
++            }
++        }
++    }
++
++    fn set_mode(&mut self, mode: Mode) {
++        self.cpu.set_mode(mode);
++    }
++
++    fn set_attenuation_limit_db(&mut self, db: f32) {
++        self.cpu.set_attenuation_limit_db(db);
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn rechecking_an_unchanged_policy_preserves_pending_or_active_session() {
++        let link = Arc::new(Link {
++            status: AtomicU32::new(OPENING),
++            policy: AtomicU8::new(provider::PREFER_NPU),
++            generation: AtomicU64::new(3),
++            completed: AtomicU64::new(3),
++            ready: Mutex::new(None),
++            path: PathBuf::new(),
++            mono: true,
++            alive: AtomicBool::new(true),
++        });
++        for status in [OPENING, WAITING_FOR_AUDIO, NPU] {
++            link.status.store(status, Ordering::Relaxed);
++            link.request(Some(provider::PREFER_NPU));
++            assert_eq!(link.generation.load(Ordering::Relaxed), 3);
++            assert_eq!(link.status.load(Ordering::Relaxed), status);
++        }
++        link.request(Some(provider::CPU));
++        assert_eq!(link.generation.load(Ordering::Relaxed), 4);
++        assert_eq!(link.status.load(Ordering::Relaxed), CPU);
++    }
++}
+diff --git a/crates/dpdfnet-xdna2/Cargo.toml b/crates/dpdfnet-xdna2/Cargo.toml
+new file mode 100644
+index 0000000000000000000000000000000000000000..5bdc51839e3a3be2852b8e08438f18e0f92fd80c
+--- /dev/null
++++ b/crates/dpdfnet-xdna2/Cargo.toml
+@@ -0,0 +1,30 @@
++[package]
++name = "dpdfnet-xdna2"
++version.workspace = true
++edition.workspace = true
++license.workspace = true
++
++[dependencies]
++libc = "0.2"
++zbus = { version = "5", features = ["blocking-api"] }
++sha2 = "0.11"
++
++[features]
++host = ["dep:serde", "dep:serde_json", "dep:libloading"]
++
++[dependencies.serde]
++version = "1"
++features = ["derive"]
++optional = true
++
++[dependencies.serde_json]
++version = "1"
++optional = true
++
++[dependencies.libloading]
++version = "0.9"
++optional = true
++
++[[bin]]
++name = "dpdfnet-xdna2-service"
++required-features = ["host"]
+diff --git a/crates/dpdfnet-xdna2/examples/session_contract.rs b/crates/dpdfnet-xdna2/examples/session_contract.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..408146b33cb259d0926773a9c745fd98873f57ee
+--- /dev/null
++++ b/crates/dpdfnet-xdna2/examples/session_contract.rs
+@@ -0,0 +1,41 @@
++//! Run against an isolated session bus with the development service already started.
++use dpdfnet_xdna2::{file_hash, policy, set_policy, Stream, AUTO, CPU, PREFER_NPU, WORDS};
++use std::{path::Path, thread, time::Duration};
++
++fn main() -> Result<(), Box<dyn std::error::Error>> {
++    let model = std::env::args()
++        .nth(1)
++        .ok_or("provide the original ONNX model")?;
++    let hash = file_hash(Path::new(&model))?;
++    set_policy(CPU)?;
++    assert_eq!(policy()?.0, CPU);
++    assert!(Stream::open(&hash).is_err());
++    set_policy(AUTO)?;
++    assert!(!policy()?.2);
++    assert!(Stream::open(&hash).is_err());
++    set_policy(PREFER_NPU)?;
++    assert!(Stream::open("unrelated").is_err());
++    let mut stream = Stream::open(&hash)?;
++    assert!(Stream::open(&hash).is_err());
++    let mut input = [0.0; WORDS];
++    input[0] = 0.1;
++    input[112] = 0.3;
++    let mut first = [0.0_f32; WORDS];
++    stream.step(&input, &mut first)?;
++    for _ in 0..12 {
++        stream.step(&input, &mut [0.0; WORDS])?;
++    }
++    stream.reset()?;
++    let mut replay = [0.0_f32; WORDS];
++    stream.step(&input, &mut replay)?;
++    assert!(first
++        .iter()
++        .zip(replay)
++        .all(|(a, b)| a.to_bits() == b.to_bits()));
++    drop(stream);
++    thread::sleep(Duration::from_millis(200));
++    drop(Stream::open(&hash)?);
++    set_policy(CPU)?;
++    println!("CPU, Auto, model identity, exclusive lease, 14 frames, reset and reopen verified");
++    Ok(())
++}
+diff --git a/crates/dpdfnet-xdna2/src/bin/dpdfnet-xdna2-service.rs b/crates/dpdfnet-xdna2/src/bin/dpdfnet-xdna2-service.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..1a82e5f8e33e61fcb6f880fedb9a168ffb96150b
+--- /dev/null
++++ b/crates/dpdfnet-xdna2/src/bin/dpdfnet-xdna2-service.rs
+@@ -0,0 +1,359 @@
++use dpdfnet_xdna2::{
++    deadline, file_hash, Channel, Stamp, AUTO, CPU, FRAME, OBJECT, PREFER_NPU, READY, RESET,
++    SERVICE, WORDS,
++};
++use serde::Deserialize;
++use std::{
++    collections::BTreeMap,
++    env,
++    error::Error,
++    ffi::{c_char, c_void, CString},
++    fs::{self, OpenOptions},
++    io::{self, Write},
++    os::{
++        fd::{FromRawFd, OwnedFd},
++        unix::{fs::OpenOptionsExt, process::CommandExt},
++    },
++    path::{Path, PathBuf},
++    process::{Command, Stdio},
++    sync::{mpsc, Arc, Mutex},
++    thread,
++    time::Duration,
++};
++use zbus::{fdo, zvariant::OwnedFd as BusFd};
++
++type Result<T> = std::result::Result<T, Box<dyn Error>>;
++const FIRST: Stamp = Stamp {
++    kind: READY,
++    epoch: 0,
++    number: 0,
++};
++
++#[derive(Clone, Deserialize)]
++struct Profile {
++    library: PathBuf,
++    library_sha256: String,
++    manifest: PathBuf,
++    manifest_sha256: String,
++    model_sha256: String,
++    qualified_for_live_audio: bool,
++    auto_qualified: bool,
++}
++
++#[derive(Deserialize)]
++struct Providers {
++    version: u32,
++    profiles: BTreeMap<String, Profile>,
++}
++
++fn local_path(variable: &str, fallback: impl FnOnce() -> PathBuf) -> PathBuf {
++    env::var_os(variable)
++        .filter(|value| !value.is_empty())
++        .map(PathBuf::from)
++        .unwrap_or_else(fallback)
++}
++
++fn read_policy(path: &Path) -> u8 {
++    match fs::read_to_string(path).ok().as_deref().map(str::trim) {
++        Some("cpu") => CPU,
++        Some("prefer-npu") => PREFER_NPU,
++        _ => AUTO,
++    }
++}
++
++fn save_policy(path: &Path, policy: u8) -> io::Result<()> {
++    let value = match policy {
++        CPU => "cpu",
++        AUTO => "auto",
++        PREFER_NPU => "prefer-npu",
++        _ => return Err(io::ErrorKind::InvalidInput.into()),
++    };
++    let parent = path.parent().ok_or(io::ErrorKind::InvalidInput)?;
++    fs::create_dir_all(parent)?;
++    let temporary = parent.join(format!(".policy-{}.tmp", std::process::id()));
++    let mut out = OpenOptions::new()
++        .write(true)
++        .create_new(true)
++        .mode(0o600)
++        .open(&temporary)?;
++    let result = writeln!(out, "{value}")
++        .and_then(|_| out.sync_all())
++        .and_then(|_| fs::rename(&temporary, path));
++    if result.is_err() {
++        let _ = fs::remove_file(&temporary);
++    }
++    result
++}
++
++struct Broker {
++    settings: PathBuf,
++    policy: Mutex<u8>,
++    profiles: BTreeMap<String, Profile>,
++    lease: Arc<Mutex<bool>>,
++    development: bool,
++}
++
++#[zbus::interface(name = "io.github.fovty.HushMic.XDNA2.V1")]
++impl Broker {
++    fn get_policy(&self) -> (u8, bool, bool) {
++        let policy = *self.policy.lock().unwrap();
++        let device = fs::read_dir("/dev/accel").ok().is_some_and(|entries| {
++            use std::os::unix::fs::FileTypeExt;
++            entries.filter_map(std::result::Result::ok).any(|entry| {
++                entry.file_type().is_ok_and(|ty| ty.is_char_device())
++                    && CString::new(entry.path().as_os_str().as_encoded_bytes()).is_ok_and(
++                        |path| unsafe { libc::access(path.as_ptr(), libc::R_OK | libc::W_OK) == 0 },
++                    )
++            })
++        });
++        let profiles = self.profiles.values();
++        let ready = device
++            && profiles
++                .clone()
++                .any(|p| p.qualified_for_live_audio || self.development);
++        let automatic = device
++            && profiles
++                .clone()
++                .any(|p| p.qualified_for_live_audio && p.auto_qualified);
++        (policy, ready, automatic)
++    }
++
++    fn set_policy(&self, value: u8) -> fdo::Result<()> {
++        let mut policy = self.policy.lock().unwrap();
++        save_policy(&self.settings, value).map_err(|e| fdo::Error::Failed(e.to_string()))?;
++        *policy = value;
++        Ok(())
++    }
++
++    fn open_session(&self, model_hash: &str) -> fdo::Result<BusFd> {
++        let policy = *self.policy.lock().unwrap();
++        let Some(profile) = self
++            .profiles
++            .values()
++            .find(|p| p.model_sha256 == model_hash)
++        else {
++            return Err(fdo::Error::NotSupported("Unqualified model".into()));
++        };
++        let allowed = match policy {
++            AUTO => profile.qualified_for_live_audio && profile.auto_qualified,
++            PREFER_NPU => profile.qualified_for_live_audio || self.development,
++            _ => false,
++        };
++        if !allowed {
++            return Err(fdo::Error::NotSupported(
++                "NPU profile not enabled for this policy".into(),
++            ));
++        }
++        let lease = Lease::acquire(self.lease.clone())
++            .ok_or_else(|| fdo::Error::LimitsExceeded("NPU is busy".into()))?;
++        let result = start(profile, lease);
++        result
++            .map(BusFd::from)
++            .map_err(|e| fdo::Error::Failed(e.to_string()))
++    }
++}
++
++struct Lease(Arc<Mutex<bool>>);
++
++impl Lease {
++    fn acquire(active: Arc<Mutex<bool>>) -> Option<Self> {
++        let mut flag = active.lock().unwrap();
++        if *flag {
++            return None;
++        }
++        *flag = true;
++        drop(flag);
++        Some(Self(active))
++    }
++}
++
++impl Drop for Lease {
++    fn drop(&mut self) {
++        *self.0.lock().unwrap() = false;
++    }
++}
++
++fn start(profile: &Profile, lease: Lease) -> Result<OwnedFd> {
++    for (path, hash) in [
++        (&profile.library, &profile.library_sha256),
++        (&profile.manifest, &profile.manifest_sha256),
++    ] {
++        if !path.is_absolute() || file_hash(path)? != *hash {
++            return Err("NPU artifact identity changed".into());
++        }
++    }
++    let (client, relay) = Channel::pair()?;
++    let (control, worker) = Channel::pair()?;
++    let parent = std::process::id() as libc::pid_t;
++    let mut command = Command::new(env::current_exe()?);
++    command
++        .arg("--worker")
++        .arg(&profile.library)
++        .arg(&profile.manifest)
++        .stdin(Stdio::from(worker.0))
++        .stdout(Stdio::null())
++        .stderr(Stdio::null());
++    // A service crash must also end an abandoned XRT owner.
++    unsafe {
++        command.pre_exec(move || {
++            if libc::prctl(libc::PR_SET_PDEATHSIG, libc::SIGKILL) != 0 || libc::getppid() != parent
++            {
++                return Err(io::Error::from_raw_os_error(libc::ECHILD));
++            }
++            Ok(())
++        });
++    }
++    let (started, startup) = mpsc::channel();
++    thread::Builder::new().name("dpdfnet-xdna2-relay".into()).spawn(move || {
++        let lease = lease;
++        let mut child = match command.spawn() {
++            Ok(child) => child,
++            Err(error) => {
++                let _ = started.send(Err(error));
++                return;
++            }
++        };
++        drop(command);
++        let ready = control.recv(&mut [0.0; WORDS], deadline(900)).and_then(|stamp| {
++            if stamp == FIRST {
++                Ok(())
++            } else {
++                Err(io::Error::new(io::ErrorKind::InvalidData, "Missing NPU worker readiness"))
++            }
++        });
++        let is_ready = ready.is_ok();
++        if started.send(ready).is_ok() && is_ready {
++            let _ = bridge(&relay, &control);
++        }
++        drop(relay);
++        drop(control);
++        // The audio deadline has already expired. The worker can still be
++        // inside an XRT call. Keep the lease until it exits, without sending
++        // a signal into a driver that may be waking or releasing the device.
++        if let Err(error) = child.wait() {
++            eprintln!("Could not reap NPU worker {}: {error}", child.id());
++            // A wait failure does not prove the device has been released.
++            std::mem::forget(lease);
++        }
++    })?;
++    startup.recv_timeout(Duration::from_secs(1))??;
++    Ok(client.0)
++}
++
++fn valid(stamp: Stamp, epoch: u32, number: u64) -> bool {
++    stamp.number == number
++        && match stamp.kind {
++            FRAME => stamp.epoch == epoch && number < u64::MAX,
++            RESET => epoch.checked_add(1) == Some(stamp.epoch),
++            _ => false,
++        }
++}
++
++fn bridge(client: &Channel, worker: &Channel) -> io::Result<()> {
++    let mut data = [0.0; WORDS];
++    let (mut epoch, mut number) = (0, 0);
++    loop {
++        let stamp = client.recv(&mut data, deadline(300_000))?;
++        if !valid(stamp, epoch, number) {
++            return Err(io::ErrorKind::InvalidData.into());
++        }
++        let until = deadline(if stamp.kind == FRAME { 24 } else { 25 });
++        worker.send(stamp, if stamp.kind == FRAME { &data } else { &[] }, until)?;
++        if worker.recv(&mut data, until)? != stamp {
++            return Err(io::ErrorKind::InvalidData.into());
++        }
++        client.send(stamp, if stamp.kind == FRAME { &data } else { &[] }, until)?;
++        if stamp.kind == FRAME {
++            number += 1;
++        } else {
++            epoch = stamp.epoch;
++        }
++    }
++}
++
++fn worker(library: &Path, manifest: &Path) -> Result<()> {
++    type Counter = unsafe extern "C" fn() -> u32;
++    type Open = unsafe extern "C" fn(*const c_char) -> *mut c_void;
++    type Step = unsafe extern "C" fn(*mut c_void, *const f32, *mut f32) -> i32;
++    type Reset = unsafe extern "C" fn(*mut c_void) -> i32;
++    type Close = unsafe extern "C" fn(*mut c_void);
++    let manifest = CString::new(manifest.as_os_str().as_encoded_bytes())?;
++    let socket = Channel(unsafe { OwnedFd::from_raw_fd(libc::STDIN_FILENO) });
++    // The broker pins the library and manifest before it launches this worker.
++    let library = unsafe { libloading::Library::new(library)? };
++    unsafe {
++        let abi = library.get::<Counter>(b"dpdfnet_xdna2_spectral_abi")?;
++        let open = library.get::<Open>(b"dpdfnet_xdna2_spectral_open")?;
++        let step = library.get::<Step>(b"dpdfnet_xdna2_spectral_step")?;
++        let reset = library.get::<Reset>(b"dpdfnet_xdna2_spectral_reset")?;
++        let close = library.get::<Close>(b"dpdfnet_xdna2_spectral_close")?;
++        if abi() != 1 {
++            return Err("Incompatible spectral ABI".into());
++        }
++        let session = open(manifest.as_ptr());
++        if session.is_null() {
++            return Err("Could not start spectral session".into());
++        }
++        let result = (|| -> Result<()> {
++            socket.send(FIRST, &[], deadline(500))?;
++            let mut input = [0.0; WORDS];
++            let mut output = [0.0; WORDS];
++            loop {
++                let stamp = socket.recv(&mut input, deadline(300_000))?;
++                let (result, reply) = match stamp.kind {
++                    FRAME => (
++                        step(session, input.as_ptr(), output.as_mut_ptr()),
++                        output.as_slice(),
++                    ),
++                    RESET => (reset(session), &[][..]),
++                    _ => return Err("Unexpected worker packet".into()),
++                };
++                if result != 0 {
++                    return Err("Spectral inference failed".into());
++                }
++                socket.send(stamp, reply, deadline(10))?;
++            }
++        })();
++        close(session);
++        result
++    }
++}
++
++fn main() -> Result<()> {
++    let args: Vec<_> = env::args_os().skip(1).collect();
++    if args.len() == 3 && args[0] == "--worker" {
++        return worker(Path::new(&args[1]), Path::new(&args[2]));
++    }
++    if !args.is_empty() {
++        return Err("Unsupported service arguments".into());
++    }
++    let catalog = local_path("HUSHMIC_XDNA2_PROVIDERS", || {
++        PathBuf::from("/usr/share/dpdfnet-xdna2/providers.json")
++    });
++    let providers: Providers = serde_json::from_slice(&fs::read(catalog)?)?;
++    if providers.version != 1 {
++        return Err("Unsupported provider catalog version".into());
++    }
++    let settings = local_path("XDG_CONFIG_HOME", || {
++        PathBuf::from(env::var_os("HOME").unwrap_or_default()).join(".config")
++    })
++    .join("hushmic/xdna2-policy");
++    let policy = Mutex::new(read_policy(&settings));
++    let broker = Broker {
++        settings,
++        policy,
++        profiles: providers.profiles,
++        lease: Arc::new(Mutex::new(false)),
++        development: env::var_os("HUSHMIC_XDNA2_DEVELOPMENT").as_deref() == Some("1".as_ref()),
++    };
++    let connection = zbus::blocking::connection::Builder::session()?
++        .name(SERVICE)?
++        .serve_at(OBJECT, broker)?
++        .build()?;
++    for message in zbus::blocking::MessageIterator::from(&connection) {
++        if message.is_err() {
++            break;
++        }
++    }
++    Ok(())
++}
+diff --git a/crates/dpdfnet-xdna2/src/lib.rs b/crates/dpdfnet-xdna2/src/lib.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..b405399d46da5e9ae5d1915a96afb23d01fa48b2
+--- /dev/null
++++ b/crates/dpdfnet-xdna2/src/lib.rs
+@@ -0,0 +1,310 @@
++//! Local transport shared by the host service and the optional HushMic client.
++use sha2::{Digest, Sha256};
++use std::{
++    fs::File,
++    io::{self, Read},
++    os::fd::{AsRawFd, FromRawFd, OwnedFd},
++    path::Path,
++    time::{Duration, Instant},
++};
++
++pub const SERVICE: &str = "io.github.fovty.HushMic.XDNA2";
++pub const OBJECT: &str = "/io/github/fovty/HushMic/XDNA2";
++pub const INTERFACE: &str = "io.github.fovty.HushMic.XDNA2.V1";
++pub const WORDS: usize = 962;
++pub const FRAME: u32 = 1;
++pub const RESET: u32 = 2;
++pub const READY: u32 = 3;
++pub const CPU: u8 = 0;
++pub const AUTO: u8 = 1;
++pub const PREFER_NPU: u8 = 2;
++
++const HEADER: usize = 20;
++const MAGIC: [u8; 4] = *b"DPX1";
++const MAX_PACKET: usize = HEADER + WORDS * 4;
++
++pub fn file_hash(path: &Path) -> io::Result<String> {
++    let mut input = File::open(path)?;
++    let mut hasher = Sha256::new();
++    let mut buf = [0; 32768];
++    loop {
++        let n = input.read(&mut buf)?;
++        if n == 0 {
++            break;
++        }
++        hasher.update(&buf[..n]);
++    }
++    Ok(hasher
++        .finalize()
++        .iter()
++        .map(|b| format!("{b:02x}"))
++        .collect())
++}
++
++#[derive(Clone, Copy, Debug, Eq, PartialEq)]
++pub struct Stamp {
++    pub kind: u32,
++    pub epoch: u32,
++    pub number: u64,
++}
++
++pub fn deadline(ms: u64) -> Instant {
++    Instant::now() + Duration::from_millis(ms)
++}
++
++pub struct Channel(pub OwnedFd);
++
++fn error(message: &'static str) -> io::Error {
++    io::Error::new(io::ErrorKind::InvalidData, message)
++}
++
++impl Channel {
++    pub fn pair() -> io::Result<(Self, Self)> {
++        let mut descriptors = [-1; 2];
++        // socketpair initializes both descriptors only on success.
++        let status = unsafe {
++            libc::socketpair(
++                libc::AF_UNIX,
++                libc::SOCK_SEQPACKET | libc::SOCK_NONBLOCK | libc::SOCK_CLOEXEC,
++                0,
++                descriptors.as_mut_ptr(),
++            )
++        };
++        if status < 0 {
++            return Err(io::Error::last_os_error());
++        }
++        Ok(unsafe {
++            (
++                Self(OwnedFd::from_raw_fd(descriptors[0])),
++                Self(OwnedFd::from_raw_fd(descriptors[1])),
++            )
++        })
++    }
++
++    fn wait(&self, events: i16, until: Instant) -> io::Result<()> {
++        loop {
++            let left = until.saturating_duration_since(Instant::now());
++            if left.is_zero() {
++                return Err(io::ErrorKind::TimedOut.into());
++            }
++            let millis = left.as_millis().saturating_add(1).min(i32::MAX as u128) as i32;
++            let mut pollfd = libc::pollfd {
++                fd: self.0.as_raw_fd(),
++                events,
++                revents: 0,
++            };
++            let n = unsafe { libc::poll(&mut pollfd, 1, millis) };
++            if n < 0 {
++                let err = io::Error::last_os_error();
++                if err.kind() == io::ErrorKind::Interrupted {
++                    continue;
++                }
++                return Err(err);
++            }
++            if n == 0 || Instant::now() >= until {
++                return Err(io::ErrorKind::TimedOut.into());
++            }
++            if pollfd.revents & events != 0 {
++                return Ok(());
++            }
++            return Err(io::ErrorKind::BrokenPipe.into());
++        }
++    }
++
++    pub fn send(&self, stamp: Stamp, data: &[f32], until: Instant) -> io::Result<()> {
++        let mut packet = [0; MAX_PACKET];
++        let words = if stamp.kind == FRAME { WORDS } else { 0 };
++        if data.len() != words || data.iter().any(|v| !v.is_finite()) {
++            return Err(error("invalid spectral frame"));
++        }
++        packet[..4].copy_from_slice(&MAGIC);
++        packet[4..8].copy_from_slice(&stamp.kind.to_le_bytes());
++        packet[8..12].copy_from_slice(&stamp.epoch.to_le_bytes());
++        packet[12..HEADER].copy_from_slice(&stamp.number.to_le_bytes());
++        for (dst, sample) in packet[HEADER..].chunks_exact_mut(4).zip(data) {
++            dst.copy_from_slice(&sample.to_le_bytes());
++        }
++        let len = HEADER + words * 4;
++        loop {
++            self.wait(libc::POLLOUT, until)?;
++            let n = unsafe {
++                libc::send(
++                    self.0.as_raw_fd(),
++                    packet.as_ptr().cast(),
++                    len,
++                    libc::MSG_NOSIGNAL,
++                )
++            };
++            if n == len as isize {
++                return Ok(());
++            }
++            if n >= 0 {
++                return Err(error("short spectral packet write"));
++            }
++            let err = io::Error::last_os_error();
++            if !matches!(
++                err.kind(),
++                io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
++            ) {
++                return Err(err);
++            }
++        }
++    }
++
++    pub fn recv(&self, data: &mut [f32; WORDS], until: Instant) -> io::Result<Stamp> {
++        let mut packet = [0; MAX_PACKET];
++        let len = loop {
++            self.wait(libc::POLLIN, until)?;
++            let n = unsafe {
++                libc::recv(
++                    self.0.as_raw_fd(),
++                    packet.as_mut_ptr().cast(),
++                    packet.len(),
++                    libc::MSG_TRUNC,
++                )
++            };
++            if n > 0 {
++                break n as usize;
++            }
++            if n == 0 {
++                return Err(io::ErrorKind::UnexpectedEof.into());
++            }
++            let err = io::Error::last_os_error();
++            if !matches!(
++                err.kind(),
++                io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
++            ) {
++                return Err(err);
++            }
++        };
++        if len < HEADER || len > MAX_PACKET || packet[..4] != MAGIC {
++            return Err(error("invalid spectral packet header"));
++        }
++        let kind = u32::from_le_bytes(packet[4..8].try_into().unwrap());
++        let epoch = u32::from_le_bytes(packet[8..12].try_into().unwrap());
++        let number = u64::from_le_bytes(packet[12..HEADER].try_into().unwrap());
++        let wanted = match kind {
++            FRAME => MAX_PACKET,
++            RESET | READY => HEADER,
++            _ => return Err(error("unknown spectral packet")),
++        };
++        if len != wanted {
++            return Err(error("invalid spectral packet length"));
++        }
++        if kind == FRAME {
++            for (dst, src) in data.iter_mut().zip(packet[HEADER..].chunks_exact(4)) {
++                *dst = f32::from_le_bytes(src.try_into().unwrap());
++                if !dst.is_finite() {
++                    return Err(error("nonfinite spectral value"));
++                }
++            }
++        }
++        Ok(Stamp {
++            kind,
++            epoch,
++            number,
++        })
++    }
++}
++
++fn proxy(conn: &zbus::blocking::Connection) -> zbus::Result<zbus::blocking::Proxy<'_>> {
++    zbus::blocking::Proxy::new(conn, SERVICE, OBJECT, INTERFACE)
++}
++
++fn connect() -> zbus::Result<zbus::blocking::Connection> {
++    zbus::blocking::connection::Builder::session()?
++        .method_timeout(Duration::from_millis(1500))
++        .build()
++}
++
++pub fn policy() -> zbus::Result<(u8, bool, bool)> {
++    proxy(&connect()?)?.call("GetPolicy", &())
++}
++
++pub fn set_policy(value: u8) -> zbus::Result<()> {
++    proxy(&connect()?)?.call("SetPolicy", &(value,))
++}
++
++pub fn session_busy(error: &zbus::Error) -> bool {
++    matches!(error, zbus::Error::MethodError(name, _, _)
++        if name.as_str() == "org.freedesktop.DBus.Error.LimitsExceeded")
++}
++
++pub struct Stream {
++    socket: Channel,
++    epoch: u32,
++    number: u64,
++}
++
++impl Stream {
++    pub fn open(model_hash: &str) -> Result<Self, zbus::Error> {
++        let bus = connect()?;
++        let fd: zbus::zvariant::OwnedFd = proxy(&bus)?.call("OpenSession", &(model_hash,))?;
++        Ok(Self {
++            socket: Channel(fd.into()),
++            epoch: 0,
++            number: 0,
++        })
++    }
++
++    pub fn step(&mut self, input: &[f32; WORDS], output: &mut [f32; WORDS]) -> io::Result<()> {
++        let stamp = Stamp {
++            kind: FRAME,
++            epoch: self.epoch,
++            number: self.number,
++        };
++        let until = deadline(20);
++        self.socket.send(stamp, input, until)?;
++        if self.socket.recv(output, until)? != stamp {
++            return Err(error("stale spectral frame"));
++        }
++        self.number = self
++            .number
++            .checked_add(1)
++            .ok_or_else(|| error("frame number overflow"))?;
++        Ok(())
++    }
++
++    pub fn reset(&mut self) -> io::Result<()> {
++        let epoch = self
++            .epoch
++            .checked_add(1)
++            .ok_or_else(|| error("stream epoch overflow"))?;
++        let stamp = Stamp {
++            kind: RESET,
++            epoch,
++            number: self.number,
++        };
++        let until = deadline(25);
++        self.socket.send(stamp, &[], until)?;
++        if self.socket.recv(&mut [0.0; WORDS], until)? != stamp {
++            return Err(error("stale reset reply"));
++        }
++        self.epoch = epoch;
++        Ok(())
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn packet_and_timeout() {
++        let (a, b) = Channel::pair().unwrap();
++        let stamp = Stamp {
++            kind: FRAME,
++            epoch: 7,
++            number: 512,
++        };
++        let input = [0.125; WORDS];
++        let mut output = [0.0; WORDS];
++        a.send(stamp, &input, deadline(100)).unwrap();
++        assert_eq!(b.recv(&mut output, deadline(100)).unwrap(), stamp);
++        assert_eq!(input, output);
++        assert!(a.send(stamp, &[f32::NAN; WORDS], deadline(100)).is_err());
++        assert_eq!(
++            b.recv(&mut output, deadline(2)).unwrap_err().kind(),
++            io::ErrorKind::TimedOut
++        );
++    }
++}
+diff --git a/crates/hushmic-denoiser/src/denoiser.rs b/crates/hushmic-denoiser/src/denoiser.rs
+index 4c2f04ce1669738c07d4aca0da01b0f8ad96a46f..fbaa1850d6cbbc9c2c867236f41a5a83e82496b7 100644
+--- a/crates/hushmic-denoiser/src/denoiser.rs
++++ b/crates/hushmic-denoiser/src/denoiser.rs
+@@ -17,6 +17,7 @@ pub struct Denoiser {
+     spec: [f32; SPEC_LEN],
+     spec_e: [f32; SPEC_LEN],
+     state_out: Vec<f32>,
++    remote_was_active: bool,
+     attn: AttnLimiter,
+     gain: GainRamp,
+     mode: Mode,
+@@ -116,6 +117,7 @@ impl Denoiser {
+             spec: [0f32; SPEC_LEN],
+             spec_e: [0f32; SPEC_LEN],
+             state_out,
++            remote_was_active: false,
+             attn: AttnLimiter::new(),
+             gain: GainRamp::new(),
+             mode: Mode::Process,
+@@ -134,6 +136,7 @@ impl Denoiser {
+         self.synthesis.reset();
+         self.state.clear();
+         self.state.extend_from_slice(&self.model.init_state);
++        self.remote_was_active = false;
+         self.attn.reset();
+         self.gain.reset_to(self.mode == Mode::Mute);
+     }
+@@ -186,8 +189,28 @@ impl Denoiser {
+         &mut self,
+         input: &[f32; HOP],
+         output: &mut [f32; HOP],
++    ) -> Result<(), Error> {
++        self.process_hop_with_spectral_provider(input, output, |_, _| false)
++    }
++
++    /// Substitute only model inference for this hop. The alternate provider
++    /// owns its own recurrent state. A false result uses a fresh CPU model
++    /// state on the first fallback hop and retains the continuous DSP state.
++    pub fn process_hop_with_spectral_provider(
++        &mut self,
++        input: &[f32; HOP],
++        output: &mut [f32; HOP],
++        enhance: impl FnOnce(&[f32; SPEC_LEN], &mut [f32; SPEC_LEN]) -> bool,
+     ) -> Result<(), Error> {
+         self.analysis.push_hop(input, &mut self.spec);
++        if enhance(&self.spec, &mut self.spec_e) {
++            self.remote_was_active = true;
++            self.render_hop(output);
++            return Ok(());
++        }
++        if std::mem::take(&mut self.remote_was_active) {
++            self.state.copy_from_slice(&self.model.init_state);
++        }
+         let result = self.model.run(
+             &self.spec,
+             &self.state,
+@@ -206,9 +229,13 @@ impl Denoiser {
+                 self.spec_e = [0f32; SPEC_LEN];
+             }
+         }
++        self.render_hop(output);
++        result.map_err(Error::Inference)
++    }
++
++    fn render_hop(&mut self, output: &mut [f32; HOP]) {
+         self.attn.apply(&self.spec, &mut self.spec_e); // blend noisy floor / bypass mix
+         self.synthesis.add_frame(&self.spec_e, output);
+         self.gain.process(output); // mute ramp, after synthesis
+-        result.map_err(Error::Inference)
+     }
+ }
+diff --git a/packaging/xdna2/README.md b/packaging/xdna2/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..242b154c0b8930869fc1196c6376881e1872b6fa
+--- /dev/null
++++ b/packaging/xdna2/README.md
+@@ -0,0 +1,29 @@
++# Optional DPDFNet XDNA2 host package
++
++Build the host service with `cargo build --locked --release -p
++dpdfnet-xdna2 --features host`. Build the LADSPA adapter with the
++`xdna2` feature. The CPU-only LADSPA package can use its usual build.
++
++Install the service binary as `/usr/bin/dpdfnet-xdna2-service`, its D-Bus
++activation file under the session service directory, and its systemd
++unit under the user unit directory. The host catalog is
++`/usr/share/dpdfnet-xdna2/providers.json`. Use version 1 and bind each
++model identity to a digest-verified spectral library and manifest.
++Record live-audio and automatic qualification separately. The D-Bus
++interface is `io.github.fovty.HushMic.XDNA2.V1`; the service name is
++`io.github.fovty.HushMic.XDNA2`.
++
++The session bus starts the service on demand. The service opens one
++private inference owner at a time. Client audio uses a bounded Unix
++packet socket; only the service's worker loads XRT. An audio deadline
++allows CPU fallback while a separate supervision thread waits for the
++worker to release the XRT session. The broker refuses another session
++until the previous worker exits. Idle LADSPA streams close after two
++seconds and open a fresh session when capture resumes. A package upgrade
++can remove acceleration without changing the standard LADSPA audio or
++control ports.
++
++`HUSHMIC_XDNA2_PROVIDERS` and `HUSHMIC_XDNA2_DEVELOPMENT=1` belong to a
++separate test service. The latter admits an unqualified profile only
++under explicitly selected Prefer NPU. Production packages rely on the
++qualified catalog and normal user permissions.
+diff --git a/packaging/xdna2/dpdfnet-xdna2.service b/packaging/xdna2/dpdfnet-xdna2.service
+new file mode 100644
+index 0000000000000000000000000000000000000000..2ecadfb499a624fc091fec3df9d7e0460fe2ac4f
+--- /dev/null
++++ b/packaging/xdna2/dpdfnet-xdna2.service
+@@ -0,0 +1,8 @@
++[Unit]
++Description=HushMic DPDFNet XDNA2 service
++
++[Service]
++Type=dbus
++BusName=io.github.fovty.HushMic.XDNA2
++ExecStart=/usr/bin/dpdfnet-xdna2-service
++NoNewPrivileges=yes
+diff --git a/packaging/xdna2/io.github.fovty.HushMic.XDNA2.service b/packaging/xdna2/io.github.fovty.HushMic.XDNA2.service
+new file mode 100644
+index 0000000000000000000000000000000000000000..6a1e750447867b6f17e971c5832ab5d9b02484a9
+--- /dev/null
++++ b/packaging/xdna2/io.github.fovty.HushMic.XDNA2.service
+@@ -0,0 +1,4 @@
++[D-BUS Service]
++Name=io.github.fovty.HushMic.XDNA2
++Exec=/usr/bin/dpdfnet-xdna2-service
++SystemdService=dpdfnet-xdna2.service
+-- 
+2.56.1
+
+
+From 55e787695cf8f48b6d76cee84558506f8db959dd Mon Sep 17 00:00:00 2001
+From: Varyag Nord <varyagnord@example.com>
+Date: Sat, 21 Nov 2026 23:15:08 +0300
+Subject: [PATCH 2/2] =?UTF-8?q?=E2=9C=A8=20Run=20full=20DPDFNet=20PCM=20th?=
+ =?UTF-8?q?rough=20the=20optional=20XDNA2=20broker?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Preserve the LADSPA ports, stream alignment and spectral compatibility.
+- Bind each PCM worker to the selected model and close its device state at the command boundary.
+- Retain CPU audio after a timeout, a stopped broker or unsupported stereo.
+
+Checks: Rust package tests, native fallback lifecycle, and EasyEffects monitoring and playback on both models.
+---
+ crates/dpdfnet-ladspa/src/adaptive.rs         | 102 +++--
+ crates/dpdfnet-ladspa/src/lib.rs              |  23 +-
+ crates/dpdfnet-ladspa/src/worker.rs           | 269 ++++++++++++-
+ crates/dpdfnet-ladspa/src/xdna2.rs            | 112 +++++-
+ crates/dpdfnet-xdna2/examples/pcm_probe.rs    | 206 ++++++++++
+ .../src/bin/dpdfnet-xdna2-service.rs          | 103 +++--
+ .../dpdfnet-xdna2/src/bin/pcm_session/mod.rs  | 323 +++++++++++++++
+ crates/dpdfnet-xdna2/src/lib.rs               |   2 +
+ crates/dpdfnet-xdna2/src/pcm.rs               | 380 ++++++++++++++++++
+ crates/hushmic-denoiser/src/attn.rs           |  26 +-
+ crates/hushmic-denoiser/src/denoiser.rs       |  20 +-
+ packaging/xdna2/README.md                     |   8 +
+ 12 files changed, 1452 insertions(+), 122 deletions(-)
+ create mode 100644 crates/dpdfnet-xdna2/examples/pcm_probe.rs
+ create mode 100644 crates/dpdfnet-xdna2/src/bin/pcm_session/mod.rs
+ create mode 100644 crates/dpdfnet-xdna2/src/pcm.rs
+
+diff --git a/crates/dpdfnet-ladspa/src/adaptive.rs b/crates/dpdfnet-ladspa/src/adaptive.rs
+index 28d6ed62a686fa8e04c3480300cfc1873b4485a1..061fc89f1a5f2f46c1bddd0669172bca68841810 100644
+--- a/crates/dpdfnet-ladspa/src/adaptive.rs
++++ b/crates/dpdfnet-ladspa/src/adaptive.rs
+@@ -8,7 +8,7 @@
+ //! so the RT-side aligner sees one continuous stream whatever is live.
+ 
+ use crate::ladder::{Event, Policy, Step, Tier};
+-use crate::worker::HopEngine;
++use crate::worker::{HopEngine, HopOutput};
+ use hushmic_denoiser::{GainRamp, Mode, HOP, LATENCY_SAMPLES};
+ use std::time::{Duration, Instant};
+ 
+@@ -49,10 +49,20 @@ impl RawDelay {
+ 
+     /// `out[i]` is the input from `LATENCY_SAMPLES` samples ago.
+     pub fn process(&mut self, input: &[f32; HOP], out: &mut [f32; HOP]) {
+-        for (i, &x) in input.iter().enumerate() {
+-            out[i] = self.buf[self.pos];
+-            self.buf[self.pos] = x;
+-            self.pos += 1;
++        self.process_samples(input, out);
++    }
++
++    fn process_samples(&mut self, mut input: &[f32], mut out: &mut [f32]) {
++        while !input.is_empty() {
++            let count = input.len().min(self.buf.len() - self.pos);
++            let (head, remaining) = input.split_at(count);
++            let (dst, tail) = out.split_at_mut(count);
++            let delay = &mut self.buf[self.pos..self.pos + count];
++            dst.copy_from_slice(delay);
++            delay.copy_from_slice(head);
++            input = remaining;
++            out = tail;
++            self.pos += count;
+             if self.pos == self.buf.len() {
+                 self.pos = 0;
+             }
+@@ -152,8 +162,9 @@ impl<E: HopEngine, P: Policy> AdaptiveEngine<E, P> {
+     fn run_into(
+         &mut self,
+         tier: Tier,
+-        input: &[f32; HOP],
+-        out: &mut [f32; HOP],
++        input: (&[f32], &[f32]),
++        scratch: &mut [f32; HOP],
++        out: &mut HopOutput<'_>,
+     ) -> (Result<(), String>, f32) {
+         let engine = match tier {
+             Tier::Quality => self.quality.as_mut(),
+@@ -161,11 +172,11 @@ impl<E: HopEngine, P: Policy> AdaptiveEngine<E, P> {
+             Tier::Raw => None,
+         };
+         let Some(engine) = engine else {
+-            out.copy_from_slice(&self.raw_out);
++            out.write(&self.raw_out);
+             return (Ok(()), 0.0);
+         };
+         let t0 = (self.clock)();
+-        let r = engine.process_hop(input, out);
++        let r = engine.process_hop_output(input, scratch, out);
+         let cost = (self.clock)().duration_since(t0).as_secs_f32() / HOP_BUDGET.as_secs_f32();
+         (r, cost)
+     }
+@@ -229,11 +240,30 @@ impl<E: HopEngine, P: Policy> AdaptiveEngine<E, P> {
+ 
+ impl<E: HopEngine, P: Policy> HopEngine for AdaptiveEngine<E, P> {
+     fn process_hop(&mut self, input: &[f32; HOP], output: &mut [f32; HOP]) -> Result<(), String> {
++        self.process_hop_parts((input, &[]), &mut [0.0; HOP], output)
++    }
++
++    fn process_hop_parts(
++        &mut self,
++        input: (&[f32], &[f32]),
++        scratch: &mut [f32; HOP],
++        output: &mut [f32; HOP],
++    ) -> Result<(), String> {
++        self.process_hop_output(input, scratch, &mut HopOutput::array(output))
++    }
++
++    fn process_hop_output(
++        &mut self,
++        input: (&[f32], &[f32]),
++        scratch: &mut [f32; HOP],
++        output: &mut HopOutput<'_>,
++    ) -> Result<(), String> {
+         // The raw path runs every hop so its delay line is always warm and
+         // its mute ramp has always reached its target before raw goes live.
+-        let mut raw = [0.0f32; HOP];
+-        self.raw.process(input, &mut raw);
+-        self.raw_ramp.process(&mut raw);
++        let (first, second) = self.raw_out.split_at_mut(input.0.len());
++        self.raw.process_samples(input.0, first);
++        self.raw.process_samples(input.1, second);
++        self.raw_ramp.process(&mut self.raw_out);
+         // A separate gain preserves mute and reaches either target in one hop.
+         // The policy holds the duck through the entire fade back to a model.
+         let target = if self.policy.duck_raw() {
+@@ -246,12 +276,11 @@ impl<E: HopEngine, P: Policy> HopEngine for AdaptiveEngine<E, P> {
+         } else {
+             self.raw_duck_gain
+         };
+-        for (i, sample) in raw.iter_mut().enumerate() {
++        for (i, sample) in self.raw_out.iter_mut().enumerate() {
+             let a = (i + 1) as f32 / HOP as f32;
+             *sample *= start * (1.0 - a) + target * a;
+         }
+         self.raw_duck_gain = target;
+-        self.raw_out = raw;
+         self.hops += 1;
+ 
+         let step = self.policy.step();
+@@ -261,7 +290,7 @@ impl<E: HopEngine, P: Policy> HopEngine for AdaptiveEngine<E, P> {
+         };
+         let (result, live_cost, shadow_cost) = match step {
+             Step::Steady { live } => {
+-                let (r, c) = self.run_into(live, input, output);
++                let (r, c) = self.run_into(live, input, scratch, output);
+                 (r, c, None)
+             }
+             Step::Shadow {
+@@ -269,21 +298,28 @@ impl<E: HopEngine, P: Policy> HopEngine for AdaptiveEngine<E, P> {
+                 shadow,
+                 kind: _,
+             } => {
+-                let (r, c) = self.run_into(live, input, output);
+-                let mut scratch = [0.0f32; HOP];
+-                let (_, sc) = self.run_into(shadow, input, &mut scratch);
++                let (r, c) = self.run_into(live, input, scratch, output);
++                let mut shadow_out = [0.0f32; HOP];
++                let (_, sc) = self.run_into(
++                    shadow,
++                    input,
++                    scratch,
++                    &mut HopOutput::array(&mut shadow_out),
++                );
+                 (r, c, Some(sc))
+             }
+             Step::Crossfade { from, to, hop, of } => {
+-                let (r, c) = self.run_into(from, input, output);
+-                let mut scratch = [0.0f32; HOP];
+-                let (_, sc) = self.run_into(to, input, &mut scratch);
++                let (r, c) = self.run_into(from, input, scratch, output);
++                let mut next_out = [0.0f32; HOP];
++                let (_, sc) =
++                    self.run_into(to, input, scratch, &mut HopOutput::array(&mut next_out));
+                 let of = of.max(1) as f32;
+                 let start = hop as f32 / of;
+                 let step_per_sample = 1.0 / (of * HOP as f32);
+-                for (i, o) in output.iter_mut().enumerate() {
++                let (left, right) = output.initialized_parts();
++                for (i, o) in left.iter_mut().chain(right).enumerate() {
+                     let a = (start + step_per_sample * (i as f32 + 1.0)).min(1.0);
+-                    *o = *o * (1.0 - a) + scratch[i] * a;
++                    *o = *o * (1.0 - a) + next_out[i] * a;
+                 }
+                 (r, c, Some(sc))
+             }
+@@ -464,6 +500,26 @@ mod tests {
+ 
+     type Seen = Arc<Mutex<Vec<(f32, Option<f32>, u32)>>>;
+ 
++    #[test]
++    fn wrapped_input_matches_contiguous_input_for_raw_and_model_tiers() {
++        let f = Fakes::new();
++        for tier in [Tier::Raw, Tier::Quality] {
++            let mut wrapped = f.engine(Some(f.gain(2.0, 0.1)), None, Pinned(tier));
++            let mut contiguous = f.engine(Some(f.gain(2.0, 0.1)), None, Pinned(tier));
++            let mut scratch = [0.0; HOP];
++            let mut out = [0.0; HOP];
++            let mut expected = [0.0; HOP];
++            for split in [1, 253, HOP - 1, HOP, 16, 32, 247, 128] {
++                let input = std::array::from_fn(|i| ((i + split) % 241) as f32 / 256.0);
++                wrapped
++                    .process_hop_parts(input.split_at(split), &mut scratch, &mut out)
++                    .unwrap();
++                contiguous.process_hop(&input, &mut expected).unwrap();
++                assert_eq!(out, expected);
++            }
++        }
++    }
++
+     /// A policy that replays a scripted step sequence and records observes.
+     struct Scripted {
+         steps: Vec<Step>,
+diff --git a/crates/dpdfnet-ladspa/src/lib.rs b/crates/dpdfnet-ladspa/src/lib.rs
+index 5e5de46df7b0bcd2235884cb47ae5fb0454ff6b7..1edb2dcc9bfa4a7555d0908ba6aa3b03a93629ba 100644
+--- a/crates/dpdfnet-ladspa/src/lib.rs
++++ b/crates/dpdfnet-ladspa/src/lib.rs
+@@ -495,25 +495,14 @@ impl Plugin for DpdfnetPlugin {
+             emit_silence(&mut output, sample_count);
+             return;
+         }
+-        w.note_quantum(sample_count);
+         w.wake();
+         let plan = self.aligner.plan(sample_count, w.output_available());
+-        for _ in 0..plan.discard {
+-            let _ = w.pop_output();
+-        }
+-        let mut i = 0;
+-        for _ in 0..plan.lead_zeros {
+-            output[i] = 0.0;
+-            i += 1;
+-        }
+-        for _ in 0..plan.real {
+-            output[i] = w.pop_output().unwrap_or(0.0);
+-            i += 1;
+-        }
+-        for _ in 0..plan.tail_zeros {
+-            output[i] = 0.0;
+-            i += 1;
+-        }
++        w.discard_output(plan.discard);
++        let (lead, rest) = output[..sample_count].split_at_mut(plan.lead_zeros);
++        let (real, tail) = rest.split_at_mut(plan.real);
++        lead.fill(0.0);
++        w.read_output(real);
++        tail.fill(0.0);
+     }
+ }
+ 
+diff --git a/crates/dpdfnet-ladspa/src/worker.rs b/crates/dpdfnet-ladspa/src/worker.rs
+index 2d29c3752eb2ec24f345d0d83ef07cb075284f67..8eebc54973217897f0d386cda6f211596b101be7 100644
+--- a/crates/dpdfnet-ladspa/src/worker.rs
++++ b/crates/dpdfnet-ladspa/src/worker.rs
+@@ -9,11 +9,13 @@
+ //! host-inserted dropouts.
+ 
+ use hushmic_denoiser::{Denoiser, Mode, HOP};
++use rtrb::CopyToUninit;
+ use std::panic::{catch_unwind, AssertUnwindSafe};
+ use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+ use std::sync::Arc;
+ use std::thread::{self, JoinHandle};
+ use std::time::{Duration, Instant};
++use std::{mem::MaybeUninit, slice};
+ 
+ /// Fallback run budget when the process has no finite RTTIME limit.
+ /// The guard reserves at least 80 ms for another hop. This is a mitigation,
+@@ -128,6 +130,123 @@ impl LagWindow {
+ /// construction — the rings never reallocate.
+ pub const RING_CAPACITY: usize = 32_768;
+ 
++pub(crate) fn contiguous_hop<'a>(
++    (first, second): (&'a [f32], &'a [f32]),
++    scratch: &'a mut [f32; HOP],
++) -> &'a [f32; HOP] {
++    if second.is_empty() {
++        return first.try_into().expect("ring hop length");
++    }
++    let (left, right) = scratch.split_at_mut(first.len());
++    left.copy_from_slice(first);
++    right.copy_from_slice(second);
++    scratch
++}
++
++/// Output for one hop. Only a completed render or full PCM reply initializes
++/// a ring reservation. The consumer cannot see the reservation before commit.
++pub struct HopOutput<'a>(OutputStorage<'a>);
++
++enum OutputStorage<'a> {
++    Array(&'a mut [f32; HOP]),
++    Ring {
++        first: &'a mut [MaybeUninit<f32>],
++        second: &'a mut [MaybeUninit<f32>],
++        initialized: bool,
++    },
++}
++
++impl<'a> HopOutput<'a> {
++    pub(crate) fn array(output: &'a mut [f32; HOP]) -> Self {
++        Self(OutputStorage::Array(output))
++    }
++
++    pub fn write(&mut self, audio: &[f32; HOP]) {
++        match &mut self.0 {
++            OutputStorage::Array(output) => output.copy_from_slice(audio),
++            OutputStorage::Ring {
++                first,
++                second,
++                initialized,
++            } => {
++                let (left, right) = audio.split_at(first.len());
++                left.copy_to_uninit(first);
++                right.copy_to_uninit(second);
++                *initialized = true;
++            }
++        }
++    }
++
++    pub(crate) fn render(
++        &mut self,
++        process: impl FnOnce(&mut [f32; HOP]) -> Result<(), String>,
++    ) -> Result<(), String> {
++        match &mut self.0 {
++            OutputStorage::Array(output) => process(output),
++            OutputStorage::Ring { .. } => {
++                let mut staged = [0.0; HOP];
++                let result = process(&mut staged);
++                self.write(&staged);
++                result
++            }
++        }
++    }
++
++    fn ensure_initialized(&mut self) {
++        if matches!(
++            self.0,
++            OutputStorage::Ring {
++                initialized: false,
++                ..
++            }
++        ) {
++            self.write(&[0.0; HOP]);
++        }
++    }
++
++    pub(crate) fn initialized_parts(&mut self) -> (&mut [f32], &mut [f32]) {
++        self.ensure_initialized();
++        match &mut self.0 {
++            OutputStorage::Array(output) => (output.as_mut_slice(), &mut []),
++            OutputStorage::Ring { first, second, .. } => {
++                // SAFETY: ensure_initialized guarantees every sample is initialized.
++                unsafe {
++                    (
++                        slice::from_raw_parts_mut(first.as_mut_ptr().cast(), first.len()),
++                        slice::from_raw_parts_mut(second.as_mut_ptr().cast(), second.len()),
++                    )
++                }
++            }
++        }
++    }
++
++    #[cfg(feature = "xdna2")]
++    pub(crate) fn receive_pcm(
++        &mut self,
++        stream: &mut dpdfnet_xdna2::pcm::Stream,
++        input: (&[f32], &[f32]),
++        attenuation: f32,
++        bypass: f32,
++    ) -> std::io::Result<(&mut [f32], &mut [f32])> {
++        match &mut self.0 {
++            OutputStorage::Array(output) => {
++                stream.step_parts(input, (output.as_mut_slice(), &mut []), attenuation, bypass)?;
++                Ok((output.as_mut_slice(), &mut []))
++            }
++            OutputStorage::Ring {
++                first,
++                second,
++                initialized,
++            } => {
++                *initialized = false;
++                let result = stream.step_into(input, (first, second), attenuation, bypass)?;
++                *initialized = true;
++                Ok(result)
++            }
++        }
++    }
++}
++
+ /// The seam between the worker and the DSP: implemented by the real
+ /// [`Denoiser`] and by test fakes, so the whole threading/alignment
+ /// machinery is testable without ONNX Runtime or model files.
+@@ -137,6 +256,22 @@ pub const RING_CAPACITY: usize = 32_768;
+ /// transient failures.
+ pub trait HopEngine: Send + 'static {
+     fn process_hop(&mut self, input: &[f32; HOP], output: &mut [f32; HOP]) -> Result<(), String>;
++    fn process_hop_parts(
++        &mut self,
++        input: (&[f32], &[f32]),
++        scratch: &mut [f32; HOP],
++        output: &mut [f32; HOP],
++    ) -> Result<(), String> {
++        self.process_hop(contiguous_hop(input, scratch), output)
++    }
++    fn process_hop_output(
++        &mut self,
++        input: (&[f32], &[f32]),
++        scratch: &mut [f32; HOP],
++        output: &mut HopOutput<'_>,
++    ) -> Result<(), String> {
++        output.render(|audio| self.process_hop_parts(input, scratch, audio))
++    }
+     fn reset(&mut self);
+     fn set_mode(&mut self, mode: Mode);
+     fn set_attenuation_limit_db(&mut self, db: f32);
+@@ -345,13 +480,11 @@ impl WorkerHandle {
+     /// caller restarts the stream (see [`Self::request_reset`]).
+     pub fn push_input(&mut self, samples: &[f32]) -> usize {
+         self.note_quantum(samples.len());
+-        for (i, &s) in samples.iter().enumerate() {
+-            if self.input.push(s).is_err() {
+-                self.shared.overflow_report.store(true, Ordering::Release);
+-                return i;
+-            }
++        let (accepted, pending) = self.input.push_partial_slice(samples);
++        if !pending.is_empty() {
++            self.shared.overflow_report.store(true, Ordering::Release);
+         }
+-        samples.len()
++        accepted.len()
+     }
+ 
+     /// RT-safe: samples currently poppable from the output ring.
+@@ -364,10 +497,24 @@ impl WorkerHandle {
+         self.output.pop().ok()
+     }
+ 
++    /// RT-safe: copy the available output and zero-fill any shortfall.
++    pub(crate) fn read_output(&mut self, samples: &mut [f32]) {
++        let (_, remainder) = self.output.pop_partial_slice(samples);
++        remainder.fill(0.0);
++    }
++
++    /// RT-safe: discard up to the requested number of produced samples.
++    pub(crate) fn discard_output(&mut self, samples: usize) {
++        let count = samples.min(self.output.slots());
++        if let Ok(chunk) = self.output.read_chunk(count) {
++            chunk.commit_all();
++        }
++    }
++
+     /// Throw away everything in the output ring (activation only —
+     /// stale pre-reset audio must not leak into the new session).
+     pub fn drain_output(&mut self) {
+-        while self.output.pop().is_ok() {}
++        self.discard_output(usize::MAX);
+     }
+ 
+     /// A panic escaped the engine; the node is silent until re-instantiated.
+@@ -542,7 +689,10 @@ fn worker_loop(
+         }
+         let epoch = shared.reset_epoch.load(Ordering::Acquire);
+         if epoch != seen_epoch {
+-            while input.pop().is_ok() {}
++            let count = input.slots();
++            if let Ok(chunk) = input.read_chunk(count) {
++                chunk.commit_all();
++            }
+             lag_window.0.clear();
+             engine.reset();
+             err_logged = false; // a fresh session logs its own first failure
+@@ -586,13 +736,34 @@ fn worker_loop(
+             .div_ceil(HOP)
+             .max(1);
+         engine.set_lag_hops(lag_window.observe(queued, per_cycle));
+-        for s in hop_in.iter_mut() {
+-            *s = input.pop().unwrap_or(0.0);
+-        }
++        let chunk = input
++            .read_chunk(HOP)
++            .expect("checked ring input availability");
++        let mut reserved = if cfg!(feature = "xdna2") && output.slots() >= HOP {
++            output.write_chunk_uninit(HOP).ok()
++        } else {
++            None
++        };
+         let started = Instant::now();
+         let result = catch_unwind(AssertUnwindSafe(|| {
+-            engine.process_hop(&hop_in, &mut hop_out)
++            let mut destination = match &mut reserved {
++                Some(reservation) => {
++                    let (first, second) = reservation.as_mut_slices();
++                    HopOutput(OutputStorage::Ring {
++                        first,
++                        second,
++                        initialized: false,
++                    })
++                }
++                None => HopOutput::array(&mut hop_out),
++            };
++            let result =
++                engine.process_hop_output(chunk.as_slices(), &mut hop_in, &mut destination);
++            destination.ensure_initialized();
++            result
+         }));
++        // Keep both input spans valid through inference and any CPU fallback.
++        chunk.commit_all();
+         guard.account(started.elapsed());
+         match result {
+             Ok(Ok(())) => {}
+@@ -610,19 +781,30 @@ fn worker_loop(
+                 return;
+             }
+         }
+-        let mut pushed = 0;
+-        while pushed < HOP {
++        if let Some(reservation) = reserved {
++            if shared.shutdown.load(Ordering::Acquire) {
++                return;
++            }
++            if shared.reset_epoch.load(Ordering::Acquire) == seen_epoch {
++                // SAFETY: The successful catch path initialized every sample.
++                // A concurrent later reset uses the ack-then-drain protocol.
++                unsafe { reservation.commit_all() };
++            }
++            continue;
++        }
++        let mut pending = hop_out.as_slice();
++        while !pending.is_empty() {
+             if shared.shutdown.load(Ordering::Acquire) {
+                 return;
+             }
+             if shared.reset_epoch.load(Ordering::Acquire) != seen_epoch {
+                 break; // abandon the partial hop; the reset drains everything
+             }
+-            match output.push(hop_out[pushed]) {
+-                Ok(()) => pushed += 1,
+-                // Output ring full: the RT side stopped popping (host
+-                // paused the stream). Wait for space.
+-                Err(_) => park_accounted(&mut guard, Duration::from_millis(1)),
++            let (accepted, remainder) = output.push_partial_slice(pending);
++            pending = remainder;
++            if accepted.is_empty() {
++                // Output ring full: the RT side stopped popping.
++                park_accounted(&mut guard, Duration::from_millis(1));
+             }
+         }
+     }
+@@ -635,6 +817,55 @@ mod replay;
+ mod tests {
+     use super::*;
+ 
++    #[test]
++    fn reset_while_rendering_a_reserved_hop_discards_it_before_ack() {
++        use std::sync::mpsc;
++
++        struct HeldHop(Option<(mpsc::Sender<()>, mpsc::Receiver<()>)>);
++        impl HopEngine for HeldHop {
++            fn process_hop(
++                &mut self,
++                input: &[f32; HOP],
++                output: &mut [f32; HOP],
++            ) -> Result<(), String> {
++                if let Some((started, resume)) = self.0.take() {
++                    started.send(()).unwrap();
++                    resume.recv_timeout(Duration::from_secs(3)).unwrap();
++                }
++                output.copy_from_slice(input);
++                Ok(())
++            }
++            fn reset(&mut self) {}
++            fn set_mode(&mut self, _: Mode) {}
++            fn set_attenuation_limit_db(&mut self, _: f32) {}
++        }
++
++        let (started, in_render) = mpsc::channel();
++        let (resume, wait) = mpsc::channel();
++        let mut worker = WorkerHandle::spawn_timeshare(HeldHop(Some((started, wait)))).unwrap();
++        assert_eq!(worker.push_input(&[0.5; HOP]), HOP);
++        worker.wake();
++        in_render.recv_timeout(Duration::from_secs(3)).unwrap();
++        worker.request_reset();
++        resume.send(()).unwrap();
++        let until = Instant::now() + Duration::from_secs(3);
++        while !worker.reset_acked() {
++            assert!(Instant::now() < until, "worker did not acknowledge reset");
++            thread::sleep(Duration::from_millis(1));
++        }
++        assert_eq!(worker.output_available(), 0);
++        assert_eq!(worker.push_input(&[0.25; HOP]), HOP);
++        worker.wake();
++        let until = Instant::now() + Duration::from_secs(3);
++        while worker.output_available() < HOP {
++            assert!(Instant::now() < until, "worker did not publish the new hop");
++            thread::sleep(Duration::from_millis(1));
++        }
++        let mut output = [0.0; HOP];
++        worker.read_output(&mut output);
++        assert_eq!(output, [0.25; HOP]);
++    }
++
+     #[test]
+     fn late_grant_discards_timeshare_run() {
+         let mut guard = RunGuard::default();
+diff --git a/crates/dpdfnet-ladspa/src/xdna2.rs b/crates/dpdfnet-ladspa/src/xdna2.rs
+index e511347fe3b01e85a9634f38a553ce131c572678..737265898a6cfd68f96371b31481557e8ead6c3d 100644
+--- a/crates/dpdfnet-ladspa/src/xdna2.rs
++++ b/crates/dpdfnet-ladspa/src/xdna2.rs
+@@ -1,5 +1,5 @@
+ //! Optional host extension. All D-Bus work happens off the inference and RT threads.
+-use crate::worker::HopEngine;
++use crate::worker::{contiguous_hop, HopEngine, HopOutput};
+ use dpdfnet_xdna2::{self as provider, Stream};
+ use hushmic_denoiser::{Denoiser, Mode, HOP};
+ use std::{
+@@ -27,12 +27,26 @@ const UNKNOWN_POLICY: u8 = u8::MAX;
+ // Close an unused session before amdxdna's five-second runtime suspend.
+ const SESSION_IDLE: Duration = Duration::from_secs(2);
+ 
++enum RemoteStream {
++    Spectral(Stream),
++    Pcm(provider::pcm::Stream),
++}
++
++impl RemoteStream {
++    fn reset(&mut self) -> std::io::Result<()> {
++        match self {
++            Self::Spectral(stream) => stream.reset(),
++            Self::Pcm(stream) => stream.reset(),
++        }
++    }
++}
++
+ struct Link {
+     status: AtomicU32,
+     policy: AtomicU8,
+     generation: AtomicU64,
+     completed: AtomicU64,
+-    ready: Mutex<Option<(u64, Stream)>>,
++    ready: Mutex<Option<(u64, RemoteStream)>>,
+     path: PathBuf,
+     mono: bool,
+     alive: AtomicBool,
+@@ -115,12 +129,14 @@ impl Link {
+             }
+             self.policy.store(mode, Ordering::Relaxed);
+         }
++        let full_pcm = mode == provider::PREFER_NPU
++            && std::env::var_os("HUSHMIC_XDNA2_FULL_PCM").as_deref() == Some("1".as_ref());
+         let (status, stream) = if mode == provider::CPU {
+             (CPU, None)
+-        } else if !ready || (mode == provider::AUTO && !automatic) {
++        } else if (!ready && !full_pcm) || (mode == provider::AUTO && !automatic) {
+             (UNQUALIFIED, None)
+         } else {
+-            self.open(generation)
++            self.open(generation, full_pcm)
+         };
+         let mut pending = self.ready.lock().unwrap();
+         if self.current(generation) {
+@@ -129,7 +145,7 @@ impl Link {
+         }
+     }
+ 
+-    fn open(&self, generation: u64) -> (u32, Option<Stream>) {
++    fn open(&self, generation: u64, full_pcm: bool) -> (u32, Option<RemoteStream>) {
+         let Ok(hash) = provider::file_hash(&self.path) else {
+             return (UNQUALIFIED, None);
+         };
+@@ -139,7 +155,16 @@ impl Link {
+             if !self.current(generation) {
+                 break;
+             }
+-            match Stream::open(&hash) {
++            let stream = if full_pcm {
++                match provider::pcm::Stream::open(&hash) {
++                    Ok(stream) => Ok(RemoteStream::Pcm(stream)),
++                    Err(error) if provider::session_busy(&error) => Err(error),
++                    Err(_) => Stream::open(&hash).map(RemoteStream::Spectral),
++                }
++            } else {
++                Stream::open(&hash).map(RemoteStream::Spectral)
++            };
++            match stream {
+                 Ok(stream) => return (WAITING_FOR_AUDIO, Some(stream)),
+                 Err(error) if provider::session_busy(&error) => {
+                     if attempt < 7 {
+@@ -235,7 +260,8 @@ pub fn clear_pending() {
+ pub struct Engine {
+     cpu: Denoiser,
+     link: Option<Arc<Link>>,
+-    stream: Option<Stream>,
++    stream: Option<RemoteStream>,
++    previous_pcm: bool,
+     generation: u64,
+     idle_deadline: Option<Instant>,
+     resume_on_audio: bool,
+@@ -251,6 +277,7 @@ impl Engine {
+             cpu,
+             link,
+             stream: None,
++            previous_pcm: false,
+             generation: 0,
+             idle_deadline: None,
+             resume_on_audio: false,
+@@ -262,6 +289,7 @@ impl Engine {
+             cpu,
+             link: None,
+             stream: None,
++            previous_pcm: false,
+             generation: 0,
+             idle_deadline: None,
+             resume_on_audio: false,
+@@ -314,6 +342,24 @@ impl Drop for Engine {
+ 
+ impl HopEngine for Engine {
+     fn process_hop(&mut self, input: &[f32; HOP], output: &mut [f32; HOP]) -> Result<(), String> {
++        self.process_hop_parts((input, &[]), &mut [0.0; HOP], output)
++    }
++
++    fn process_hop_parts(
++        &mut self,
++        input: (&[f32], &[f32]),
++        scratch: &mut [f32; HOP],
++        output: &mut [f32; HOP],
++    ) -> Result<(), String> {
++        self.process_hop_output(input, scratch, &mut HopOutput::array(output))
++    }
++
++    fn process_hop_output(
++        &mut self,
++        input: (&[f32], &[f32]),
++        scratch: &mut [f32; HOP],
++        output: &mut HopOutput<'_>,
++    ) -> Result<(), String> {
+         self.refresh();
+         if self.idle_deadline.is_some() || self.resume_on_audio {
+             let now = Instant::now();
+@@ -330,25 +376,46 @@ impl HopEngine for Engine {
+                 self.idle_deadline = Some(now + SESSION_IDLE);
+             }
+         }
++        if let Some(RemoteStream::Pcm(stream)) = &mut self.stream {
++            let (attenuation, bypass) = self.cpu.external_pcm_controls();
++            if let Ok(parts) = output.receive_pcm(stream, input, attenuation, bypass) {
++                self.previous_pcm = true;
++                self.cpu.finish_external_pcm(parts);
++                if let Some(link) = &self.link {
++                    link.publish(self.generation, NPU);
++                }
++                return Ok(());
++            }
++            self.stream = None;
++            if let Some(link) = &self.link {
++                link.publish(self.generation, LOST);
++            }
++        }
++        if std::mem::take(&mut self.previous_pcm) {
++            self.cpu.reset_signal_history();
++        }
+         let stream = &mut self.stream;
+         let link = &self.link;
+         let generation = self.generation;
+-        self.cpu
+-            .process_hop_with_spectral_provider(input, output, |spectrum, enhanced| {
+-                if let Some(session) = stream {
+-                    let success = session.step(spectrum, enhanced).is_ok();
+-                    if !success {
+-                        *stream = None;
+-                    }
+-                    if let Some(link) = link {
+-                        link.publish(generation, if success { NPU } else { LOST });
++        let input = contiguous_hop(input, scratch);
++        output.render(|audio| {
++            self.cpu
++                .process_hop_with_spectral_provider(input, audio, |spectrum, enhanced| {
++                    if let Some(RemoteStream::Spectral(session)) = stream {
++                        let success = session.step(spectrum, enhanced).is_ok();
++                        if !success {
++                            *stream = None;
++                        }
++                        if let Some(link) = link {
++                            link.publish(generation, if success { NPU } else { LOST });
++                        }
++                        success
++                    } else {
++                        false
+                     }
+-                    success
+-                } else {
+-                    false
+-                }
+-            })
+-            .map_err(|e| e.to_string())
++                })
++                .map_err(|e| e.to_string())
++        })
+     }
+ 
+     fn poll_control(&mut self) {
+@@ -360,6 +427,7 @@ impl HopEngine for Engine {
+         self.refresh();
+         self.retire_idle_session(Instant::now());
+         self.cpu.reset();
++        self.previous_pcm = false;
+         if self
+             .stream
+             .as_mut()
+diff --git a/crates/dpdfnet-xdna2/examples/pcm_probe.rs b/crates/dpdfnet-xdna2/examples/pcm_probe.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..18572bf66d7f4441ce4f8639d5f858bf2029b0b5
+--- /dev/null
++++ b/crates/dpdfnet-xdna2/examples/pcm_probe.rs
+@@ -0,0 +1,206 @@
++//! Exercise the negotiated PCM worker from a separate process.
++use dpdfnet_xdna2::{
++    pcm::{Stream, HOP},
++    session_busy,
++};
++use std::{
++    env, fs,
++    io::{self, BufWriter, Write},
++    path::Path,
++    thread,
++    time::{Duration, Instant},
++};
++
++type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
++
++// FP32 encoding of the offline fixture's 10^(-30/20).
++const CAP: f32 = f32::from_bits(1023510242);
++const LIMITS: [f32; 19] = [
++    CAP, 1.0, 0.0, CAP, 0.0, CAP, CAP, 1.0, 0.0, 1e-6, CAP, 0.0, CAP, CAP, 1.0, 0.0, 0.0, CAP, CAP,
++];
++
++fn open(model: &str, after_close: bool) -> Result<Stream> {
++    let until = Instant::now() + Duration::from_secs(3);
++    loop {
++        match Stream::open(model) {
++            Ok(stream) => return Ok(stream),
++            Err(error) if after_close && session_busy(&error) && Instant::now() < until => {
++                thread::sleep(Duration::from_millis(10));
++            }
++            Err(error) => return Err(error.into()),
++        }
++    }
++}
++
++fn read_pcm(path: &Path) -> Result<Vec<f32>> {
++    let raw = fs::read(path)?;
++    if raw.is_empty() || raw.len() % (4 * HOP) != 0 {
++        return Err(io::Error::from(io::ErrorKind::InvalidData).into());
++    }
++    Ok(raw
++        .chunks_exact(4)
++        .map(|word| f32::from_le_bytes(word.try_into().unwrap()))
++        .collect())
++}
++
++fn quality(stream: &mut Stream, pcm: &[f32], out: &Path) -> Result<()> {
++    if pcm.len() < LIMITS.len() * HOP {
++        return Err("Incomplete PCM reset fixture".into());
++    }
++    let mut output = BufWriter::new(fs::File::create(out)?);
++    let mut target = 0.0f32;
++    let mut result = [0.0; HOP];
++    for epoch in 0..6 {
++        let mut mix = 0.0f32;
++        if epoch != 0 {
++            // Exercise restart after the client has left the worker idle.
++            thread::sleep(Duration::from_millis(30));
++            stream.reset()?;
++        }
++        for (index, limit) in LIMITS.iter().enumerate() {
++            match index {
++                1 | 10 | 18 => target = 1.0,
++                6 | 16 => target = 0.0,
++                _ => (),
++            }
++            mix += (target - mix).clamp(-0.25, 0.25);
++            let audio = &pcm[index * HOP..(index + 1) * HOP];
++            let input_cut = (epoch * 113 + index * 17) % (HOP + 1);
++            let output_cut = HOP - input_cut;
++            stream.step_parts(
++                audio.split_at(input_cut),
++                result.split_at_mut(output_cut),
++                *limit,
++                mix,
++            )?;
++            for value in result {
++                output.write_all(&value.to_le_bytes())?;
++            }
++        }
++    }
++    output.flush()?;
++    Ok(())
++}
++
++fn timing(stream: &mut Stream, pcm: &[f32], out: &Path, paced: bool, mix: bool) -> Result<()> {
++    let mut result = [0.0; HOP];
++    let mut entries = Vec::with_capacity(160);
++    let period = Duration::from_millis(10);
++    let (limit, bypass) = if mix { (CAP, 0.5) } else { (0.0, 0.0) };
++    let mut planned = Instant::now();
++    for index in 0..200 {
++        if paced {
++            planned += period;
++            thread::sleep(planned.saturating_duration_since(Instant::now()));
++        } else {
++            planned = Instant::now();
++        }
++        let start = Instant::now();
++        let offset = (index * HOP) % pcm.len();
++        stream.step(
++            pcm[offset..offset + HOP].try_into()?,
++            &mut result,
++            limit,
++            bypass,
++        )?;
++        let end = Instant::now();
++        if index >= 40 {
++            entries.push((
++                start.duration_since(planned),
++                end.duration_since(start),
++                end.duration_since(planned),
++            ));
++        }
++        if paced {
++            // Match the native diagnostic clock's explicit rebasing rule.
++            planned = planned.max(end - period);
++        }
++    }
++    let mut writer = BufWriter::new(fs::File::create(out)?);
++    for (entry, body, response) in entries {
++        writeln!(
++            writer,
++            "{} {} {}",
++            entry.as_nanos(),
++            body.as_nanos(),
++            response.as_nanos()
++        )?;
++    }
++    writer.flush()?;
++    Ok(())
++}
++
++fn checkpoint(label: &str) -> Result<()> {
++    println!("{label}");
++    io::stdout().flush()?;
++    let mut ack = String::new();
++    io::stdin().read_line(&mut ack)?;
++    if ack.trim() != "ack" {
++        return Err("Missing PCM measurement acknowledgement".into());
++    }
++    Ok(())
++}
++
++fn main() -> Result<()> {
++    let args: Vec<_> = env::args().skip(1).collect();
++    let [operation, model, input, output] = args.as_slice() else {
++        return Err("usage: pcm_probe OP MODEL_HASH INPUT OUTPUT".into());
++    };
++    let pcm = read_pcm(Path::new(input))?;
++    let out = Path::new(output);
++    let mut stream = open(model, true)?;
++    match operation.as_str() {
++        "quality" => {
++            assert!(matches!(Stream::open(model), Err(error) if session_busy(&error)));
++            checkpoint("OPEN")?;
++            quality(&mut stream, &pcm, out)?;
++            checkpoint("COMPLETE")?;
++        }
++        "paced" | "continuous" | "paced-nomix" | "continuous-nomix" => {
++            checkpoint("OPEN")?;
++            timing(
++                &mut stream,
++                &pcm,
++                out,
++                operation.starts_with("paced"),
++                !operation.ends_with("-nomix"),
++            )?;
++            checkpoint("COMPLETE")?;
++        }
++        "malformed" => {
++            let mut malformed = [0.0; HOP];
++            malformed[109] = f32::NAN;
++            let mut response = [0.0; HOP];
++            assert!(stream.step(&malformed, &mut response, CAP, 0.5).is_err());
++            assert_eq!(
++                stream.reset().unwrap_err().kind(),
++                io::ErrorKind::BrokenPipe
++            );
++            let mut next = open(model, true)?;
++            next.step(pcm[..HOP].try_into()?, &mut response, CAP, 0.5)?;
++        }
++        "fault" | "fault-nomix" => {
++            let mut response = [0.0; HOP];
++            let (limit, bypass) = if operation == "fault" {
++                (CAP, 0.5)
++            } else {
++                (0.0, 0.0)
++            };
++            for index in 0..6 {
++                let result = stream.step(
++                    pcm[index * HOP..(index + 1) * HOP].try_into()?,
++                    &mut response,
++                    limit,
++                    bypass,
++                );
++                assert_eq!(result.is_ok(), index < 5, "submit {index}");
++            }
++            assert_eq!(
++                stream.reset().unwrap_err().kind(),
++                io::ErrorKind::BrokenPipe
++            );
++        }
++        _ => return Err("Unknown PCM probe operation".into()),
++    }
++    Ok(())
++}
+diff --git a/crates/dpdfnet-xdna2/src/bin/dpdfnet-xdna2-service.rs b/crates/dpdfnet-xdna2/src/bin/dpdfnet-xdna2-service.rs
+index 1a82e5f8e33e61fcb6f880fedb9a168ffb96150b..181459ba1db94f3f2edf50244c212e5b5dbbe45b 100644
+--- a/crates/dpdfnet-xdna2/src/bin/dpdfnet-xdna2-service.rs
++++ b/crates/dpdfnet-xdna2/src/bin/dpdfnet-xdna2-service.rs
+@@ -22,6 +22,8 @@ use std::{
+ };
+ use zbus::{fdo, zvariant::OwnedFd as BusFd};
+ 
++mod pcm_session;
++
+ type Result<T> = std::result::Result<T, Box<dyn Error>>;
+ const FIRST: Stamp = Stamp {
+     kind: READY,
+@@ -44,6 +46,8 @@ struct Profile {
+ struct Providers {
+     version: u32,
+     profiles: BTreeMap<String, Profile>,
++    #[serde(default)]
++    pcm_profiles: BTreeMap<String, pcm_session::Profile>,
+ }
+ 
+ fn local_path(variable: &str, fallback: impl FnOnce() -> PathBuf) -> PathBuf {
+@@ -89,6 +93,7 @@ struct Broker {
+     settings: PathBuf,
+     policy: Mutex<u8>,
+     profiles: BTreeMap<String, Profile>,
++    pcm_profiles: BTreeMap<String, pcm_session::Profile>,
+     lease: Arc<Mutex<bool>>,
+     development: bool,
+ }
+@@ -151,6 +156,24 @@ impl Broker {
+             .map(BusFd::from)
+             .map_err(|e| fdo::Error::Failed(e.to_string()))
+     }
++
++    fn open_pcm_session(&self, model_hash: &str) -> fdo::Result<BusFd> {
++        if !self.development || *self.policy.lock().unwrap() != PREFER_NPU {
++            return Err(fdo::Error::NotSupported(
++                "Experimental PCM session is disabled".into(),
++            ));
++        }
++        let profile = self
++            .pcm_profiles
++            .values()
++            .find(|p| p.model_sha256 == model_hash)
++            .ok_or_else(|| fdo::Error::NotSupported("PCM model is unavailable".into()))?;
++        let lease = Lease::acquire(self.lease.clone())
++            .ok_or_else(|| fdo::Error::LimitsExceeded("NPU is busy".into()))?;
++        pcm_session::start(profile, lease)
++            .map(BusFd::from)
++            .map_err(|e| fdo::Error::Failed(e.to_string()))
++    }
+ }
+ 
+ struct Lease(Arc<Mutex<bool>>);
+@@ -204,38 +227,45 @@ fn start(profile: &Profile, lease: Lease) -> Result<OwnedFd> {
+         });
+     }
+     let (started, startup) = mpsc::channel();
+-    thread::Builder::new().name("dpdfnet-xdna2-relay".into()).spawn(move || {
+-        let lease = lease;
+-        let mut child = match command.spawn() {
+-            Ok(child) => child,
+-            Err(error) => {
+-                let _ = started.send(Err(error));
+-                return;
++    thread::Builder::new()
++        .name("dpdfnet-xdna2-relay".into())
++        .spawn(move || {
++            let lease = lease;
++            let mut child = match command.spawn() {
++                Ok(child) => child,
++                Err(error) => {
++                    let _ = started.send(Err(error));
++                    return;
++                }
++            };
++            drop(command);
++            let ready = control
++                .recv(&mut [0.0; WORDS], deadline(900))
++                .and_then(|stamp| {
++                    if stamp == FIRST {
++                        Ok(())
++                    } else {
++                        Err(io::Error::new(
++                            io::ErrorKind::InvalidData,
++                            "Missing NPU worker readiness",
++                        ))
++                    }
++                });
++            let is_ready = ready.is_ok();
++            if started.send(ready).is_ok() && is_ready {
++                let _ = bridge(&relay, &control);
+             }
+-        };
+-        drop(command);
+-        let ready = control.recv(&mut [0.0; WORDS], deadline(900)).and_then(|stamp| {
+-            if stamp == FIRST {
+-                Ok(())
+-            } else {
+-                Err(io::Error::new(io::ErrorKind::InvalidData, "Missing NPU worker readiness"))
++            drop(relay);
++            drop(control);
++            // The audio deadline has already expired. The worker can still be
++            // inside an XRT call. Keep the lease until it exits, without sending
++            // a signal into a driver that may be waking or releasing the device.
++            if let Err(error) = child.wait() {
++                eprintln!("Could not reap NPU worker {}: {error}", child.id());
++                // A wait failure does not prove the device has been released.
++                std::mem::forget(lease);
+             }
+-        });
+-        let is_ready = ready.is_ok();
+-        if started.send(ready).is_ok() && is_ready {
+-            let _ = bridge(&relay, &control);
+-        }
+-        drop(relay);
+-        drop(control);
+-        // The audio deadline has already expired. The worker can still be
+-        // inside an XRT call. Keep the lease until it exits, without sending
+-        // a signal into a driver that may be waking or releasing the device.
+-        if let Err(error) = child.wait() {
+-            eprintln!("Could not reap NPU worker {}: {error}", child.id());
+-            // A wait failure does not prove the device has been released.
+-            std::mem::forget(lease);
+-        }
+-    })?;
++        })?;
+     startup.recv_timeout(Duration::from_secs(1))??;
+     Ok(client.0)
+ }
+@@ -324,6 +354,18 @@ fn main() -> Result<()> {
+     if args.len() == 3 && args[0] == "--worker" {
+         return worker(Path::new(&args[1]), Path::new(&args[2]));
+     }
++    if matches!(args.len(), 4 | 5) && args[0] == "--pcm-worker" {
++        let expected = match args.get(4) {
++            Some(hash) => Some(hash.to_str().ok_or("Invalid PCM client model identity")?),
++            None => None,
++        };
++        return pcm_session::worker(
++            Path::new(&args[1]),
++            Path::new(&args[2]),
++            Path::new(&args[3]),
++            expected,
++        );
++    }
+     if !args.is_empty() {
+         return Err("Unsupported service arguments".into());
+     }
+@@ -343,6 +385,7 @@ fn main() -> Result<()> {
+         settings,
+         policy,
+         profiles: providers.profiles,
++        pcm_profiles: providers.pcm_profiles,
+         lease: Arc::new(Mutex::new(false)),
+         development: env::var_os("HUSHMIC_XDNA2_DEVELOPMENT").as_deref() == Some("1".as_ref()),
+     };
+diff --git a/crates/dpdfnet-xdna2/src/bin/pcm_session/mod.rs b/crates/dpdfnet-xdna2/src/bin/pcm_session/mod.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..530ed7f06b60d34d642000655275d594ccbaa052
+--- /dev/null
++++ b/crates/dpdfnet-xdna2/src/bin/pcm_session/mod.rs
+@@ -0,0 +1,323 @@
++use super::{deadline, file_hash, valid, Channel, Lease, Result, FIRST, WORDS};
++use dpdfnet_xdna2::{pcm, FRAME, RESET};
++use serde::Deserialize;
++use std::{
++    env,
++    ffi::{c_char, c_void, CString, OsString},
++    fs,
++    io::{self, BufRead, BufReader},
++    os::{
++        fd::{FromRawFd, OwnedFd},
++        unix::{ffi::OsStringExt, process::CommandExt},
++    },
++    path::{Path, PathBuf},
++    process::{Child, Command, Stdio},
++    sync::mpsc,
++    thread,
++    time::Duration,
++};
++
++const QUARANTINED: &[u8] =
++    b"R296_QUARANTINED_ENTIRE_MATCHED_BF16_OWNER_WITH_PERSISTENT_BUFFERS_HELD";
++
++#[derive(Deserialize)]
++pub(super) struct Profile {
++    library: PathBuf,
++    library_sha256: String,
++    manifest: PathBuf,
++    manifest_sha256: String,
++    model: PathBuf,
++    pub(super) model_sha256: String,
++    #[serde(default)]
++    bind_model_in_worker: bool,
++    #[serde(default)]
++    compact_close: bool,
++}
++
++fn receipt_directory() -> Result<PathBuf> {
++    let parent =
++        env::var_os("HUSHMIC_XDNA2_PCM_RECEIPTS").ok_or("Missing private PCM receipt directory")?;
++    let root = fs::canonicalize(parent)?;
++    let mut pattern = CString::new(root.join("pcm-owner-XXXXXX").as_os_str().as_encoded_bytes())?
++        .into_bytes_with_nul();
++    // mkdtemp creates one 0700 directory and writes the final name in place.
++    if unsafe { libc::mkdtemp(pattern.as_mut_ptr().cast()) }.is_null() {
++        return Err(io::Error::last_os_error().into());
++    }
++    pattern.pop();
++    Ok(PathBuf::from(OsString::from_vec(pattern)))
++}
++
++pub(super) fn start(p: &Profile, lease: Lease) -> Result<OwnedFd> {
++    for (path, hash) in [
++        (&p.library, &p.library_sha256),
++        (&p.manifest, &p.manifest_sha256),
++    ] {
++        if !path.is_absolute() || file_hash(path)? != *hash {
++            return Err("PCM artifact identity differs".into());
++        }
++    }
++    if !p.model.is_absolute()
++        || p.model_sha256.len() != 64
++        || !p
++            .model_sha256
++            .bytes()
++            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
++    {
++        return Err("PCM model identity is invalid".into());
++    }
++    if !p.bind_model_in_worker && file_hash(&p.model)? != p.model_sha256 {
++        return Err("PCM model identity differs".into());
++    }
++    let (client, audio) = Channel::pair()?;
++    let (observer, notifications) = Channel::pair()?;
++    let parent = std::process::id() as libc::pid_t;
++    let mut command = Command::new(env::current_exe()?);
++    command
++        .arg("--pcm-worker")
++        .arg(&p.library)
++        .arg(&p.manifest)
++        .arg(&p.model);
++    if p.bind_model_in_worker {
++        command.arg(&p.model_sha256);
++    }
++    command
++        .env("DPDF_R103_OUTPUT_DIRECTORY", receipt_directory()?)
++        .env(
++            "DPDF_PCM_CLOSE_WITHOUT_STATE",
++            if p.compact_close { "1" } else { "0" },
++        )
++        .stdin(Stdio::from(audio.0))
++        .stdout(Stdio::from(notifications.0))
++        .stderr(Stdio::piped());
++    // The child belongs to this supervisor for the life of its device context.
++    unsafe {
++        command.pre_exec(move || {
++            if libc::prctl(libc::PR_SET_PDEATHSIG, libc::SIGKILL) != 0 || libc::getppid() != parent
++            {
++                return Err(io::Error::from_raw_os_error(libc::ECHILD));
++            }
++            Ok(())
++        });
++    }
++    let (report, startup) = mpsc::channel();
++    thread::Builder::new()
++        .name("dpdfnet-xdna2-pcm".into())
++        .spawn(move || {
++            let mut child = match command.spawn() {
++                Ok(child) => child,
++                Err(error) => {
++                    let _ = report.send(Err(error));
++                    return;
++                }
++            };
++            drop(command);
++            let readiness = observer
++                .recv(&mut [0.0; WORDS], deadline(900))
++                .and_then(|stamp| {
++                    if stamp == FIRST {
++                        Ok(())
++                    } else {
++                        Err(io::ErrorKind::InvalidData.into())
++                    }
++                });
++            let _ = report.send(readiness);
++            drop(observer);
++            supervise(&mut child, lease);
++        })?;
++    startup.recv_timeout(Duration::from_secs(1))??;
++    Ok(client.0)
++}
++
++fn supervise(child: &mut Child, lease: Lease) {
++    if let Some(stderr) = child.stderr.take() {
++        for record in BufReader::new(stderr).split(b'\n') {
++            if record.is_ok_and(|line| line == QUARANTINED) {
++                // This pinned facade has explicitly suspended itself with
++                // acceptance unknown. Reap only the worker we just started.
++                if let Err(error) = child.kill() {
++                    eprintln!(
++                        "Could not stop quarantined PCM worker {}: {error}",
++                        child.id()
++                    );
++                }
++                break;
++            }
++        }
++    }
++    if let Err(error) = child.wait() {
++        eprintln!("Could not reap PCM worker {}: {error}", child.id());
++        std::mem::forget(lease);
++    }
++}
++
++type Fill = unsafe extern "C" fn(*mut c_void, *mut f32, usize, *mut f32, *mut f32) -> i32;
++type Publish = unsafe extern "C" fn(*mut c_void, *const f32, usize) -> i32;
++type Exchange = unsafe extern "C" fn(*mut c_void, Fill, Publish, *mut c_void) -> i32;
++type Reset = unsafe extern "C" fn(*mut c_void) -> i32;
++type Destroy = unsafe extern "C" fn(*mut c_void) -> i32;
++
++struct Wire {
++    audio: Channel,
++    epoch: u32,
++    number: u64,
++    packet: Option<pcm::Packet>,
++    error: Option<io::Error>,
++}
++
++unsafe extern "C" fn fill(
++    opaque: *mut c_void,
++    dest: *mut f32,
++    count: usize,
++    attenuation: *mut f32,
++    bypass: *mut f32,
++) -> i32 {
++    if count != pcm::HOP {
++        return -1;
++    }
++    // The native ABI lends one writable slot until this callback returns.
++    let (wire, samples) = unsafe {
++        (
++            &mut *opaque.cast::<Wire>(),
++            std::slice::from_raw_parts_mut(dest, count),
++        )
++    };
++    match pcm::receive(&wire.audio, samples, deadline(300_000)) {
++        Ok(packet) if valid(packet.stamp, wire.epoch, wire.number) => {
++            wire.packet = Some(packet);
++            if packet.stamp.kind == RESET {
++                return -1;
++            }
++            unsafe {
++                *attenuation = packet.attenuation;
++                *bypass = packet.bypass;
++            }
++            0
++        }
++        Ok(_) => {
++            wire.error = Some(io::ErrorKind::InvalidData.into());
++            -1
++        }
++        Err(error) => {
++            wire.error = Some(error);
++            -1
++        }
++    }
++}
++
++unsafe extern "C" fn publish(opaque: *mut c_void, data: *const f32, count: usize) -> i32 {
++    if count != pcm::HOP {
++        return -1;
++    }
++    // The native ABI supplies a validated, read-only result for this callback.
++    let (wire, samples) = unsafe {
++        (
++            &mut *opaque.cast::<Wire>(),
++            std::slice::from_raw_parts(data, count),
++        )
++    };
++    let Some(packet) = wire.packet else {
++        return -1;
++    };
++    match pcm::send(&wire.audio, packet, samples, deadline(10)) {
++        Ok(()) => 0,
++        Err(error) => {
++            wire.error = Some(error);
++            -1
++        }
++    }
++}
++
++fn work(mut wire: Wire, session: *mut c_void, exchange: Exchange, reset: Reset) -> Result<()> {
++    loop {
++        wire.packet = None;
++        wire.error = None;
++        let result = unsafe { exchange(session, fill, publish, (&mut wire as *mut Wire).cast()) };
++        if let Some(error) = wire.error.take() {
++            if error.kind() == io::ErrorKind::UnexpectedEof {
++                return Ok(());
++            }
++            return Err(error.into());
++        }
++        match (result, wire.packet) {
++            (0, Some(packet)) if packet.stamp.kind == FRAME => wire.number += 1,
++            (-2, Some(packet)) if packet.stamp.kind == RESET => {
++                if unsafe { reset(session) } != 0 {
++                    return Err("Could not reset full PCM session".into());
++                }
++                wire.epoch = packet.stamp.epoch;
++                pcm::send(&wire.audio, packet, &[], deadline(10))?;
++            }
++            _ => return Err("Full PCM exchange failed".into()),
++        }
++    }
++}
++
++pub(super) fn worker(
++    library: &Path,
++    manifest: &Path,
++    model: &Path,
++    expected: Option<&str>,
++) -> Result<()> {
++    type Abi = unsafe extern "C" fn() -> u32;
++    type Open = unsafe extern "C" fn(*const c_char, *const c_char) -> *mut c_void;
++    let manifest = CString::new(manifest.as_os_str().as_encoded_bytes())?;
++    let model = CString::new(model.as_os_str().as_encoded_bytes())?;
++    // The broker supplies the data and startup sockets as two distinct inherited FDs.
++    let audio = Channel(unsafe { OwnedFd::from_raw_fd(libc::STDIN_FILENO) });
++    let notifications = Channel(unsafe { OwnedFd::from_raw_fd(libc::STDOUT_FILENO) });
++    let loaded = unsafe { libloading::Library::new(library)? };
++    let destroy_symbol: &[u8] =
++        if env::var_os("DPDF_PCM_CLOSE_WITHOUT_STATE").as_deref() == Some("1".as_ref()) {
++            b"r103_destroy_quiet_v1"
++        } else {
++            b"r103_destroy_v1"
++        };
++    let (abi, exchange, reset, destroy) = unsafe {
++        (
++            *loaded.get::<Abi>(b"r103_abi_version_v1")?,
++            *loaded.get::<Exchange>(b"r103_pcm_exchange_v1")?,
++            *loaded.get::<Reset>(b"audio_native_reset")?,
++            *loaded.get::<Destroy>(destroy_symbol)?,
++        )
++    };
++    if unsafe { abi() } != 1 {
++        return Err("Unsupported full PCM native ABI".into());
++    }
++    let session = unsafe {
++        if let Some(expected) = expected {
++            type OpenBound =
++                unsafe extern "C" fn(*const c_char, *const c_char, *const c_char) -> *mut c_void;
++            let hash = CString::new(expected)?;
++            let open = loaded.get::<OpenBound>(b"r103_create_bound_v1")?;
++            open(manifest.as_ptr(), model.as_ptr(), hash.as_ptr())
++        } else {
++            let open = loaded.get::<Open>(b"audio_native_create")?;
++            open(manifest.as_ptr(), model.as_ptr())
++        }
++    };
++    if session.is_null() {
++        return Err("Could not open full PCM backend".into());
++    }
++    let ready = notifications.send(FIRST, &[], deadline(500));
++    drop(notifications);
++    let result = ready.map_err(Into::into).and_then(|_| {
++        work(
++            Wire {
++                audio,
++                epoch: 0,
++                number: 0,
++                packet: None,
++                error: None,
++            },
++            session,
++            exchange,
++            reset,
++        )
++    });
++    let closed = unsafe { destroy(session) };
++    if closed != 0 {
++        return Err("Could not close full PCM session".into());
++    }
++    result
++}
+diff --git a/crates/dpdfnet-xdna2/src/lib.rs b/crates/dpdfnet-xdna2/src/lib.rs
+index b405399d46da5e9ae5d1915a96afb23d01fa48b2..1b22ac551032fc2cceebb9dd233b514b297241d7 100644
+--- a/crates/dpdfnet-xdna2/src/lib.rs
++++ b/crates/dpdfnet-xdna2/src/lib.rs
+@@ -1,4 +1,6 @@
+ //! Local transport shared by the host service and the optional HushMic client.
++pub mod pcm;
++
+ use sha2::{Digest, Sha256};
+ use std::{
+     fs::File,
+diff --git a/crates/dpdfnet-xdna2/src/pcm.rs b/crates/dpdfnet-xdna2/src/pcm.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..93362a2cd23190efbfc2e6f48a5eeef960ec940f
+--- /dev/null
++++ b/crates/dpdfnet-xdna2/src/pcm.rs
+@@ -0,0 +1,380 @@
++//! Full-frame PCM wire format on a separately negotiated seqpacket socket.
++use super::{connect, deadline, error, proxy, Channel, Stamp, FRAME, RESET};
++use std::{io, mem::MaybeUninit, os::fd::AsRawFd, slice, time::Instant};
++
++pub const HOP: usize = 480;
++const MAGIC: [u8; 4] = *b"DPC1";
++const HEADER: usize = 28;
++
++#[derive(Clone, Copy, Debug, PartialEq)]
++pub struct Packet {
++    pub stamp: Stamp,
++    pub attenuation: f32,
++    pub bypass: f32,
++}
++
++impl Packet {
++    fn encode(self) -> [u8; HEADER] {
++        let mut bytes = [0; HEADER];
++        bytes[..4].copy_from_slice(&MAGIC);
++        bytes[4..8].copy_from_slice(&self.stamp.kind.to_le_bytes());
++        bytes[8..12].copy_from_slice(&self.stamp.epoch.to_le_bytes());
++        bytes[12..20].copy_from_slice(&self.stamp.number.to_le_bytes());
++        bytes[20..24].copy_from_slice(&self.attenuation.to_le_bytes());
++        bytes[24..28].copy_from_slice(&self.bypass.to_le_bytes());
++        bytes
++    }
++
++    fn decode(bytes: &[u8; HEADER], words: usize) -> io::Result<Self> {
++        if bytes[..4] != MAGIC {
++            return Err(error("PCM header magic differs"));
++        }
++        let packet = Self {
++            stamp: Stamp {
++                kind: u32::from_le_bytes(bytes[4..8].try_into().unwrap()),
++                epoch: u32::from_le_bytes(bytes[8..12].try_into().unwrap()),
++                number: u64::from_le_bytes(bytes[12..20].try_into().unwrap()),
++            },
++            attenuation: f32::from_le_bytes(bytes[20..24].try_into().unwrap()),
++            bypass: f32::from_le_bytes(bytes[24..28].try_into().unwrap()),
++        };
++        packet.validate(words)?;
++        Ok(packet)
++    }
++
++    fn validate(self, words: usize) -> io::Result<()> {
++        match self.stamp.kind {
++            FRAME
++                if words == HOP
++                    && (0.0..=1.0).contains(&self.attenuation)
++                    && (0.0..=1.0).contains(&self.bypass) =>
++            {
++                Ok(())
++            }
++            RESET if words == 0 && self.attenuation == 0.0 && self.bypass == 0.0 => Ok(()),
++            _ => Err(error("Invalid PCM packet extent or controls")),
++        }
++    }
++}
++
++fn check_endian() -> io::Result<()> {
++    if cfg!(target_endian = "little") {
++        Ok(())
++    } else {
++        Err(io::ErrorKind::Unsupported.into())
++    }
++}
++
++fn retry(err: &io::Error) -> bool {
++    matches!(
++        err.kind(),
++        io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
++    )
++}
++
++pub fn send(socket: &Channel, packet: Packet, audio: &[f32], until: Instant) -> io::Result<()> {
++    send_parts(socket, packet, audio, &[], until)
++}
++
++fn send_parts(
++    socket: &Channel,
++    packet: Packet,
++    first: &[f32],
++    second: &[f32],
++    until: Instant,
++) -> io::Result<()> {
++    check_endian()?;
++    let words = first.len().saturating_add(second.len());
++    packet.validate(words)?;
++    let header = packet.encode();
++    let iov = [
++        libc::iovec {
++            iov_base: header.as_ptr().cast_mut().cast(),
++            iov_len: HEADER,
++        },
++        libc::iovec {
++            iov_base: first.as_ptr().cast_mut().cast(),
++            iov_len: size_of_val(first),
++        },
++        libc::iovec {
++            iov_base: second.as_ptr().cast_mut().cast(),
++            iov_len: size_of_val(second),
++        },
++    ];
++    // sendmsg reads the iovecs and both byte spans for the duration of the call.
++    let mut message: libc::msghdr = unsafe { std::mem::zeroed() };
++    message.msg_iov = iov.as_ptr().cast_mut();
++    message.msg_iovlen = if !second.is_empty() {
++        3
++    } else if !first.is_empty() {
++        2
++    } else {
++        1
++    };
++    let size = (HEADER + words * size_of::<f32>()) as isize;
++    loop {
++        socket.wait(libc::POLLOUT, until)?;
++        let count = unsafe { libc::sendmsg(socket.0.as_raw_fd(), &message, libc::MSG_NOSIGNAL) };
++        if count == size {
++            return Ok(());
++        }
++        if count >= 0 {
++            return Err(error("Incomplete PCM send"));
++        }
++        let err = io::Error::last_os_error();
++        if !retry(&err) {
++            return Err(err);
++        }
++    }
++}
++
++pub fn receive(socket: &Channel, audio: &mut [f32], until: Instant) -> io::Result<Packet> {
++    receive_parts(socket, receive_storage(audio), &mut [], until)
++}
++
++fn receive_storage(audio: &mut [f32]) -> &mut [MaybeUninit<f32>] {
++    // SAFETY: Same layout and exclusive access. Receive only writes bytes and
++    // never de-initializes any sample in the originally initialized slice.
++    unsafe { slice::from_raw_parts_mut(audio.as_mut_ptr().cast(), audio.len()) }
++}
++
++fn receive_parts(
++    socket: &Channel,
++    first: &mut [MaybeUninit<f32>],
++    second: &mut [MaybeUninit<f32>],
++    until: Instant,
++) -> io::Result<Packet> {
++    check_endian()?;
++    let mut header = [0u8; HEADER];
++    let mut iov = [
++        libc::iovec {
++            iov_base: header.as_mut_ptr().cast(),
++            iov_len: HEADER,
++        },
++        libc::iovec {
++            iov_base: first.as_mut_ptr().cast(),
++            iov_len: size_of_val(first),
++        },
++        libc::iovec {
++            iov_base: second.as_mut_ptr().cast(),
++            iov_len: size_of_val(second),
++        },
++    ];
++    let count = loop {
++        socket.wait(libc::POLLIN, until)?;
++        // Header and audio are exclusive, valid writable spans until recvmsg returns.
++        let mut message: libc::msghdr = unsafe { std::mem::zeroed() };
++        message.msg_iov = iov.as_mut_ptr();
++        message.msg_iovlen = if !second.is_empty() {
++            3
++        } else if !first.is_empty() {
++            2
++        } else {
++            1
++        };
++        let count = unsafe { libc::recvmsg(socket.0.as_raw_fd(), &mut message, 0) };
++        if count > 0 {
++            if message.msg_flags & (libc::MSG_TRUNC | libc::MSG_CTRUNC) != 0 {
++                return Err(error("Truncated PCM packet"));
++            }
++            break count as usize;
++        }
++        if count == 0 {
++            return Err(io::ErrorKind::UnexpectedEof.into());
++        }
++        let err = io::Error::last_os_error();
++        if !retry(&err) {
++            return Err(err);
++        }
++    };
++    let payload = count
++        .checked_sub(HEADER)
++        .ok_or_else(|| error("Short PCM header"))?;
++    if payload % size_of::<f32>() != 0 {
++        return Err(error("Misaligned PCM payload"));
++    }
++    Packet::decode(&header, payload / size_of::<f32>())
++}
++
++pub struct Stream {
++    socket: Option<Channel>,
++    epoch: u32,
++    number: u64,
++}
++
++impl Stream {
++    pub fn open(model_hash: &str) -> Result<Self, zbus::Error> {
++        let bus = connect()?;
++        let fd: zbus::zvariant::OwnedFd = proxy(&bus)?.call("OpenPcmSession", &(model_hash,))?;
++        Ok(Self {
++            socket: Some(Channel(fd.into())),
++            epoch: 0,
++            number: 0,
++        })
++    }
++
++    pub fn step(
++        &mut self,
++        input: &[f32; HOP],
++        output: &mut [f32; HOP],
++        attenuation: f32,
++        bypass: f32,
++    ) -> io::Result<()> {
++        self.step_parts((input, &[]), (output, &mut []), attenuation, bypass)
++    }
++
++    pub fn step_parts(
++        &mut self,
++        input: (&[f32], &[f32]),
++        output: (&mut [f32], &mut [f32]),
++        attenuation: f32,
++        bypass: f32,
++    ) -> io::Result<()> {
++        self.step_into(
++            input,
++            (receive_storage(output.0), receive_storage(output.1)),
++            attenuation,
++            bypass,
++        )
++        .map(|_| ())
++    }
++
++    /// Receive a complete, validated hop directly into one or two writable spans.
++    /// On error, the caller must treat both spans as uninitialized.
++    pub fn step_into<'a>(
++        &mut self,
++        input: (&[f32], &[f32]),
++        output: (&'a mut [MaybeUninit<f32>], &'a mut [MaybeUninit<f32>]),
++        attenuation: f32,
++        bypass: f32,
++    ) -> io::Result<(&'a mut [f32], &'a mut [f32])> {
++        if output.0.len().saturating_add(output.1.len()) != HOP {
++            return Err(error("Invalid PCM output extent"));
++        }
++        let number = self
++            .number
++            .checked_add(1)
++            .ok_or_else(|| error("PCM frame overflow"))?;
++        let request = Packet {
++            stamp: Stamp {
++                kind: FRAME,
++                epoch: self.epoch,
++                number: self.number,
++            },
++            attenuation,
++            bypass,
++        };
++        request.validate(input.0.len().saturating_add(input.1.len()))?;
++        self.exchange(
++            request,
++            input,
++            (&mut *output.0, &mut *output.1),
++            deadline(20),
++        )?;
++        self.number = number;
++        // SAFETY: A successful exchange requires the exact FRAME header and
++        // precisely HOP samples across these two spans, with no truncation.
++        // recvmsg wrote every byte. Every f32 bit pattern is valid.
++        Ok(unsafe {
++            (
++                slice::from_raw_parts_mut(output.0.as_mut_ptr().cast(), output.0.len()),
++                slice::from_raw_parts_mut(output.1.as_mut_ptr().cast(), output.1.len()),
++            )
++        })
++    }
++
++    pub fn reset(&mut self) -> io::Result<()> {
++        let epoch = self
++            .epoch
++            .checked_add(1)
++            .ok_or_else(|| error("PCM epoch overflow"))?;
++        let request = Packet {
++            stamp: Stamp {
++                kind: RESET,
++                epoch,
++                number: self.number,
++            },
++            attenuation: 0.0,
++            bypass: 0.0,
++        };
++        self.exchange(request, (&[], &[]), (&mut [], &mut []), deadline(25))?;
++        self.epoch = epoch;
++        Ok(())
++    }
++
++    fn exchange(
++        &mut self,
++        request: Packet,
++        input: (&[f32], &[f32]),
++        output: (&mut [MaybeUninit<f32>], &mut [MaybeUninit<f32>]),
++        until: Instant,
++    ) -> io::Result<()> {
++        let socket = self.socket.as_ref().ok_or(io::ErrorKind::BrokenPipe)?;
++        let status = send_parts(socket, request, input.0, input.1, until).and_then(|_| {
++            if receive_parts(socket, output.0, output.1, until)? == request {
++                Ok(())
++            } else {
++                Err(error("PCM reply identity differs"))
++            }
++        });
++        if status.is_err() {
++            self.socket.take();
++        }
++        status
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn only_a_complete_matching_reply_initializes_both_output_spans() {
++        let input = std::array::from_fn::<_, HOP, _>(|sample| sample as f32 / HOP as f32);
++        let request = Packet {
++            stamp: Stamp {
++                kind: FRAME,
++                epoch: 3,
++                number: 7,
++            },
++            attenuation: 0.25,
++            bypass: 0.5,
++        };
++        for (reply_epoch, reply_words) in [(3, HOP), (4, HOP), (3, HOP - 1), (3, HOP + 1)] {
++            let (client, server) = Channel::pair().unwrap();
++            let mut reply = request;
++            reply.stamp.epoch = reply_epoch;
++            let mut packet = reply.encode().to_vec();
++            for sample in input.iter().copied().chain([0.0]).take(reply_words) {
++                packet.extend_from_slice(&sample.to_le_bytes());
++            }
++            // Test peer may deliberately violate the normal sender's extent check.
++            let sent = unsafe {
++                libc::send(
++                    server.0.as_raw_fd(),
++                    packet.as_ptr().cast(),
++                    packet.len(),
++                    0,
++                )
++            };
++            assert_eq!(sent as usize, packet.len());
++            let mut stream = Stream {
++                socket: Some(client),
++                epoch: 3,
++                number: 7,
++            };
++            let mut output = [MaybeUninit::uninit(); HOP];
++            let result = stream.step_into(input.split_at(19), output.split_at_mut(137), 0.25, 0.5);
++            if (reply_epoch, reply_words) == (3, HOP) {
++                let (first, second) = result.unwrap();
++                assert_eq!(first, &input[..137]);
++                assert_eq!(second, &input[137..]);
++                assert_eq!(stream.number, 8);
++            } else {
++                assert!(result.is_err());
++                assert!(stream.socket.is_none());
++                assert_eq!(stream.number, 7);
++            }
++        }
++    }
++}
+diff --git a/crates/hushmic-denoiser/src/attn.rs b/crates/hushmic-denoiser/src/attn.rs
+index 9872d0f8ee2cb84b015652001da46a060cf7051c..8d3bd63afabe5618aa6d28098bed9b195567a5c4 100644
+--- a/crates/hushmic-denoiser/src/attn.rs
++++ b/crates/hushmic-denoiser/src/attn.rs
+@@ -58,17 +58,23 @@ impl AttnLimiter {
+         self.bypass_mix = 0.0; // fresh session fades in from processed
+     }
+ 
++    pub(crate) fn controls_for_next_hop(&self) -> (f32, f32) {
++        let step = 1.0 / BYPASS_RAMP_HOPS as f32;
++        let delta = self.bypass_target - self.bypass_mix;
++        let bypass = if delta.abs() <= step {
++            self.bypass_target
++        } else {
++            self.bypass_mix + step * delta.signum()
++        };
++        (if self.enabled { self.alpha } else { 0.0 }, bypass)
++    }
++
++    pub(crate) fn advance_bypass(&mut self) {
++        self.bypass_mix = self.controls_for_next_hop().1;
++    }
++
+     pub fn apply(&mut self, noisy: &[f32; SPEC_LEN], enhanced: &mut [f32; SPEC_LEN]) {
+-        // step the bypass mix once per hop; land exactly on the target
+-        if self.bypass_mix != self.bypass_target {
+-            let step = 1.0 / BYPASS_RAMP_HOPS as f32;
+-            let d = self.bypass_target - self.bypass_mix;
+-            if d.abs() <= step {
+-                self.bypass_mix = self.bypass_target;
+-            } else {
+-                self.bypass_mix += step * d.signum();
+-            }
+-        }
++        self.advance_bypass();
+         // maintain a delay line of the last NOISY_FRAME_OFFSET noisy frames
+         self.ring.push_back(*noisy);
+         let delayed = if self.ring.len() > NOISY_FRAME_OFFSET {
+diff --git a/crates/hushmic-denoiser/src/denoiser.rs b/crates/hushmic-denoiser/src/denoiser.rs
+index fbaa1850d6cbbc9c2c867236f41a5a83e82496b7..42cb7c5d97fa21772b9045e63224bb00d52467b9 100644
+--- a/crates/hushmic-denoiser/src/denoiser.rs
++++ b/crates/hushmic-denoiser/src/denoiser.rs
+@@ -132,13 +132,31 @@ impl Denoiser {
+     /// attenuation limit stay in force — in particular, a `Denoiser` reset
+     /// while muted stays silent from the very first sample.
+     pub fn reset(&mut self) {
++        self.reset_signal_history();
++        self.gain.reset_to(self.mode == Mode::Mute);
++    }
++
++    /// Restart the analysis, recurrent state, limiter delay and synthesis
++    /// after leaving a full-PCM provider. The mute ramp keeps its position.
++    pub fn reset_signal_history(&mut self) {
+         self.analysis.reset();
+         self.synthesis.reset();
+         self.state.clear();
+         self.state.extend_from_slice(&self.model.init_state);
+         self.remote_was_active = false;
+         self.attn.reset();
+-        self.gain.reset_to(self.mode == Mode::Mute);
++    }
++
++    /// Mix controls for a provider that owns analysis and synthesis.
++    pub fn external_pcm_controls(&self) -> (f32, f32) {
++        self.attn.controls_for_next_hop()
++    }
++
++    /// Commit an accepted provider hop and apply the same local mute ramp.
++    pub fn finish_external_pcm(&mut self, (first, second): (&mut [f32], &mut [f32])) {
++        self.attn.advance_bypass();
++        self.gain.process(first);
++        self.gain.process(second);
+     }
+ 
+     /// Cap how deep suppression may go by blending the latency-aligned noisy
+diff --git a/packaging/xdna2/README.md b/packaging/xdna2/README.md
+index 242b154c0b8930869fc1196c6376881e1872b6fa..162b5d122f6ddbb92f75ff26ce7bc959e6e46dcc 100644
+--- a/packaging/xdna2/README.md
++++ b/packaging/xdna2/README.md
+@@ -27,3 +27,11 @@ control ports.
+ separate test service. The latter admits an unqualified profile only
+ under explicitly selected Prefer NPU. Production packages rely on the
+ qualified catalog and normal user permissions.
++
++The separate experimental `OpenPcmSession` method uses the `pcm_profiles`
++registry in the development catalog. Start the test service with a private
++`HUSHMIC_XDNA2_PCM_RECEIPTS` directory. Explicit Prefer NPU and
++`HUSHMIC_XDNA2_FULL_PCM=1` in the LADSPA host select this full-PCM route.
++The existing LADSPA ports and spectral service method are shared with the
++standard package. The broker returns the worker's direct PCM socket and
++retains the device lease until that worker exits.
+-- 
+2.56.1
+

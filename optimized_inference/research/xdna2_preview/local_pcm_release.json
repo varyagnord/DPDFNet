@@ -1,0 +1,85 @@
+{
+  "binary_sha256": {
+    "broker": "890b3ed7a04fefb18353dbf4cf8840e291e70db248f59163aae9ce7eccac1446",
+    "easyeffects": "fcbbb5868c3d0788f39237bc5dbabe5f0770f010f427cb7498910c0bee4885ae",
+    "ladspa": "ce4fb516800cdda67597adefbaace2c3467e57188cf65265673762e35d9f14de"
+  },
+  "component_sha256": {
+    "grid_exp.inc": "8956f5a5f7b15e248a19c3df77a3e5f8405711a1c7c3da6010b6915337d78a29",
+    "packed_snapshot.h": "d685d831901358781bee3976086afd68acfc92cebd9c8c31b79fc8e19e315cfe",
+    "paired_hidden.cc": "ce779e0a83d6009c222870262f5ce3c43270bb7d270340c910d6c51fbf8d723f"
+  },
+  "isolated_native_cases": {
+    "2": {
+      "monitor-fault": {
+        "monitor_fault": true,
+        "quantum": 512,
+        "rate": 44100,
+        "recorded_samples": 294400,
+        "transitions": 4
+      },
+      "playback": {
+        "monitor_fault": false,
+        "quantum": 480,
+        "rate": 48000,
+        "recorded_samples": 396000,
+        "transitions": 4
+      }
+    },
+    "8": {
+      "monitor-fault": {
+        "monitor_fault": true,
+        "quantum": 512,
+        "rate": 44100,
+        "recorded_samples": 294400,
+        "transitions": 4
+      },
+      "playback": {
+        "monitor_fault": false,
+        "quantum": 480,
+        "rate": 48000,
+        "recorded_samples": 416640,
+        "transitions": 4
+      }
+    }
+  },
+  "physical_microphone": {
+    "dbus_activation_and_pcm_reopen": true,
+    "errors_delta": 0,
+    "model": 8,
+    "reopen_completed_deltas": [
+      114,
+      114,
+      111
+    ],
+    "seconds_from_last_completion_to_release": 2.037,
+    "settings_preserved": true,
+    "sustained_completed_delta": 3004,
+    "sustained_seconds": 30
+  },
+  "platform": {
+    "device": "AMD XDNA2 Gorgon Point",
+    "firmware": "1.1.2.64",
+    "xrt": "2.27.0"
+  },
+  "schema": 1,
+  "scope": "user-scoped native EasyEffects, mono manual opt-in",
+  "selected_models": {
+    "2": {
+      "experiment": "R851",
+      "library_sha256": "fc3568b45e36585496e38b9aa515a3234b6297fccd240b83f82ded916b15e2c5",
+      "manifest_sha256": "34ccc3cb2738fe2f275851d2e81ccdcc2fbf15a8080d603fcd283aba2df000d0",
+      "model_sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b"
+    },
+    "8": {
+      "experiment": "R877",
+      "library_sha256": "1cad519dda139e52bb162f503c3c9ad9c18aeff1e84f8d1147f26cdddac90154",
+      "manifest_sha256": "4c0eb6587a9a1afd9b89e7bae9664b7e4e57f8d5a974c20709975a81c935091a",
+      "model_sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631"
+    }
+  },
+  "source_revisions": {
+    "easyeffects": "603af79e744380043fa05fcd06647e28d78b8cb4",
+    "hushmic": "55e787695cf8f48b6d76cee84558506f8db959dd"
+  }
+}

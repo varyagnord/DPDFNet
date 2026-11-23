@@ -1,0 +1,250 @@
+diff --git a/activation.py b/activation.py
+--- a/activation.py
++++ b/activation.py
+@@ -152,12 +152,16 @@
+
+     output, empty, ready = destination
++    from aie.dialects.arith import andi, select
+     from feedback_route import FORWARD_PREFIX_ROWS, read_plane, release_plane
+
+-    values = read_plane(inputs)
++    partial = cmpi(CmpIPredicate.eq,length,constant(index(),48)) if backward else None
++    credits = select(partial,constant(i32(),1),constant(i32(),2)) if backward else 1
++    values = read_plane(inputs,credits)
+     weights = coefficients.acquire(1)
+     for step in range_(length):
++        boundary = cmpi(CmpIPredicate.eq,step,constant(index(),FORWARD_PREFIX_ROWS))
++        with if_(andi(boundary,partial) if backward else boundary):
++            read_plane(inputs)
+         if not backward:
+-            with if_(cmpi(CmpIPredicate.eq,step,constant(index(),FORWARD_PREFIX_ROWS))):
+-                read_plane(inputs)
+             empty.acquire()
+         pack(values, packed, accumulator, index_cast(i32(), length - 1 - step if backward else step))
+diff --git a/feedback_route.py b/feedback_route.py
+--- a/feedback_route.py
++++ b/feedback_route.py
+@@ -11,4 +11,5 @@
+ # Consumer order is the three input projections in each direction.
+ FORWARD_PREFIX_ROWS = 4
++REVERSE_SUFFIX_START = 44
+ PROJECTIONS = (
+     (1, 2, 49152, 0),
+@@ -58,7 +59,9 @@
+     arrived = Lock(router, init=0, name="r457_feedback_ready")
+     early = Lock(router, init=0, name="r989_feedback_prefix_ready")
+-    cut = FORWARD_PREFIX_ROWS * 64
+-    prefix = plain(words, 0, cut)
+-    tail = plain(words, cut, words - cut)
++    prefix_end = FORWARD_PREFIX_ROWS * 64
++    suffix_start = REVERSE_SUFFIX_START * 64
++    prefix = plain(words, 0, prefix_end)
++    middle = plain(words, suffix_start, words - suffix_start)
++    tail = plain(words, prefix_end, suffix_start - prefix_end)
+
+     source = Buffer(matrix, tile=normalizer, address=4096, name="r457_result_source")
+@@ -70,4 +73,5 @@
+         TileDma(normalizer, [DmaChannel(mm2s, 0, [
+             Bd(source, tap=prefix, acquires=[Acquire(source_ready)], releases=[Release(source_free, value=0)]),
++            Bd(source, tap=middle, acquires=[Acquire(source_ready)], releases=[Release(source_free, value=0)]),
+             descriptor(source, source_ready, source_free, tap=tail),
+         ])]),
+@@ -76,4 +80,6 @@
+                 Bd(slot_a, tap=prefix, acquires=[Acquire(free_a, value=2)],
+                    releases=[Release(early)], bd_id=2),
++                Bd(slot_a, tap=middle, acquires=[Acquire(free_a, value=0, greater_equal=False)],
++                   releases=[Release(early)], bd_id=12),
+                 Bd(slot_a, tap=tail, acquires=[Acquire(free_a, value=0, greater_equal=False)],
+                    releases=[Release(arrived)], bd_id=13),
+@@ -82,4 +88,6 @@
+                 Bd(slot_a, tap=prefix, acquires=[Acquire(input_ready)],
+                    releases=[Release(free_a, value=0)], bd_id=3),
++                Bd(slot_a, tap=middle, acquires=[Acquire(input_ready)],
++                   releases=[Release(free_a, value=0)], bd_id=15),
+                 Bd(slot_a, tap=tail, acquires=[Acquire(input_ready)],
+                    releases=[Release(free_a, value=2)], bd_id=14),
+@@ -93,15 +101,13 @@
+         triple = endpoint(flat, tile, addr, f"whole_input__cons{idx}")
+         flows.append(Flow(router, tile, src_channel=0, dst_channel=channel, name=f"dprnn_input_{idx}"))
+-        if idx < 3:
+-            buffer, vacant, ready = triple
+-            cut = FORWARD_PREFIX_ROWS * 64
+-            receive = [
+-                Bd(buffer, tap=plain(words, 0, cut),
+-                   acquires=[Acquire(vacant)], releases=[Release(ready)]),
+-                Bd(buffer, tap=plain(words, cut, words-cut),
+-                   acquires=[Acquire(vacant, value=0, greater_equal=False)], releases=[Release(ready)]),
+-            ]
+-        else:
+-            receive = [descriptor(*triple)]
++        buffer, vacant, ready = triple
++        receive = [
++            Bd(buffer, tap=prefix, acquires=[Acquire(vacant)],
++               releases=[Release(ready, value=int(idx < 3))]),
++            Bd(buffer, tap=middle, acquires=[Acquire(vacant, value=0, greater_equal=False)],
++               releases=[Release(ready, value=int(idx >= 3))]),
++            Bd(buffer, tap=tail, acquires=[Acquire(vacant, value=0, greater_equal=False)],
++               releases=[Release(ready)]),
++        ]
+         dma.append(TileDma(tile, [DmaChannel(s2mm, channel, receive)]))
+         consumers.append(triple)
+@@ -128,5 +134,14 @@
+     dma.extend((
+         TileDma(join, [
+-            DmaChannel(s2mm, 0, [descriptor(norm_buffer, free_plane, ready_plane, tap=payload, bd_id=0)]),
++            DmaChannel(s2mm, 0, [
++                Bd(norm_buffer, tap=plain(words + 128, 0, prefix_end),
++                   acquires=[Acquire(free_plane)], releases=[Release(ready_plane, value=0)], bd_id=0),
++                Bd(norm_buffer, tap=plain(words + 128, suffix_start, words - suffix_start),
++                   acquires=[Acquire(free_plane, value=0, greater_equal=False)],
++                   releases=[Release(ready_plane, value=0)], bd_id=2),
++                Bd(norm_buffer, tap=plain(words + 128, prefix_end, suffix_start - prefix_end),
++                   acquires=[Acquire(free_plane, value=0, greater_equal=False)],
++                   releases=[Release(ready_plane)], bd_id=4),
++            ]),
+             DmaChannel(s2mm, 4, [descriptor(norm_buffer, free_coef, ready_coef, tap=coefficients, bd_id=3)]),
+             DmaChannel(mm2s, 3, [descriptor(norm_buffer, ready_plane, free_plane, tap=payload, bd_id=29),
+@@ -139,7 +154,7 @@
+
+
+-def read_plane(triple):
++def read_plane(triple, credits=1):
+     buffer, _, ready = triple
+-    ready.acquire()
++    ready.acquire(credits)
+     return buffer
+
+diff --git a/r328_joint_v1.py b/r328_joint_v1.py
+--- a/r328_joint_v1.py
++++ b/r328_joint_v1.py
+@@ -65,5 +65,5 @@
+  placement=read(P/'R276_INTEGRATION_BUDGET_V3.json')['prospective_actual_image_placements']['four_KiB_weight_slabs'][int(os.environ['R277_PLACEMENT'])]['stages']
+  objects=os.environ['R277_OBJECT']
+- from feedback_route import FORWARD_PREFIX_ROWS, construct as resident_planes, read_plane, release_plane
++ from feedback_route import REVERSE_SUFFIX_START, FORWARD_PREFIX_ROWS, construct as resident_planes, read_plane, release_plane
+  route_tiles={}
+  def route_tile(col,row):
+@@ -450,9 +450,11 @@
+     if input_branch:
+      def project(a,b,w,aa,cc,pack,mm,extract,length):
+-      xx=read_plane(a);ww=w.acquire(1)
++      partial=cmpi(CmpIPredicate.eq,length,constant(index(),48)) if reverse else None
++      credits=select(partial,constant(i32(),1),constant(i32(),2)) if reverse else 1
++      xx=read_plane(a,credits);ww=w.acquire(1)
+       for t in range_(length):
+-       if not reverse:
+-        with if_(cmpi(CmpIPredicate.eq,t,constant(index(),FORWARD_PREFIX_ROWS))):
+-         read_plane(a)
++       boundary=cmpi(CmpIPredicate.eq,t,constant(index(),FORWARD_PREFIX_ROWS))
++       with if_(andi(boundary,partial) if reverse else boundary):
++        read_plane(a)
+        row_index=length-1-t if reverse else t
+        yy=b.acquire(1);pack(xx,aa,cc,index_cast(i32(),row_index));mm(aa,ww[:4096],cc);extract(cc,ww,yy);b.release(1)
+@@ -671,4 +673,8 @@
+                   [acc_i_type,wt_i_type,vt,np.int32])
+  add(run_i,[directional.receiver,wt_i,intra_fc.prod(),acc_i,project_i,extract_i,receive_weights],'fc_i')
++ def last_df_panel_order(chunk,length):
++  last=cmpi(CmpIPredicate.eq,chunk,constant(index(),40))
++  df=cmpi(CmpIPredicate.eq,length,constant(index(),48))
++  return select(andi(last,df),constant(i32(),4),constant(i32(),0))
+  def panel_projection(data,free,ready,w,out,packed,accumulator,project,extract,length):
+   coeff=w.acquire(1)
+@@ -678,7 +684,8 @@
+    with if_(cmpi(CmpIPredicate.ult,chunk,length)):
+     project(data,coeff,packed,accumulator,index_cast(i32(),position))
++    row_order=last_df_panel_order(chunk,length)
+     for row in range_(8):
+      output=out.acquire(1)
+-     extract(accumulator,coeff,output,index_cast(i32(),row))
++     extract(accumulator,coeff,output,index_cast(i32(),apply_row_order(row,row_order)))
+      out.release(1)
+   free.release(6)
+@@ -720,4 +727,6 @@
+     first=panel_row(position)
+     swap=first_panel_swap(first,length)
++    if not panel_output:
++     output_order=last_df_panel_order(first,length)
+     with if_(cmpi(CmpIPredicate.ult,position,length)) as active:
+      for stripe in range_(0,8,4):
+@@ -725,4 +734,6 @@
+        aa=a.acquire(1)
+        row=stripe+within
++       if not panel_output:
++        row=apply_row_order(row,output_order)
+        permuted=apply_row_order(row,swap)
+        logical=index_cast(i32(),first+(permuted if panel_output else row))
+@@ -732,5 +743,9 @@
+        a.release(1)
+        if not panel_output:
++        df=cmpi(CmpIPredicate.eq,length,constant(index(),48))
+         with if_(cmpi(CmpIPredicate.eq,output_row,constant(i32(),FORWARD_PREFIX_ROWS-1))):
++         full.release(select(df,constant(i32(),1),constant(i32(),2)))
++        suffix_end=cmpi(CmpIPredicate.eq,output_row,constant(i32(),REVERSE_SUFFIX_START+3))
++        with if_(andi(df,suffix_end)):
+          full.release()
+       if panel_output:
+@@ -868,12 +883,15 @@
+     weight_tap=TensorAccessPattern.full((8,2,6,4224))
+     tail_tap=TensorAccessPattern.full((8,NATIVE_WCOUNT));norm_tap=TensorAccessPattern.full((8,2,128))
+-    forward_weights_by_branch = {branch:handle for handle,di,branch in ig if di==0}
+-    def forward_weights(block,branch):
+-     transfer=TaskGroup()
+-     tap=weight_tap[block,0,branch*3:branch*3+3,:]
+-     forward_weights_by_branch[branch].fill(iw,tap=bank_tap(2,tap,bank),group=transfer,wait=True)
+-     return transfer
+-    pending_input=None
+-    pending_hidden=None
++    ahead_groups=((0,0),(0,1),(1,0),(1,1))
++    weights_by_group={(di,branch):handle for handle,di,branch in ig}
++    def issue_weights(block):
++     transfers=[]
++     for di,branch in ahead_groups:
++      transfer=TaskGroup()
++      tap=weight_tap[block,di,branch*3:branch*3+3,:]
++      weights_by_group[di,branch].fill(iw,tap=bank_tap(2,tap,bank),group=transfer,wait=True)
++      transfers.append(transfer)
++     return transfers
++    pending=()
+     for b in range(count):
+      group=TaskGroup()
+@@ -892,9 +910,7 @@
+        erb_load(out,ah,group,index)
+      hh.fill(h,tap=bank_tap(1,state_tap[b,:,:],bank),group=group,wait=True)
+-     if b==0:
+-      pending_input=forward_weights(b,0)
+-      pending_hidden=forward_weights(b,1)
++     if b==0:pending=issue_weights(b)
+      for handle,di,branch in ig:
+-      if di!=0:
++      if (di,branch) not in ahead_groups:
+        handle.fill(iw,tap=bank_tap(2,weight_tap[b,di,branch*3:branch*3+3,:],bank),group=group,wait=True)
+      for handle,offset,n in wh:handle.fill(tw,tap=bank_tap(3,tail_tap[b,offset:offset+n],bank),group=group,wait=True)
+@@ -903,9 +919,6 @@
+      arrived=capture(activation,ingress,bank,emit_controls) if b==count-1 else None
+      group.finish()
+-     pending_input.finish()
+-     pending_hidden.finish()
+-     if b+1<count:
+-      pending_input=forward_weights(b+1,0)
+-      pending_hidden=forward_weights(b+1,1)
++     for transfer in pending:transfer.finish()
++     if b+1<count:pending=issue_weights(b+1)
+      archive.await_()
+      archive.free()
+@@ -994,12 +1007,14 @@
+    other_free.release()
+    left_raw_done.release()
+-  publish_input.release(2)
++  publish_input.release(3)
+   arrived,publish_final,early=feedback
+   for block in range_(blocks-1):
+    early.acquire()
+    publish_input.release()
++   early.acquire()
++   publish_input.release()
+    arrived.acquire()
+    publish_input.release()
+-  early.acquire()
++  early.acquire(2)
+   arrived.acquire()
+   publish_final.release()

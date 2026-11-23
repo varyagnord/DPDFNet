@@ -1,0 +1,123 @@
+{
+  "artifact_sha256": {
+    "broker": "890b3ed7a04fefb18353dbf4cf8840e291e70db248f59163aae9ce7eccac1446",
+    "easy_effects": "3417c1d4d389edc5f4024aa325b7f7f0f16bf1a5143a45feae78ee83d946de98",
+    "installed_provider_catalog": "73a58145f8e81eeaf492d639a3ba4777cdf3696c5091f297a2828d18d5569608",
+    "ladspa": "ce4fb516800cdda67597adefbaace2c3467e57188cf65265673762e35d9f14de"
+  },
+  "date": "2026-11-23",
+  "previous_catalog": {
+    "2": "R851",
+    "8": "R877"
+  },
+  "qualification": {
+    "accuracy_exact_commands": 10624,
+    "desktop_20s_completed_commands": 2005,
+    "desktop_device_idle_afterwards": true,
+    "desktop_reconnect_completed_commands": [
+      114,
+      114,
+      115
+    ],
+    "desktop_settings_preserved": true,
+    "independent_ab": {
+      "boost": {
+        "mean_body": {
+          "adjusted_95_percent": [
+            0.09169937436115383,
+            1.599109527556808
+          ],
+          "gain_percent": 0.8482690662870107
+        },
+        "p99_response": {
+          "adjusted_95_percent": [
+            -1.0268279642037248,
+            3.7185516857075496
+          ],
+          "gain_percent": 1.37439827817325
+        }
+      },
+      "fixed_2_ghz": {
+        "mean_body": {
+          "adjusted_95_percent": [
+            0.9179773270031499,
+            1.2458055640611643
+          ],
+          "gain_percent": 1.0820272541171017
+        },
+        "p99_response": {
+          "adjusted_95_percent": [
+            0.8511734570213814,
+            1.4073469772061364
+          ],
+          "gain_percent": 1.1296512954006688
+        }
+      }
+    },
+    "isolated_native_cases": {
+      "2-monitor-fault": {
+        "passed": true,
+        "quantum": 512,
+        "rate_hz": 44100,
+        "transitions": 4
+      },
+      "2-playback": {
+        "passed": true,
+        "quantum": 480,
+        "rate_hz": 48000,
+        "transitions": 4
+      },
+      "8-monitor-fault": {
+        "passed": true,
+        "quantum": 512,
+        "rate_hz": 44100,
+        "transitions": 4
+      },
+      "8-playback": {
+        "passed": true,
+        "quantum": 480,
+        "rate_hz": 48000,
+        "transitions": 4
+      }
+    },
+    "paced_reference": "R1007",
+    "verified_staged_files": 104
+  },
+  "r1044_source_delta": {
+    "base": "R1007 materialized model-8 source",
+    "graph_source_sha256": {
+      "activation.py": {
+        "r1007": "2065df23b31f718de844ed584982225c4a6302e281040c04b78da57ce516cc06",
+        "r1044": "2613d074de1159425bfc4f82750d6bce8ef5734f6f9a0da30c660586424740f5"
+      },
+      "feedback_route.py": {
+        "r1007": "49606c937150972ba7c1bc6388e71cb1adf85e4beb72234f05ec8d140d89034d",
+        "r1044": "14e03195ad66636438f8ec31273ca7626eba5fa822ddf3bfd9f0905dfecb0bde"
+      },
+      "r328_joint_v1.py": {
+        "r1007": "a484721b6f6b96b43183de2e460811e0fe8e28286bc165cea5d2f5f1d5830197",
+        "r1044": "7573294ec76c9c1471a97161e9f23b7383dcd275719db39577ea5f6d81c7b0cf"
+      }
+    },
+    "patch": "source/local_pcm/model8-r1044.patch",
+    "verified_byte_exact_patch_replay": true
+  },
+  "schema": 1,
+  "scope": "User-scoped native EasyEffects, mono, Prefer NPU",
+  "selected_models": {
+    "2": {
+      "compact_close": true,
+      "experiment": "R851",
+      "library_sha256": "fc3568b45e36585496e38b9aa515a3234b6297fccd240b83f82ded916b15e2c5",
+      "manifest_sha256": "34ccc3cb2738fe2f275851d2e81ccdcc2fbf15a8080d603fcd283aba2df000d0",
+      "model_sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b"
+    },
+    "8": {
+      "compact_close": false,
+      "experiment": "R1044",
+      "library_sha256": "cc6055ee12f1feb4f8987c2096f2b2ea1542aeea6802db1ec11079878e961244",
+      "manifest_sha256": "d141b6d3d97fdf483268b3353176e5a48ec0a095d64d93b3840f2da279329757",
+      "model_sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631"
+    }
+  }
+}

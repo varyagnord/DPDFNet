@@ -1,6 +1,6 @@
 # Full PCM on a user-scoped XDNA2 host
 
-This checkpoint selects the model-2 R851 image and the model-8 R877 image.
+The current desktop catalog selects R851 for model 2 and R1044 for model 8.
 They run the full mono PCM processing graph on the NPU under explicit
 Prefer NPU, including analysis and synthesis, recurrent inference,
 attenuation, and overlap-add. The LADSPA adapter still owns streaming,
@@ -15,6 +15,13 @@ Use a fresh destination. The staging process copies and verifies the provider
 manifests, libraries, models and referenced assets. The resulting versioned
 directory contains both full PCM profiles, a service executable and a digest
 inventory. Existing spectral entries keep their previous identities.
+
+For the R1044 promotion, take model 2 from the previous installed
+catalog and model 8 from the qualified R1044 catalog. Preserve each
+entry's tested provider options, including its close policy, and stage
+with the same verified broker. The [promotion record](../research/xdna2_preview/local_pcm_promotion.json) pins both providers,
+the broker, and the R1044 graph delta. Rebuilding the full device image
+still requires the matching materialized graph, SDK and immutable inputs.
 
 ```sh
 python3 -B optimized_inference/research/xdna2_preview/spectral/stage_local_pcm.py \
@@ -43,13 +50,15 @@ Create a private `RuntimeDirectory=dpdfnet-xdna2` with mode `0700` and set
 The service's existing persisted device preference controls selection.
 Keep the XRT and NPU driver installation supplied by the host.
 
-Back up the active adapter, launcher, service overrides and the configuration
-and preset directories before briefly closing the app. Switch the adapter and
-service, then restart the original launcher with its existing DSP tier and
-input-channel defaults. To roll back, restore the adapter and launcher, remove
-the PCM service override, reload the user systemd units and start the previous
-service and app. If the app changed settings during a failed switch, restore
-the saved settings while it is closed.
+Back up the active service drop-in, settings and presets before a
+provider-only update. With the audio graph idle, keep the EasyEffects
+process running and stop the user broker. Atomically replace its drop-in
+with the new provider paths, reload systemd and start the broker.
+Compare the device policy, loaded preset and settings digests, then
+validate the worker's actual model and manifest on the native graph.
+Restore the saved drop-in and restart the broker to roll back to the
+previous PCM catalog. Initial installation or an adapter update also
+requires saving the old adapter and launcher.
 
 ## Verify the installed integration
 
@@ -80,12 +89,13 @@ resumed stream. Exact source and artifact identities are in the
 
 ## Maintainer handoff
 
-R907/R912 expose an earlier first ERB40 quartet. The profile shows time
-moves into later reverse-credit waits, with the first 16–19 wait reaching
-about 13k cycles. The original model-8 release profile remains R877 unless
-a candidate establishes practical full-frame benefit in the paced A/B test.
-R913 saves 2,048 bytes and about 255 cycles on the initial right encoder DMA.
-Keep that experiment for cumulative transport changes.
+R1044 advances the DF48 reverse high quartet and prefetches the two
+reverse intra-GRU coefficient groups. Relative to R1007, independent
+paced cohorts show +1.082% mean gain at 2 GHz and +0.848% in Boost.
+Both cohorts pass mean and p99 noninferiority. The original Boost
+cohort's p99 lower limit was −5.050%, so the Boost result was confirmed
+with a separately registered 24-pair cohort. The R1065 two-row variant
+did not meet the useful full-frame gain threshold.
 
 1. Profile reverse availability from the rightmost encoder group through
    the later reverse stripes. Measure queue waits and DMA callbacks

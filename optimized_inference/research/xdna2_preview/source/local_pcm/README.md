@@ -1,6 +1,6 @@
 # Selected XDNA2 component sources
 
-These Apache-2.0 source inputs accompany the local R851/R877 checkpoint.
+These Apache-2.0 source inputs accompany the local PCM checkpoints.
 The model weights, model family and original DPDFNet implementation are
 by the DPDFNet authors at Ceva. The changes here cover XDNA2 inference,
 placement and the desktop integration.
